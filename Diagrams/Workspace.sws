@@ -7,7 +7,8 @@
 		<Model ID="{D7F8CC8F-F1B1-485B-AE6D-6727009821C1}" Loaded="No" Name="Use Cases" Type="{18112060-1A4B-11D1-83D9-444553540000}" URL="Use Cases Definition_2..oom"/>
 		<Model Expanded="Yes" ID="{9E1FFA76-C214-4DB4-AD8C-250DC6761197}" Loaded="No" Name="Class Diagram_1" Type="{18112060-1A4B-11D1-83D9-444553540000}" URL="[version3]ClassDiagram (1).oom"/>
 		<Model Expanded="Yes" ID="{D7F8CC8F-F1B1-485B-AE6D-6727009821C1}" Loaded="No" Name="Use Cases" Type="{18112060-1A4B-11D1-83D9-444553540000}" URL="Use Cases Definition_2..oom"/>
-		<Model Expanded="Yes" ID="{9E1FFA76-C214-4DB4-AD8C-250DC6761197}" Name="Class Diagram_1" Selected="Yes" Type="{18112060-1A4B-11D1-83D9-444553540000}" URL="[version3]ClassDiagram (1).oom"/>
+		<Model Expanded="Yes" ID="{9E1FFA76-C214-4DB4-AD8C-250DC6761197}" Loaded="No" Name="Class Diagram_1" Type="{18112060-1A4B-11D1-83D9-444553540000}" URL="[version3]ClassDiagram (1).oom"/>
+		<Model Expanded="Yes" ID="{92E9212A-EC40-41A5-957F-6EF8E0847740}" Name="Use Cases Definition_1" Type="{18112060-1A4B-11D1-83D9-444553540000}" URL="file:///D|/tmp/Use Cases Definition_1.oom"/>
 	</Local>
 	<BrowserModule Name="Repository"/>
 </Workspace>
