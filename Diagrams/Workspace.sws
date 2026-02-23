@@ -4,11 +4,10 @@
 
 <Workspace>
 	<Local Expanded="Yes">
-		<Model ID="{D7F8CC8F-F1B1-485B-AE6D-6727009821C1}" Loaded="No" Name="Use Cases" Type="{18112060-1A4B-11D1-83D9-444553540000}" URL="Use Cases Definition_2..oom"/>
-		<Model Expanded="Yes" ID="{9E1FFA76-C214-4DB4-AD8C-250DC6761197}" Loaded="No" Name="Class Diagram_1" Type="{18112060-1A4B-11D1-83D9-444553540000}" URL="[version3]ClassDiagram (1).oom"/>
-		<Model Expanded="Yes" ID="{D7F8CC8F-F1B1-485B-AE6D-6727009821C1}" Loaded="No" Name="Use Cases" Type="{18112060-1A4B-11D1-83D9-444553540000}" URL="Use Cases Definition_2..oom"/>
-		<Model Expanded="Yes" ID="{9E1FFA76-C214-4DB4-AD8C-250DC6761197}" Loaded="No" Name="Class Diagram_1" Type="{18112060-1A4B-11D1-83D9-444553540000}" URL="[version3]ClassDiagram (1).oom"/>
-		<Model Expanded="Yes" ID="{92E9212A-EC40-41A5-957F-6EF8E0847740}" Name="Use Cases Definition_1" Type="{18112060-1A4B-11D1-83D9-444553540000}" URL="file:///D|/tmp/Use Cases Definition_1.oom"/>
+		<Model Expanded="Yes" ID="{32C0AF9B-7B54-46E2-A988-359C780C22A6}" Loaded="No" Name="Conceptual Data_1" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" URL="file:///D|/tài liệu đại học/năm 3 -hk2/CT241 - Phan tich yeu cau phan mem/Bao cao/Diagram/Conceptual Data_1.cdm"/>
+		<Model Expanded="Yes" ID="{F097ABCC-A4E4-4F1B-B4C5-F7DD8661B49A}" Loaded="No" Name="Use Cases Definition_1" Type="{18112060-1A4B-11D1-83D9-444553540000}" URL="file:///D|/tài liệu đại học/năm 3 -hk2/CT241 - Phan tich yeu cau phan mem/Bao cao/Diagram/Use Cases Definition_1.oom"/>
+		<Model Expanded="Yes" ID="{621DA950-E2F4-4833-8825-CAA6DED172FF}" Name="Use Cases Definition_1" Type="{18112060-1A4B-11D1-83D9-444553540000}" URL="/code/CT449/E-Lib/Diagram/ELib-use-case.oom"/>
+		<Model Expanded="Yes" ID="{D0F33220-5B40-47E1-8CF1-BC7A476102D0}" Name="Conceptual Data_1" Selected="Yes" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" URL="/code/CT449/E-Lib/Diagram/ELib-ERD.cdm"/>
 	</Local>
 	<BrowserModule Name="Repository"/>
 </Workspace>

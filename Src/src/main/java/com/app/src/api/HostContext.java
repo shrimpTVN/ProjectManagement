@@ -1,4 +1,7 @@
-package com.app.src.core;
+package com.app.src.api;
+
+import javafx.scene.Node;
+import java.util.Optional;
 
 //import com.app.model.User;
 import java.util.List;
@@ -16,5 +19,8 @@ public interface HostContext {
 
     // Provides access to shared data (e.g., list of all projects)
     // This allows the plugin to do its job (like statistics)
-    List<?> getSharedData(String key);
+    Optional<List<?>> getSharedData(String key);
+
+    // Register the UI node that should be shown when the plugin is activated.
+    void registerPluginView(String pluginId, Node view);
 }
