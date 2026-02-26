@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.gluonhq.charm.glisten.control.ExpansionPanel?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -80,7 +79,6 @@
 
             <Separator layoutX="-3.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="0.0" />
             <Circle fill="DODGERBLUE" layoutX="182.0" layoutY="58.0" radius="22.0" stroke="BLACK" strokeType="INSIDE" />
-            <ExpansionPanel layoutX="143.0" layoutY="90.0" />
             <Label alignment="CENTER" layoutX="32.0" layoutY="81.0" prefHeight="18.0" prefWidth="300.0" text="Don't have account yet ? Sign up now" textAlignment="CENTER" textFill="#0f97b9" />
 
          </children>
