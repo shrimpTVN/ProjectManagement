@@ -7,6 +7,7 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -14,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="686.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER_NAME">
+<AnchorPane prefHeight="613.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER_NAME">
    <children>
       <Circle fill="DODGERBLUE" layoutX="300.0" layoutY="58.0" radius="30.0" stroke="BLACK" strokeType="INSIDE" />
       <Label alignment="CENTER" layoutX="186.0" layoutY="88.0" prefHeight="26.0" prefWidth="227.0" text="You have an accounnt ? Login now">
@@ -22,7 +23,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <VBox layoutX="140.0" layoutY="127.0" prefHeight="514.0" prefWidth="319.0" spacing="6.0">
+      <VBox layoutX="140.0" layoutY="127.0" prefHeight="502.0" prefWidth="319.0" spacing="6.0">
          <children>
             <Label maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="323.0" text="Name">
                <font>
@@ -55,8 +56,12 @@
             </Label>
             <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="151.0" spacing="20.0">
                <children>
-                  <RadioButton mnemonicParsing="false" prefHeight="0.0" prefWidth="88.0" text="Male" />
-                  <RadioButton lineSpacing="20.0" mnemonicParsing="false" text="Female" />
+                  <RadioButton mnemonicParsing="false" prefHeight="0.0" prefWidth="88.0" text="Male">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="gender" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton lineSpacing="20.0" mnemonicParsing="false" text="Female" toggleGroup="$gender" />
                </children>
             </HBox>
             <Label maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="142.0" text="Password">
@@ -73,7 +78,7 @@
             <TextField maxWidth="1.7976931348623157E308" />
             <Button alignment="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="34.0" prefWidth="319.0" text="SIGNUP" textAlignment="CENTER">
                <VBox.margin>
-                  <Insets top="5.0" />
+                  <Insets top="20.0" />
                </VBox.margin>
             </Button>
          </children>
