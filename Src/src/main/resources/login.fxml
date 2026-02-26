@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.gluonhq.charm.glisten.control.ExpansionPanel?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -11,11 +12,10 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.LoginController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.LoginController">
    <left>
       <AnchorPane prefHeight="400.0" prefWidth="228.0" BorderPane.alignment="CENTER">
          <children>
@@ -61,13 +61,13 @@
                </children>
             </GridPane>
 
-            <Label alignment="CENTER" fx:id="labelLoginMess" contentDisplay="CENTER" layoutX="62.0" layoutY="233.0" prefHeight="19.0" prefWidth="251.0" text="Invalid login. Please try again." textFill="#eb1111">
+            <Label fx:id="labelLoginMess" alignment="CENTER" contentDisplay="CENTER" layoutX="62.0" layoutY="233.0" prefHeight="19.0" prefWidth="251.0" text="Invalid login. Please try again." textFill="#eb1111">
                <font>
                   <Font size="13.0" />
                </font>
             </Label>
             <!--            control button-->
-            <Button fx:id="loginBtn" onAction="#handleLoginBtnClick" layoutX="55.0" layoutY="259.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="264.0" text="Login">
+            <Button fx:id="loginBtn" layoutX="55.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleLoginBtnClick" prefHeight="37.0" prefWidth="264.0" text="Login">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
@@ -79,6 +79,9 @@
             </Button>
 
             <Separator layoutX="-3.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="0.0" />
+            <Circle fill="DODGERBLUE" layoutX="182.0" layoutY="58.0" radius="22.0" stroke="BLACK" strokeType="INSIDE" />
+            <ExpansionPanel layoutX="143.0" layoutY="90.0" />
+            <Label alignment="CENTER" layoutX="32.0" layoutY="81.0" prefHeight="18.0" prefWidth="300.0" text="Don't have account yet ? Sign up now" textAlignment="CENTER" textFill="#0f97b9" />
 
          </children>
       </AnchorPane>
