@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -11,7 +13,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720" prefWidth="1280.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER_NAME">
+<AnchorPane prefHeight="720" prefWidth="1280.0" stylesheets="@/css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER_NAME">
     <children>
         <BorderPane fx:id="mainBorderPane" layoutX="3.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="622.0" prefWidth="1136.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <top>
@@ -39,27 +41,32 @@
                                 <Insets right="50.0" />
                             </opaqueInsets>
                         </HBox>
-                    </children></HBox>
+                    </children>
+                </HBox>
             </top>
             <left>
                 <VBox alignment="TOP_CENTER" prefHeight="650.0" prefWidth="306.0" style="-fx-border-color: d1d5db; -fx-border-width: 2;" BorderPane.alignment="CENTER">
                     <children>
                         <HBox fx:id="forMeMenu" alignment="CENTER" prefHeight="40.0" prefWidth="302.0">
                             <children>
-                                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="40.0" style="-fx-font-size: 20px;" text="👤" textAlignment="CENTER">
+                                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="34.0" style="-fx-font-size: 20px;" text="👤" textAlignment="CENTER">
                                     <font>
                                         <Font size="16.0" />
-                                    </font></Label>
+                                    </font>
+                                </Label>
                                 <Label prefHeight="40.0" prefWidth="218.0" text="For me">
                                     <font>
                                         <Font size="16.0" />
                                     </font>
                                 </Label>
                             </children>
+                            <VBox.margin>
+                                <Insets left="15.0" right="15.0" top="15.0" />
+                            </VBox.margin>
                         </HBox>
                         <HBox fx:id="myProjectMenu" prefHeight="40.0" prefWidth="302.0" style="-fx-border-color: c7c7c7;">
                             <children>
-                                <Label fx:id="myProjectLabel" prefHeight="38.0" prefWidth="221.0" text="&gt; My project">
+                                <Label fx:id="myProjectLabel" prefHeight="38.0" prefWidth="202.0" text="&gt; My project" HBox.hgrow="ALWAYS">
                                     <font>
                                         <Font name="System Bold" size="14.0" />
                                     </font>
@@ -67,29 +74,54 @@
                                         <Insets left="30.0" />
                                     </HBox.margin>
                                 </Label>
-                                <Button fx:id="addProjectBtn" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="+">
+                                <Button fx:id="addProjectBtn" alignment="CENTER" prefHeight="50.0" prefWidth="50.0" styleClass="flat-btn" text="+" textAlignment="CENTER">
                                     <font>
                                         <Font name="System Bold" size="16.0" />
                                     </font>
                                     <HBox.margin>
                                         <Insets left="10.0" />
                                     </HBox.margin>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                                 </Button>
                             </children>
+                            <VBox.margin>
+                                <Insets left="15.0" right="15.0" />
+                            </VBox.margin>
                         </HBox>
-<!--                        lúc mà ấn zo > my project thì nó sẽ sổ mấy cái project abcd, còn ấn button nó sẽ mở màn hình tạo công việc mới, mà màn hình đó thì chưa xong :0-->
-                        <VBox fx:id="projectList" managed="false" prefWidth="302.0" visible="false">
+                        <!--lúc mà ấn zo > my project thì nó sẽ sổ mấy cái project abcd, còn ấn button nó sẽ mở màn hình tạo công việc mới, mà màn hình đó thì chưa xong :0-->
+                        <VBox fx:id="projectList" managed="false" prefHeight="125.0" prefWidth="191.0" visible="false">
+                            <!--managed="false" ra lệnh cho khung chứa bên ngoài bỏ qua khối này khi tính toán và sắp xếp bố cục.-->
                             <children>
-                                <Label text="Project A">
-                                    <VBox.margin><Insets left="50.0" top="10.0" /></VBox.margin>
+                                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="302.0">
+                                    <children>
+                                        <TextField fx:id="searchProjectField" prefHeight="26.0" prefWidth="254.0" promptText="🔍 Tìm kiếm dự án..." styleClass="input-field" HBox.hgrow="ALWAYS">
+                                            <HBox.margin>
+                                                <Insets top="5.0" />
+                                            </HBox.margin>
+                                        </TextField>
+                                    </children>
+                                </HBox>
+                                <Label prefWidth="48.0" text="Project A">
+                                    <VBox.margin>
+                                        <Insets left="50.0" top="10.0" />
+                                    </VBox.margin>
                                 </Label>
                                 <Label text="Project B">
-                                    <VBox.margin><Insets left="50.0" top="10.0" /></VBox.margin>
+                                    <VBox.margin>
+                                        <Insets left="50.0" top="10.0" />
+                                    </VBox.margin>
                                 </Label>
                                 <Label text="Project C">
-                                    <VBox.margin><Insets bottom="10.0" left="50.0" top="10.0" /></VBox.margin>
+                                    <VBox.margin>
+                                        <Insets bottom="10.0" left="50.0" top="10.0" />
+                                    </VBox.margin>
                                 </Label>
                             </children>
+                            <VBox.margin>
+                                <Insets bottom="15.0" left="15.0" right="15.0" top="5.0" />
+                            </VBox.margin>
                         </VBox>
                     </children>
                 </VBox>
