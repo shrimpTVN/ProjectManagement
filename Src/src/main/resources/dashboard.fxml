@@ -17,7 +17,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="720.0" maxWidth="1280.0" prefHeight="720" prefWidth="1280.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.DashboardController">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="720" prefWidth="1280.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.DashboardController">
     <children>
         <BorderPane fx:id="mainBorderPane" layoutX="-14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="622.0" prefWidth="1136.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <top>
@@ -159,7 +159,7 @@
          <center>
             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: black; -fx-border-width: 0.5;" BorderPane.alignment="CENTER">
                <content>
-                  <VBox prefHeight="652.0" prefWidth="983.0" spacing="10.0">
+                  <VBox maxWidth="1.7976931348623157E308" prefHeight="652.0" prefWidth="983.0" spacing="10.0">
                      <padding>
                         <Insets bottom="15.0" left="40.0" right="40.0" top="15.0" />
                      </padding>
