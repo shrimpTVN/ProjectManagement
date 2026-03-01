@@ -8,7 +8,6 @@
     -fx-padding: 5;
     -fx-cursor: hand;
 }
-// địt cụ nó sao không sài css được z ???
 .flat-btn:hover {
     -fx-background-color: #e0e0e0;
     -fx-background-radius: 5;
