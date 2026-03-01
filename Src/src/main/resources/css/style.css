@@ -1,0 +1,19 @@
+﻿/* --- Nút phẳng dùng chung --- */
+.flat-btn {
+    -fx-background-color: transparent !important;
+    -fx-border-color: transparent;
+    -fx-text-fill: #333333;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 5;
+    -fx-cursor: hand;
+}
+// địt cụ nó sao không sài css được z ???
+.flat-btn:hover {
+    -fx-background-color: #e0e0e0;
+    -fx-background-radius: 5;
+}
+
+.flat-btn:pressed {
+    -fx-background-color: #d0d0d0;
+}
