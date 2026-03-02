@@ -1,4 +1,11 @@
-﻿/* --- Nút phẳng dùng chung --- */
+﻿/*Font dùng chung*/
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* Áp dụng cho toàn bộ ứng dụng */
+.root {
+    -fx-font-family: 'Urbanist', sans-serif; /* Lấy tên font từ khung dưới cùng của ảnh */
+}
+/* --- Nút phẳng dùng chung --- */
 .flat-btn {
     -fx-background-color: transparent !important;
     -fx-border-color: transparent;
