@@ -1,6 +1,8 @@
 package com.app.src.controllers;
 
+import com.app.src.models.User;
 import com.app.src.services.LoginService;
+import com.app.src.services.UserService;
 import com.app.src.utils.MySQLDatabaseConnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +13,7 @@ import javafx.stage.Stage;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class LoginController {
@@ -37,32 +40,17 @@ public class LoginController {
     }
 
     @FXML
-    public void handleLoginBtnClick(ActionEvent event)
-    {
+    public void handleLoginBtnClick(ActionEvent event) throws SQLException {
         if (!userNameInput.getText().isBlank() && passwordInput.getText().isBlank())
         {
             labelLoginMess.setText("Type your user name and password!");
         } else {
-            MySQLDatabaseConnection connection = new MySQLDatabaseConnection();
-            LoginService loginService = new LoginService(connection.getConnection());
-            ResultSet queryResult = loginService.validateLogin(userNameInput.getText(), passwordInput.getText() );
+            LoginService loginService = new LoginService();
+            String userId = loginService.validateLogin(userNameInput.getText(), passwordInput.getText() );
+            UserService userService = new UserService();
+            User user = userService.getUserById(userId);
 
-           try{
-               while (queryResult.next())
-               {
-                   if (queryResult.getInt(1) == 1)
-                   {
-                       labelLoginMess.setText("Congratulation! You are login!");
-                   }   else{
-                       labelLoginMess.setText("Username or Password wrong. Try again!");
-                   }
-
-               }
-           } catch(Exception e){
-               e.printStackTrace();
-           }
-
-
+            System.out.println(user);
         }
     }
 }
