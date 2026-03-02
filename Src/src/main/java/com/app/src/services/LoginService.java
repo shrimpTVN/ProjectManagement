@@ -10,10 +10,10 @@ import java.sql.Statement;
 public class LoginService {
     private final AccountDAO accountDAO;
     public LoginService(){
-        accountDAO = new AccountDAO();
+        accountDAO = AccountDAO.getInstance();
     }
 
-    public String validateLogin(String userName, String password) throws SQLException {
+    public int validateLogin(String userName, String password) throws SQLException {
         return accountDAO.validateLogin(userName, password);
     }
 }

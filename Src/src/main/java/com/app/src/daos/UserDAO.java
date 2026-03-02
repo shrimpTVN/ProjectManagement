@@ -11,6 +11,14 @@ import java.util.List;
 public class UserDAO extends AbstractDAO<User>{
 
     private static Connection connection;
+    private static UserDAO instance;
+    public static UserDAO getInstance(){
+        if(instance == null){
+            instance = new UserDAO();
+
+        }
+        return instance;
+    }
 
     @Override
     public User findById(String id) {

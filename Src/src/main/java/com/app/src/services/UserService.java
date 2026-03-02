@@ -9,7 +9,7 @@ public class UserService {
     private final UserDAO userDAO ;
 
     public UserService() {
-        userDAO = new UserDAO();
+        userDAO = UserDAO.getInstance();
     }
 
     public User getUserById(String userId) throws SQLException
