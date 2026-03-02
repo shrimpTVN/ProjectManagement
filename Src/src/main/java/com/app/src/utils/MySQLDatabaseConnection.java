@@ -20,7 +20,7 @@ public class MySQLDatabaseConnection implements DatabaseConnection {
         try
         {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            databaseLink = DriverManager.getConnection(url, databaseUser, databasePassword);
+            this.databaseLink = DriverManager.getConnection(url, databaseUser, databasePassword);
 
         }catch(Exception e)
         {
@@ -28,6 +28,6 @@ public class MySQLDatabaseConnection implements DatabaseConnection {
             e.getCause();
         }
 
-        return databaseLink;
+        return this.databaseLink;
     }
 }

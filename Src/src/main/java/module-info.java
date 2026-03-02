@@ -11,6 +11,7 @@ module com.app.src {
     requires mysql.connector.j;
 
     requires org.pf4j;
+    requires java.management;
     opens com.app.src to javafx.fxml;
     exports com.app.src;
     exports com.app.src.utils;
