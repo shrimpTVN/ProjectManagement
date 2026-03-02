@@ -1,34 +1,19 @@
 package com.app.src.services;
 
+import com.app.src.daos.AccountDAO;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class LoginService {
-    private static Connection connectDB;
-    
-    public LoginService(Connection connectDB){
-        LoginService.connectDB = connectDB;
+    private final AccountDAO accountDAO;
+    public LoginService(){
+        accountDAO = new AccountDAO();
     }
-    
-    public ResultSet validateLogin(String userName, String password){
 
-        String verifyLogin = "select count(1) from account where username = '" + userName
-                + "' and password='" + password + "'";
-
-        System.out.println(verifyLogin);
-
-        ResultSet resultQuery = null;
-        try{
-            Statement statement = connectDB.createStatement();
-            resultQuery =  statement.executeQuery(verifyLogin);
-
-        }catch(Exception e)
-        {
-            e.printStackTrace();
-            e.getCause();
-        }
-        
-        return resultQuery;
+    public String validateLogin(String userName, String password) throws SQLException {
+        return accountDAO.validateLogin(userName, password);
     }
 }
