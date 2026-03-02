@@ -1,7 +1,7 @@
 package com.app.src.models;
 
 import java.util.Date;
-
+//chua dinh nghia lai
 public class Comment {
     private String id;
     private String taskId;

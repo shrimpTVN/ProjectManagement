@@ -1,5 +1,6 @@
 package com.app.src.models;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Project {
@@ -8,6 +9,8 @@ public class Project {
     private String projectDescription;
     private Date projectStartDate;
     private Date projectEndDate;
+    private ArrayList<Task> tasks;
+    private ArrayList<ProjectJoining> joinings;
 
     public Project() { }
 
@@ -17,6 +20,22 @@ public class Project {
         this.projectDescription = projectDescription;
         this.projectStartDate = projectStartDate;
         this.projectEndDate = projectEndDate;
+    }
+
+    public ArrayList<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(ArrayList<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public ArrayList<ProjectJoining> getJoinings() {
+        return joinings;
+    }
+
+    public void setJoinings(ArrayList<ProjectJoining> joinings) {
+        this.joinings = joinings;
     }
 
     public String getProjectId() {
