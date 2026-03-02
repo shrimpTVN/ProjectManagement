@@ -1,44 +1,17 @@
 package com.app.src.models;
 
+import javax.management.relation.Role;
 import java.util.Date;
-
+//Project joining se luu lai user tham gia du an thoi gian nao, voi role la gi
 public class ProjectJoining {
-    private String projectId;
-    private String roleId;
-    private String userId;
+
     private Date joinDate;
+    private Role role;
+    private User user;
 
     public ProjectJoining(){}
-    public ProjectJoining(String projectId, String roleId, String userId, Date joinDate) {
-        this.projectId = projectId;
-        this.roleId = roleId;
-        this.userId = userId;
+    public ProjectJoining( Date joinDate) {
         this.joinDate = joinDate;
-
-    }
-
-    public String getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
-
-    public String getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public Date getJoinDate() {
@@ -47,5 +20,21 @@ public class ProjectJoining {
 
     public void setJoinDate(Date joinDate) {
         this.joinDate = joinDate;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

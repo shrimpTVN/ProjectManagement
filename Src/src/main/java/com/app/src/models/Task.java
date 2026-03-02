@@ -1,5 +1,6 @@
 package com.app.src.models;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Task {
@@ -8,19 +9,27 @@ public class Task {
     private String taskDescription;
     private Date taskStartTime;
     private Date taskEndTime;
-    private String projectId;
-    private String userId;
+    private User user;
+//    private ArrayList<StatusUpdating> statusUpdatingList;
+
+
 
     public Task(){}
 
-    public Task(String taskId, String taskName, String taskDescription, Date taskStartTime, Date taskEndTime, String userId) {
+    public Task(String taskId, String taskName, String taskDescription, Date taskStartTime, Date taskEndTime) {
         this.taskId = taskId;
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskStartTime = taskStartTime;
         this.taskEndTime = taskEndTime;
-        this.userId = userId;
-        this.projectId = projectId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getTaskId() {
@@ -63,19 +72,4 @@ public class Task {
         this.taskEndTime = taskEndTime;
     }
 
-    public String getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 }

@@ -1,13 +1,17 @@
 package com.app.src.models;
 
 import java.io.Serializable;
-
+import java.util.ArrayList;
+//User se luu lai thong tin tai khoan, nhung task va project cua user do
 public class User {
     private String userId;
     private String userName;
     private String userDoB;
     private boolean userGender;
     private String userPhoneNumber;
+    private Account account;
+
+
 
     public User(){}
     public User(String userId, String userName, String userDoB, boolean userGender, String userPhoneNumber) {
@@ -15,6 +19,14 @@ public class User {
         this.userName = userName;
         this.userDoB = userDoB;
         this.userGender = userGender;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public String getUserId() {

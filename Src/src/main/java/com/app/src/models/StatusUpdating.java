@@ -5,19 +5,22 @@ import java.util.Date;
 public class StatusUpdating {
     private Date date;
     private String content;
-    private String statusId;
-    private String taskId;
+    private TaskStatus taskStatus;
 
     public StatusUpdating() {}
 
-    public StatusUpdating(final Date date, final String content, final String statusId, final String taskId) {
+    public StatusUpdating(final Date date, final String content) {
         this.date = date;
         this.content = content;
-        this.statusId = statusId;
-        this.taskId = taskId;
-
     }
 
+    public TaskStatus getTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(TaskStatus taskStatus) {
+        this.taskStatus = taskStatus;
+    }
     public Date getDate() {
         return date;
     }
@@ -34,19 +37,4 @@ public class StatusUpdating {
         this.content = content;
     }
 
-    public String getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(String statusId) {
-        this.statusId = statusId;
-    }
-
-    public String getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
-    }
 }
