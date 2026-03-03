@@ -13,7 +13,7 @@ public class LoginApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 //        load the FXML file from the classpath (src/main/resources)
-        URL fxmlUrl = LoginApplication.class.getResource("/login.fxml");
+        URL fxmlUrl = LoginApplication.class.getResource("/scenes/login.fxml");
         if (fxmlUrl == null) {
             throw new IllegalStateException("FXML resource not found ");
         }
