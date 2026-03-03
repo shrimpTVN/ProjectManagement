@@ -1,4 +1,11 @@
-﻿/* --- Nút phẳng dùng chung --- */
+﻿/*Font dùng chung*/
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* Áp dụng cho toàn bộ ứng dụng */
+.root {
+    -fx-font-family: 'Urbanist', sans-serif; /* Lấy tên font từ khung dưới cùng của ảnh */
+}
+/* --- Nút phẳng dùng chung --- */
 .flat-btn {
     -fx-background-color: transparent !important;
     -fx-border-color: transparent;
@@ -8,6 +15,8 @@
     -fx-padding: 5;
     -fx-cursor: hand;
 }
+
+/*địt cụ nó sao không sài css được z ???*/
 .flat-btn:hover {
     -fx-background-color: #e0e0e0;
     -fx-background-radius: 5;
@@ -15,4 +24,19 @@
 
 .flat-btn:pressed {
     -fx-background-color: #d0d0d0;
+}
+
+/*---CSS for TaskTable----*/
+/*Kẻ đường dọc cho các ô bên trong taskTable */
+#taskTable .table-cell {
+    -fx-border-color: black;
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 0 10 0 10;
+}
+
+/*Chỉnh tiêu đề cột của riêng bảng này */
+#taskTable .column-header {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 0 0 0.5 0.5;
 }

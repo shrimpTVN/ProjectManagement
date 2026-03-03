@@ -46,10 +46,9 @@ public class LoginController {
             labelLoginMess.setText("Type your user name and password!");
         } else {
             LoginService loginService = new LoginService();
-            String userId = loginService.validateLogin(userNameInput.getText(), passwordInput.getText() );
+            int userId = loginService.validateLogin(userNameInput.getText(), passwordInput.getText() );
             UserService userService = new UserService();
             User user = userService.getUserById(userId);
-
             System.out.println(user);
         }
     }
