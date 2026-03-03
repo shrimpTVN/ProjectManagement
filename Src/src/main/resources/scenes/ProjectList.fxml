@@ -1,14 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="652.0" prefWidth="958.0" style="-fx-background-color: white;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.ProjectListController">
+    <content>
+        <VBox spacing="20.0" style="-fx-background-color: white;">
+            <padding>
+                <Insets bottom="30.0" left="40.0" right="40.0" top="30.0" />
+            </padding>
 
-</AnchorPane>
+            <HBox alignment="CENTER_LEFT" spacing="5.0">
+                <children>
+                    <Label styleClass="font-14" text="Home /" textFill="#666666" />
+                    <Label styleClass="font-14" text="According to the projects /" textFill="#666666" />
+                </children>
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <children>
+                    <Label maxWidth="1.7976931348623157E308" styleClass="font-36" text="You are a member of projects:" HBox.hgrow="ALWAYS" />
+                    <TextField prefHeight="35.0" prefWidth="250.0" promptText="🔍 Find" styleClass="font-14" />
+                </children>
+            </HBox>
+
+            <Label styleClass="font-20" text="Recent" />
+            <FlowPane fx:id="recentProjectsFlowPane" hgap="20.0" vgap="20.0" />
+
+            <Separator prefWidth="200.0" />
+
+            <Label styleClass="font-20" text="All" />
+            <FlowPane fx:id="allProjectsFlowPane" hgap="20.0" vgap="20.0" />
+
+        </VBox>
+    </content>
+</ScrollPane>
