@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" prefHeight="655.0" prefWidth="322.0" style="-fx-border-color: black; -fx-border-width: 0.5;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" prefHeight="655.0" prefWidth="322.0" style="-fx-border-color: black; -fx-border-width: 0.5;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER">
     <children>
         <HBox fx:id="forMeMenu" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="302.0">
             <children>
@@ -39,41 +39,11 @@
         </HBox>
 
         <VBox fx:id="projectList" managed="true" maxWidth="1.7976931348623157E308" prefHeight="184.0" prefWidth="278.0" visible="true">
-            <children>
-                <HBox alignment="CENTER" prefHeight="30.0" prefWidth="278.0">
-                    <children>
-                        <TextField fx:id="searchProjectField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="254.0" promptText="🔍    Find" styleClass="input-field, font-14" HBox.hgrow="ALWAYS">
-                            <HBox.margin>
-                                <Insets />
-                            </HBox.margin>
-                        </TextField>
-                    </children>
-                    <VBox.margin>
-                        <Insets top="10.0" />
-                    </VBox.margin>
-                </HBox>
-
+            <children>      <!-- managed = false và visible = false sẽ ẩn project list-->
+                <TextField fx:id="searchProjectField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="254.0" promptText="🔍    Find" styleClass="input-field, font-14" />
                 <Label style="-fx-font-weight: bold;" styleClass="font-14" text="Recent">
                     <VBox.margin>
                         <Insets left="45.0" top="10.0" />
-                    </VBox.margin>
-                </Label>
-
-                <Label maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="248.0" styleClass="font-14" text="Project A">
-                    <VBox.margin>
-                        <Insets left="45.0" top="5.0" />
-                    </VBox.margin>
-                </Label>
-
-                <Label maxWidth="1.7976931348623157E308" styleClass="font-14" text="Project B">
-                    <VBox.margin>
-                        <Insets left="45.0" top="15.0" />
-                    </VBox.margin>
-                </Label>
-
-                <Label maxWidth="1.7976931348623157E308" styleClass="font-14" text="Project C">
-                    <VBox.margin>
-                        <Insets left="45.0" top="15.0" />
                     </VBox.margin>
                 </Label>
             </children>
