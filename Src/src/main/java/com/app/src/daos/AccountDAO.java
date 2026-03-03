@@ -63,7 +63,7 @@ public class AccountDAO extends AbstractDAO<Account> {
     }
 
     @Override
-    public boolean update(Account entity) {
+    public boolean update(int id, Account entity) {
         return false;
     }
 

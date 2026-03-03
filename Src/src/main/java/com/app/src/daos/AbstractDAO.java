@@ -2,6 +2,7 @@ package com.app.src.daos;
 
 import com.app.src.core.DatabaseConnection;
 import com.app.src.daos.BaseDAO;
+import com.app.src.models.Account;
 import com.app.src.utils.MySQLDatabaseConnection;
 
 import java.sql.Connection;

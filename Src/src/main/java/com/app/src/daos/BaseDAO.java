@@ -8,7 +8,7 @@ public interface BaseDAO<T> {
     T findById(int id) ;
     List<T> findAll();
     boolean create(T entity);
-    boolean update(T entity);
+    boolean update(int id, T entity);
     boolean delete(int id);
 }
 
