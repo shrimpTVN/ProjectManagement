@@ -1,23 +1,23 @@
 package com.app.src.models;
 
 public class Notification {
-    private String notiId;
+    private int notiId;
     private String notiDescription;
     private boolean notiIsRead;
 
     public Notification(){}
 
-    public Notification(String notiId, String notiDescription, boolean notiIsRead) {
+    public Notification(int notiId, String notiDescription, boolean notiIsRead) {
         this.notiId = notiId;
         this.notiDescription = notiDescription;
         this.notiIsRead = notiIsRead;
     }
 
-    public String getNotiId() {
+    public int getNotiId() {
         return notiId;
     }
 
-    public void setNotiId(String notiId) {
+    public void setNotiId(int notiId) {
         this.notiId = notiId;
     }
 

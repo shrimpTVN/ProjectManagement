@@ -23,5 +23,6 @@ public class LoginApplication extends Application {
         stage.setTitle("Login");
         stage.setScene(scene);
         stage.show();
+
     }
 }
