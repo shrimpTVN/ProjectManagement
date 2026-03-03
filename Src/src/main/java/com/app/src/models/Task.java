@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Task {
-    private int taskId;
+    private String taskId;
     private String taskName;
     private String taskDescription;
     private Date taskStartTime;
@@ -16,7 +16,7 @@ public class Task {
 
     public Task(){}
 
-    public Task(int taskId, String taskName, String taskDescription, Date taskStartTime, Date taskEndTime) {
+    public Task(String taskId, String taskName, String taskDescription, Date taskStartTime, Date taskEndTime) {
         this.taskId = taskId;
         this.taskName = taskName;
         this.taskDescription = taskDescription;
@@ -32,11 +32,11 @@ public class Task {
         this.user = user;
     }
 
-    public int getTaskId() {
+    public String getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(int taskId) {
+    public void setTaskId(String taskId) {
         this.taskId = taskId;
     }
 
