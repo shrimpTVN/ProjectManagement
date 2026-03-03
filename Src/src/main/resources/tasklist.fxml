@@ -20,7 +20,7 @@
          </padding>
          <children>
             <HBox fx:id="breadcrumbBox" alignment="CENTER_LEFT" prefHeight="38.0">
-<!--               breadcrumBox : duong dan va vi tri trang dang o hien tai -->
+<!--               BreadcrumbLink component for navigation -->
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
@@ -29,13 +29,13 @@
                </VBox.margin>
                <children>
                   <Hyperlink fx:id="hlHome" style="-fx-padding: 0; -fx-border-width: 0; -fx-background-insets: 0; -fx-text-fill: black; -fx-visited-text-fill: black;" text="Home">
-<!--                     hlHome : duong dan den trang Home <khi bam vao nhay den Home>-->
+<!--                     hlHome : link to home page-->
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Hyperlink>
                   <Label fx:id="lblSep" text="/">
-<!--                     lblSep : dau '/' trong duong dan-->
+<!--                     lblSep : "/" component-->
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
@@ -44,7 +44,7 @@
                      </font>
                   </Label>
                   <Label fx:id="lblCurrentPage" style="-fx-text-fill: black;" text="All my tasks">
-<!--                     lblCurrentPage : label chua ten trang dang dung -->
+<!--                     lblCurrentPage : name of the current page -->
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -117,7 +117,8 @@
                   <Insets bottom="40.0" />
                </VBox.margin>
             </VBox>
-            <TableView fx:id="taskTable" prefHeight="200.0" prefWidth="843.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #000000; -fx-border-width: 0.5;" stylesheets="" VBox.vgrow="ALWAYS">
+<!--             Table component-->
+            <TableView fx:id="taskTable" prefHeight="200.0" prefWidth="843.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #000000; -fx-border-width: 0.5;" VBox.vgrow="ALWAYS">
               <columns>
                 <TableColumn fx:id="colName" prefWidth="245.5" style="-fx-alignment: CENTER_LEFT; -fx-border-color: black; -fx-border-width: 0 0 0.5 0;" text="Name" />
                 <TableColumn fx:id="colProject" prefWidth="100.5" style="-fx-alignment: CENTER_LEFT;" text="Project" />
