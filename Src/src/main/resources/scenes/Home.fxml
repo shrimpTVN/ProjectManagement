@@ -1,38 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="652.0" prefWidth="958.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER">
+<VBox prefHeight="652.0" prefWidth="958.0" style="-fx-background-color: white;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.HomeController">
+    <padding>
+        <Insets bottom="30.0" left="40.0" right="40.0" top="30.0" />
+    </padding>
     <children>
-        <Label fx:id="homeTitleLabel" text="Home" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="30.0">
-            <font>
-                <Font name="Urbanist Regular" size="18.0" />
-            </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-        </Label>
-
-        <HBox alignment="CENTER" spacing="60.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" spacing="5.0">
             <children>
-                <Button fx:id="allTasksBtn" mnemonicParsing="false" prefHeight="250.0" prefWidth="350.0" style="-fx-background-color: #7d7d7d; -fx-text-fill: white; -fx-alignment: top-left; -fx-padding: 20; -fx-background-radius: 5; -fx-border-color: black; -fx-border-radius: 5; -fx-border-width: 0.5;" text="All my tasks">
-                    <font>
-                        <Font name="Urbanist Regular" size="24.0" />
-                    </font>
+                <Label styleClass="font-14" text="Home" textFill="#666666" />
+            </children>
+        </HBox>
+
+        <HBox alignment="CENTER" spacing="60.0" VBox.vgrow="ALWAYS">
+            <children>
+                <Button fx:id="allTasksBtn" mnemonicParsing="false" prefHeight="250.0" prefWidth="350.0" style="-fx-background-color: #7d7d7d; -fx-text-fill: white; -fx-alignment: top-left; -fx-padding: 20; -fx-background-radius: 5; -fx-border-color: black; -fx-border-radius: 5; -fx-border-width: 0.5;" styleClass="font-20" text="All my tasks">
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Button>
 
-                <Button fx:id="projectsBtn" mnemonicParsing="false" prefHeight="250.0" prefWidth="350.0" style="-fx-background-color: #7d7d7d; -fx-text-fill: white; -fx-alignment: top-left; -fx-padding: 20; -fx-background-radius: 5; -fx-border-color: black; -fx-border-radius: 5; -fx-border-width: 0.5;" text="According to the&#10;projects">
-                    <font>
-                        <Font name="Urbanist Regular" size="24.0" />
-                    </font>
+                <Button fx:id="projectsBtn" mnemonicParsing="false" prefHeight="250.0" prefWidth="350.0" style="-fx-background-color: #7d7d7d; -fx-text-fill: white; -fx-alignment: top-left; -fx-padding: 20; -fx-background-radius: 5; -fx-border-color: black; -fx-border-radius: 5; -fx-border-width: 0.5;" styleClass="font-20" text="According to the&#10;projects">
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
@@ -40,4 +34,4 @@
             </children>
         </HBox>
     </children>
-</AnchorPane>
+</VBox>
