@@ -10,11 +10,20 @@ import java.util.List;
 
 public class AccountDAO extends AbstractDAO<Account> {
     private static Connection connection;
+    private static AccountDAO instance;
+
+    public static AccountDAO getInstance(){
+        if (instance == null){
+            instance = new AccountDAO();
+        }
+        return instance;
+    }
+
     public AccountDAO(){
     }
 
-    public String validateLogin(String  username, String password) throws SQLException {
-        String userId="";
+    public int validateLogin(String  username, String password) throws SQLException {
+        int userId=-1;
         final String sql="select user_id from account where Acc_userName=? and Acc_password=? ";
         try {
             connection=this.getConnection();
@@ -24,7 +33,7 @@ public class AccountDAO extends AbstractDAO<Account> {
             ResultSet rs=ps.executeQuery();
 
             if (rs.next()) {
-                userId=rs.getString("user_id");
+                userId=rs.getInt("user_id");
             }
 
             this.closeResource(ps, connection, rs);

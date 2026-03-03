@@ -3,15 +3,15 @@ package com.app.src.models;
 import java.util.Date;
 
 public class Comment {
-    private String id;
-    private String taskId;
+    private int id;
+    private int taskId;
     private String comment;
     private Date date;
-    private String userId;
-    private String previousCommentId;
+    private int userId;
+    private int previousCommentId;
 
     public Comment(){}
-    public Comment(String id, String taskId, String comment, Date date, String userId, String previousCommentId) {
+    public Comment(int id, int taskId, String comment, Date date, int userId, int previousCommentId) {
         this.id = id;
         this.taskId = taskId;
         this.comment = comment;
@@ -20,19 +20,19 @@ public class Comment {
         this.previousCommentId = previousCommentId;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getTaskId() {
+    public int getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(String taskId) {
+    public void setTaskId(int taskId) {
         this.taskId = taskId;
     }
 
@@ -52,19 +52,19 @@ public class Comment {
         this.date = date;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public String getPreviousCommentId() {
+    public int getPreviousCommentId() {
         return previousCommentId;
     }
 
-    public void setPreviousCommentId(String previousCommentId) {
+    public void setPreviousCommentId(int previousCommentId) {
         this.previousCommentId = previousCommentId;
     }
 }

@@ -11,15 +11,23 @@ import java.util.List;
 public class UserDAO extends AbstractDAO<User>{
 
     private static Connection connection;
+    private static UserDAO instance;
+    public static UserDAO getInstance(){
+        if(instance == null){
+            instance = new UserDAO();
+
+        }
+        return instance;
+    }
 
     @Override
-    public User findById(String id) {
+    public User findById(int id) {
         String sql = "select * from user where User_id = ?";
         User user = new User();
         try{
             connection = getConnection();
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, id);
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
 
