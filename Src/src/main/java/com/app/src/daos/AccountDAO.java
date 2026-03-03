@@ -48,7 +48,7 @@ public class AccountDAO extends AbstractDAO<Account> {
         return userId;
     }
     @Override
-    public Account findById(String id) {
+    public Account findById(int id) {
         return null;
     }
 
@@ -68,7 +68,7 @@ public class AccountDAO extends AbstractDAO<Account> {
     }
 
     @Override
-    public boolean delete(String id) {
+    public boolean delete(int id) {
         return false;
     }
 }
