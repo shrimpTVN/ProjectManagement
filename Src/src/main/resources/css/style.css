@@ -1,10 +1,26 @@
-﻿/*Font dùng chung*/
+﻿/*Font dùng chung
 @import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+Không hổ trợ
+*/
 
 /* Áp dụng cho toàn bộ ứng dụng */
-.root {
+* {
     -fx-font-family: 'Urbanist', sans-serif; /* Lấy tên font từ khung dưới cùng của ảnh */
 }
+
+/* Các class quy định kích cỡ chữ */
+.font-36 {
+    -fx-font-size: 36px;
+}
+
+.font-20 {
+    -fx-font-size: 20px;
+}
+
+.font-14 {
+    -fx-font-size: 14px;
+}
+
 /* --- Nút phẳng dùng chung --- */
 .flat-btn {
     -fx-background-color: transparent !important;
