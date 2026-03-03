@@ -1,23 +1,23 @@
 package com.app.src.models;
 
 public class ProjectRole {
-    private String roleId;
+    private int roleId;
     private String roleName;
     private String roleDescription;
 
     public ProjectRole(){}
 
-    public ProjectRole(String roleId, String roleName, String roleDescription) {
+    public ProjectRole(int roleId, String roleName, String roleDescription) {
         this.roleId = roleId;
         this.roleName = roleName;
         this.roleDescription = roleDescription;
     }
 
-    public String getRoleId() {
+    public int getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(String roleId) {
+    public void setRoleId(int roleId) {
         this.roleId = roleId;
     }
 

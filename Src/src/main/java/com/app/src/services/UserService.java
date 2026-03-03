@@ -12,8 +12,9 @@ public class UserService {
         userDAO = UserDAO.getInstance();
     }
 
-    public User getUserById(String userId) throws SQLException
+    public User getUserById(int userId) throws SQLException
     {
+
         return userDAO.findById(userId);
     }
 }

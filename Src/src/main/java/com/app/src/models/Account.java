@@ -1,24 +1,24 @@
 package com.app.src.models;
 
 public class Account {
-    private String accountId;
+    private int accountId;
     private String userName;
     private String password;
 
     public Account() {  }
 
-    public Account(String accountId, String userName, String password) {
+    public Account(int accountId, String userName, String password) {
         this.accountId = accountId;
 
         this.userName = userName;
         this.password = password;
     }
 
-    public String getAccountId() {
+    public int getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(String accountId) {
+    public void setAccountId(int accountId) {
         this.accountId = accountId;
     }
 

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 //User se luu lai thong tin tai khoan, nhung task va project cua user do
 public class User {
-    private String userId;
+    private int userId;
     private String userName;
     private String userDoB;
     private boolean userGender;
@@ -14,7 +14,7 @@ public class User {
 
 
     public User(){}
-    public User(String userId, String userName, String userDoB, boolean userGender, String userPhoneNumber) {
+    public User(int userId, String userName, String userDoB, boolean userGender, String userPhoneNumber) {
         this.userId = userId;
         this.userName = userName;
         this.userDoB = userDoB;
@@ -29,11 +29,11 @@ public class User {
         this.account = account;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
