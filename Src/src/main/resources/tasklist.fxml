@@ -117,7 +117,7 @@
                   <Insets bottom="40.0" />
                </VBox.margin>
             </VBox>
-            <TableView fx:id="taskTable" prefHeight="200.0" prefWidth="843.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #000000; -fx-border-width: 0.5;" stylesheets="@template_style.css" VBox.vgrow="ALWAYS">
+            <TableView fx:id="taskTable" prefHeight="200.0" prefWidth="843.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #000000; -fx-border-width: 0.5;" stylesheets="" VBox.vgrow="ALWAYS">
               <columns>
                 <TableColumn fx:id="colName" prefWidth="245.5" style="-fx-alignment: CENTER_LEFT; -fx-border-color: black; -fx-border-width: 0 0 0.5 0;" text="Name" />
                 <TableColumn fx:id="colProject" prefWidth="100.5" style="-fx-alignment: CENTER_LEFT;" text="Project" />
