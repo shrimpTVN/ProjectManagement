@@ -6,7 +6,6 @@ Không hổ trợ
 /* Áp dụng cho toàn bộ ứng dụng */
 * {
     -fx-font-family: 'Urbanist', sans-serif; /* Lấy tên font từ khung dưới cùng của ảnh */
-    -fx-background-color: #FFFFFF;
 }
 
 /* Các class quy định kích cỡ chữ */
@@ -56,41 +55,4 @@ Không hổ trợ
     -fx-background-color: white;
     -fx-border-color: black;
     -fx-border-width: 0 0 0.5 0.5;
-}
-
-/*chỉnh css breadcrumblink*/
-.breadcrumb-item {
-    -fx-padding: 0;
-    -fx-border-width: 0;
-    -fx-background-insets: 0;
-    -fx-text-fill: black;
-    -fx-visited-text-fill: black;
-    -fx-font-size: 15px;
-    -fx-padding: 0 10 0 0;
-    -fx-cursor: hand;
-}
-
-/*chỉnh css cho status button*/
-#statusButton {
-    -fx-background-color: #84D18D; /* Màu xanh lá nhạt */
-    -fx-border-color: black;
-    -fx-border-width: 1;
-    -fx-padding: 5 15 5 15;
-    -fx-font-weight: 300;
-    -fx-cursor: hand;
-    -fx-font-size: 15px;
-}
-
-/*css cho tiêu đề của các nội dung thông tin project*/
-#contentTitle{
-    -fx-font-size: 20px;
-    -fx-font-weight: 700;
-
-}
-
-/*css cho tab button*/
-#tabBtn{
-    -fx-background-color: transparent;
-    -fx-padding: 0;
-    -fx-font-size: 16px;
 }
