@@ -12,6 +12,9 @@ public class UserDAO extends AbstractDAO<User>{
 
     private static Connection connection;
     private static UserDAO instance;
+
+    private UserDAO() {}
+
     public static UserDAO getInstance(){
         if(instance == null){
             instance = new UserDAO();
@@ -42,10 +45,10 @@ public class UserDAO extends AbstractDAO<User>{
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException ex) {}
+            try {
+                closeConnection(connection);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
 

@@ -5,18 +5,27 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="120.0" prefWidth="272.8" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: black; -fx-border-radius: 10; -fx-padding: 15;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.Cursor?>
+<VBox prefHeight="120.0" prefWidth="272.8"
+      style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: black; -fx-border-radius: 10; -fx-padding: 15;"
+      fx:controller="com.app.src.controllers.ProjectCardController"
+      stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Label fx:id="projectNameLabel" maxWidth="1.7976931348623157E308" styleClass="font-20" text="NAME Project" />
+        <Label fx:id="projectNameLabel" maxWidth="1.7976931348623157E308" styleClass="font-20" text="NAME Project"/>
         <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
             <children>
-                <Label style="-fx-font-weight: bold;" styleClass="font-14" text="👤" />
+                <Label style="-fx-font-weight: bold;" styleClass="font-14" text="admin: "/>
+
                 <Label fx:id="authorLabel" styleClass="font-14" text="Author">
                     <HBox.margin>
-                        <Insets left="10.0" />
+                        <Insets left="10.0"/>
                     </HBox.margin>
                 </Label>
+
             </children>
         </HBox>
     </children>
+    <cursor>
+        <Cursor fx:constant="HAND"/>
+    </cursor>
 </VBox>
