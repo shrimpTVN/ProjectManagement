@@ -36,12 +36,12 @@
                 <RowConstraints maxHeight="29.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="Password: ">
+                  <Label text="User name ">
                      <font>
                         <Font size="13.0" />
                      </font>
                   </Label>
-                  <Label text="User name: " GridPane.rowIndex="1">
+                  <Label text="Password: " GridPane.rowIndex="1">
                      <font>
                         <Font size="13.0" />
                      </font>
