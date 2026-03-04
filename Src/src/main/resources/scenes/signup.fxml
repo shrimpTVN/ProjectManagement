@@ -14,10 +14,10 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="613.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER_NAME">
+<AnchorPane prefHeight="640.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.SignUpController">
    <children>
       <Circle fill="DODGERBLUE" layoutX="300.0" layoutY="58.0" radius="30.0" stroke="BLACK" strokeType="INSIDE" />
+<!--      chuyen sang login-->
       <Label alignment="CENTER" layoutX="186.0" layoutY="88.0" prefHeight="26.0" prefWidth="227.0" text="You have an accounnt ? Login now">
          <font>
             <Font size="14.0" />
@@ -25,37 +25,38 @@
       </Label>
       <VBox layoutX="140.0" layoutY="127.0" prefHeight="502.0" prefWidth="319.0" spacing="6.0">
          <children>
-            <Label maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="323.0" text="Name">
+            <Label fx:id="userName" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="323.0" text="Name">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
             <TextField maxWidth="1.7976931348623157E308" />
-            <Label maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="142.0" text="Email">
+            <Label fx:id="userEmail" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="142.0" text="Email">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
             <TextField maxWidth="1.7976931348623157E308" />
-            <Label maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="142.0" text="Telephone">
+            <Label fx:id="userPhone" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="142.0" text="Telephone">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
             <TextField maxWidth="1.7976931348623157E308" />
-            <Label maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="142.0" text="Date of birth">
+            <Label fx:id="userDateOfBirth" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="142.0" text="Date of birth">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
             <DatePicker maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="341.0" />
-            <Label maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="77.0" text="Sex">
+            <Label fx:id="userSex" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="77.0" text="Sex">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
             <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="151.0" spacing="20.0">
                <children>
+<!--                  male and female-->
                   <RadioButton mnemonicParsing="false" prefHeight="0.0" prefWidth="88.0" text="Male">
                      <toggleGroup>
                         <ToggleGroup fx:id="gender" />
@@ -64,18 +65,19 @@
                   <RadioButton lineSpacing="20.0" mnemonicParsing="false" text="Female" toggleGroup="$gender" />
                </children>
             </HBox>
-            <Label maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="142.0" text="Password">
+            <Label fx:id="userPassword" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="142.0" text="Password">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
             <PasswordField maxWidth="1.7976931348623157E308" />
-            <Label maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="142.0" text="Password again">
+            <Label fx:id="userPasswordAgain" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="142.0" text="Password again">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
             <TextField maxWidth="1.7976931348623157E308" />
+<!--            button-->
             <Button alignment="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="34.0" prefWidth="319.0" text="SIGNUP" textAlignment="CENTER">
                <VBox.margin>
                   <Insets top="20.0" />

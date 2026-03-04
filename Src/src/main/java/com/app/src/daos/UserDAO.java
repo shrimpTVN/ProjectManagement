@@ -63,12 +63,12 @@ public class UserDAO extends AbstractDAO<User>{
     }
 
     @Override
-    public boolean update(User entity) {
+    public boolean update(int id, User entity) {
         return false;
     }
 
     @Override
-    public boolean delete(String id) {
+    public boolean delete(int id) {
         return false;
     }
 }

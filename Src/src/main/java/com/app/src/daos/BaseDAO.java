@@ -5,10 +5,10 @@ import java.util.List;
 
 // 1. The Generic Interface
 public interface BaseDAO<T> {
-    T findById(String id) ;
+    T findById(int id) ;
     List<T> findAll();
     boolean create(T entity);
-    boolean update(T entity);
-    boolean delete(String id);
+    boolean update(int id, T entity);
+    boolean delete(int id);
 }
 
