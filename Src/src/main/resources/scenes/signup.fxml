@@ -14,8 +14,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="613.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.SignUpController">
+<AnchorPane prefHeight="640.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.SignUpController">
    <children>
       <Circle fill="DODGERBLUE" layoutX="300.0" layoutY="58.0" radius="30.0" stroke="BLACK" strokeType="INSIDE" />
 <!--      chuyen sang login-->
@@ -26,7 +25,7 @@
       </Label>
       <VBox layoutX="140.0" layoutY="127.0" prefHeight="502.0" prefWidth="319.0" spacing="6.0">
          <children>
-            <Label  fx:id="userName" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="323.0" text="Name">
+            <Label fx:id="userName" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="323.0" text="Name">
                <font>
                   <Font size="14.0" />
                </font>

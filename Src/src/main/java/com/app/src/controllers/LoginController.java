@@ -1,5 +1,6 @@
 package com.app.src.controllers;
 
+import com.app.src.core.session.UserSession;
 import com.app.src.models.User;
 import com.app.src.services.LoginService;
 import com.app.src.services.UserService;
@@ -30,26 +31,31 @@ public class LoginController {
     @FXML
     private Label welcomeText;
 
-//    we need to declare a variable has the same name with the fx:id in the FXML file, and annotate it with @FXML
+    //    we need to declare a variable has the same name with the fx:id in the FXML file, and annotate it with @FXML
 //    we need add @FXML annotation to the event handler method, so that the FXML loader can access it, and add onMouseClicked="#btnLoginHandle" in the button element
     @FXML
-    public void handleCancelBtnClick(ActionEvent event)
-    {
+    public void handleCancelBtnClick(ActionEvent event) {
         Stage stage = (Stage) cancelBtn.getScene().getWindow();
         stage.close();
     }
 
     @FXML
     public void handleLoginBtnClick(ActionEvent event) throws SQLException {
-        if (!userNameInput.getText().isBlank() && passwordInput.getText().isBlank())
-        {
+        if (!userNameInput.getText().isBlank() && passwordInput.getText().isBlank()) {
             labelLoginMess.setText("Type your user name and password!");
         } else {
             LoginService loginService = new LoginService();
-            int userId = loginService.validateLogin(userNameInput.getText(), passwordInput.getText() );
-            UserService userService = new UserService();
-            User user = userService.getUserById(userId);
-            System.out.println(user);
+            int userId = loginService.validateLogin(userNameInput.getText(), passwordInput.getText());
+
+            if (userId != -1) {
+                UserService userService = new UserService();
+
+                UserSession.getInstance().setUser(userService.getUserById(userId));
+
+                SceneManager.getInstance().switchScene("/scenes/dashboard.fxml");
+            } else {
+                labelLoginMess.setText("Invalid username or password!");
+            }
         }
     }
 }

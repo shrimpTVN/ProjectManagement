@@ -13,7 +13,9 @@ public class User {
 
 
 
-    public User(){}
+    public User(){
+        this.userId = -1;
+    }
     public User(int userId, String userName, String userDoB, boolean userGender, String userPhoneNumber) {
         this.userId = userId;
         this.userName = userName;
