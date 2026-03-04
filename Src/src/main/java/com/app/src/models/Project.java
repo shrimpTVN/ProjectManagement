@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Project {
-    private String projectId;
+    private int projectId;
     private String projectName;
     private String projectDescription;
     private Date projectStartDate;
@@ -14,7 +14,7 @@ public class Project {
 
     public Project() { }
 
-    public Project(String projectId, String projectName, String projectDescription, Date projectStartDate, Date projectEndDate) {
+    public Project(int projectId, String projectName, String projectDescription, Date projectStartDate, Date projectEndDate) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.projectDescription = projectDescription;
@@ -38,11 +38,11 @@ public class Project {
         this.joinings = joinings;
     }
 
-    public String getProjectId() {
+    public int getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(String projectId) {
+    public void setProjectId(int projectId) {
         this.projectId = projectId;
     }
 
