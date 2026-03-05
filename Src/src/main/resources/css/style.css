@@ -1,13 +1,11 @@
-﻿/*Font dùng chung
-@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
-Không hổ trợ
-*/
-
+﻿/*Font.loadFont(*/
+/*getClass().getResource("").toExternalForm(),*/
+/*14*/
+/*);*/
+/*.root {*/
+/*    -fx-font-family: "Urbanist";*/
+/*}*/
 /* Áp dụng cho toàn bộ ứng dụng */
-* {
-    -fx-font-family: 'Urbanist', sans-serif; /* Lấy tên font từ khung dưới cùng của ảnh */
-    -fx-background-color: #FFFFFF;
-}
 
 /* Các class quy định kích cỡ chữ */
 .font-36 {
