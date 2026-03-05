@@ -19,14 +19,24 @@ public abstract class AbstractDAO<T> implements BaseDAO<T> {
         return connection;
     }
 
-    public void closeResource(Statement statement, Connection connection, ResultSet resultSet) throws SQLException {
+    public void closeResource(Statement statement, Connection connection) throws SQLException {
         statement.close();
-        if(resultSet!=null){
-            resultSet.close();
-        }
         connection.commit();
         connection.rollback();
     }
+    public void closeResource(Statement statement, Connection connection, ResultSet resultSet) throws SQLException {
 
+        if(resultSet!=null){
+            resultSet.close();
+        }
+        closeResource(statement, connection);
+    }
+
+    public void closeConnection(Connection connection) throws SQLException {
+       if (connection != null) {
+           connection.close();
+       }
+
+    }
     // Shared helper methods for executing queries can go here...
 }

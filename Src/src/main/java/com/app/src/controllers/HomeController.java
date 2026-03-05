@@ -16,7 +16,7 @@ public class HomeController {
 
     public void handleProjectBtnClick(javafx.event.ActionEvent actionEvent) {
 
-
+    ViewNavigator.getInstance().loadSubScene("/scenes/ProjectList.fxml");
     }
 
     public void handleAllTaskBtnClick(javafx.event.ActionEvent actionEvent) {
