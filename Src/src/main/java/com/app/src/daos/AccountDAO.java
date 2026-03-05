@@ -19,7 +19,7 @@ public class AccountDAO extends AbstractDAO<Account> {
         return instance;
     }
 
-    public AccountDAO(){
+    private AccountDAO(){
     }
 
     public int validateLogin(String  username, String password) throws SQLException {
@@ -40,9 +40,7 @@ public class AccountDAO extends AbstractDAO<Account> {
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
-           if (connection != null) {
-               connection.close();
-           }
+          closeConnection(connection);
         }
 
         return userId;
