@@ -23,4 +23,6 @@ module com.app.src {
     opens com.app.src.core to javafx.fxml;
     exports com.app.src.api;
     opens com.app.src.api to javafx.fxml;
+    exports com.app.src.controllers.project;
+    opens com.app.src.controllers.project to javafx.fxml;
 }
