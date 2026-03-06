@@ -10,6 +10,7 @@
 /* Các class quy định kích cỡ chữ */
 .font-36 {
     -fx-font-size: 36px;
+    -fx-font-weight: bold;
 }
 
 .font-20 {
@@ -26,7 +27,6 @@
     -fx-border-color: transparent;
     -fx-text-fill: #333333;
     -fx-font-size: 20px;
-    -fx-font-weight: bold;
     -fx-padding: 5;
     -fx-cursor: hand;
 }
