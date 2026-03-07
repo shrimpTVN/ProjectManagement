@@ -146,7 +146,7 @@ public class ProjectDAO extends AbstractDAO {
     // Thêm dự án và trả về ID vừa được tạo
     public int createAndReturnId(Project project) {
         final String sql = "INSERT INTO project (Pro_name, Pro_startDate, Pro_endDate, Pro_description) VALUES (?, ?, ?, ?)";
-        int generatedId = -1; // Trả về -1 nếu có lỗi
+        int generatedId = -1; // generatedId sẽ lưu ID của dự án vừa được tạo. Ban đầu đặt là -1 để biểu thị chưa có ID nào được tạo thành công
 
         try {
             connection = getConnection();

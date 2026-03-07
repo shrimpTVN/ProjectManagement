@@ -21,7 +21,7 @@ public class ProjectService {
         int newProjectId = projectDAO.createAndReturnId(project);
 
         if (newProjectId > 0) {
-            int managerRoleId = 1;
+            int managerRoleId = 1;  // theo database đang dùng thì role manager có id là 1
             return ProjectJoiningDAO.getInstance().assignRoleManager(newProjectId, managerId, managerRoleId);
         }
 

@@ -42,7 +42,7 @@ public class CreateProjectController implements Initializable {
         cbManager.setConverter(new StringConverter<User>() {
             @Override
             public String toString(User user) {
-                return user == null ? "" : user.getUserName(); // Gọi hàm get tên từ model User của bạn
+                return user == null ? "" : user.getUserName();
             }
 
             @Override
@@ -133,7 +133,7 @@ public class CreateProjectController implements Initializable {
     }
 
     private void handleCancel() {
-        System.out.println("Hủy tạo dự án. Quay về màn hình trước.");
+        System.out.println("Hủy tạo dự án. Quay về màn hình Home.");
         ViewNavigator.getInstance().loadSubScene("/scenes/Home.fxml");
     }
 
