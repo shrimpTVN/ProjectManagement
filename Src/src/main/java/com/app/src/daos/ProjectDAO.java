@@ -166,10 +166,20 @@ public class ProjectDAO extends AbstractDAO {
                 if (rs.next()) {
                     generatedId = rs.getInt(1);
                 }
+                rs.close();
+                connection.commit();
             }
+            ps.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
+            try {
+                if (connection != null) {       // Nếu có lỗi, rollback để đảm bảo dữ liệu không bị lỗi
+                    connection.rollback();      // rollback sẽ hoàn tác tất cả các thay đổi đã thực hiện trong transaction hiện tại, đưa database trở về trạng thái trước khi bắt đầu transaction. Điều này rất quan trọng để đảm bảo tính toàn vẹn của dữ liệu khi có lỗi xảy ra.
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         } finally {
             if (connection != null) {
                 try {

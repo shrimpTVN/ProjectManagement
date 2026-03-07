@@ -1,5 +1,6 @@
 package com.app.src.controllers;
 
+import com.app.src.core.AppContext;
 import com.app.src.daos.UserDAO;
 import com.app.src.models.Project;
 import com.app.src.models.User;
@@ -112,13 +113,21 @@ public class CreateProjectController implements Initializable {
             newProject.setProjectDescription(description);
 
             // Gọi Service lưu dữ liệu
-            boolean success = projectService.createProjectWithManager(newProject, managerId);
+            try {
+                boolean success = projectService.createProjectWithManager(newProject, managerId);
 
-            if (success) {
-                System.out.println("Tạo dự án và gán Manager thành công!");
-                // TODO: Chuyển về màn hình danh sách dự án
-            } else {
-                System.out.println("Có lỗi xảy ra khi tạo dự án.");
+                if (success) {
+                    System.out.println("Tạo dự án và gán Manager thành công!");
+                    // Cập nhật danh sách projects trong AppContext
+                    AppContext.refreshProjects();
+                    // Chuyển về màn hình danh sách dự án
+                    ViewNavigator.getInstance().loadSubScene("/scenes/Home.fxml");
+                } else {
+                    System.out.println("Có lỗi xảy ra khi tạo dự án. Service trả về false");
+                }
+            } catch (Exception e) {
+                System.out.println("Có lỗi xảy ra khi tạo dự án: " + e.getMessage());
+                e.printStackTrace();
             }
         }
     }

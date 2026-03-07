@@ -22,7 +22,7 @@ public class ProjectService {
 
         if (newProjectId > 0) {
             int managerRoleId = 1;
-            return ProjectJoiningDAO.getInstance().assignRole(newProjectId, managerId, managerRoleId);
+            return ProjectJoiningDAO.getInstance().assignRoleManager(newProjectId, managerId, managerRoleId);
         }
 
         return false;

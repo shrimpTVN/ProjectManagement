@@ -23,7 +23,7 @@ public class ProjectJoiningDAO extends AbstractDAO {
     public String getAdmin(int projectId) {
         String adminName ="";
         final String sql ="select  user.user_name from project_joining PJ join user on PJ.user_id = user.user_id " +
-                "where PJ.Role_id=2 and PJ.pro_id = ?";
+                "where PJ.Role_id=1 and PJ.pro_id = ?";
         try{
             connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -48,7 +48,7 @@ public class ProjectJoiningDAO extends AbstractDAO {
         return  adminName;
     }
 
-    public boolean assignRole(int projectId, int userId, int roleId) {
+    public boolean assignRoleManager(int projectId, int userId, int roleId) {
         final String sql = "INSERT INTO PROJECT_JOINING (Pro_id, User_id, Role_id, PJo_dateJoin) VALUES (?, ?, ?, ?)";
         try {
             connection = getConnection();
@@ -60,9 +60,21 @@ public class ProjectJoiningDAO extends AbstractDAO {
             ps.setTimestamp(4, new java.sql.Timestamp(System.currentTimeMillis())); // này là để lấy thời gian hiện tại
 
             int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {         // Nếu có ít nhất một hàng bị ảnh hưởng, commit transaction
+                connection.commit();
+            }
+            ps.close();
             return rowsAffected > 0;
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            return false;
         } finally {
             try {
                 if (connection != null) {
@@ -72,7 +84,6 @@ public class ProjectJoiningDAO extends AbstractDAO {
                 e.printStackTrace();
             }
         }
-        return false;
     }
 
     @Override
