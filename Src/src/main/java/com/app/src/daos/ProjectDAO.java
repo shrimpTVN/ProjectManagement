@@ -104,7 +104,92 @@ public class ProjectDAO extends AbstractDAO {
 
     @Override
     public boolean create(Object entity) {
+        if (!(entity instanceof Project)) {
+            return false;       // Nếu đối tượng truyền vào không phải là Project, trả về false để báo lỗi
+        }
+
+        Project project = (Project) entity;     // Ép kiểu entity thành Project để lấy dữ liệu
+
+        // Câu lệnh SQL để chèn dữ liệu vào bảng project. Sử dụng dấu ? để đại diện cho các giá trị sẽ được set sau
+        final String sql = "INSERT INTO PROJECT (Pro_name, Pro_startDate, Pro_endDate, Pro_description) VALUES (?, ?, ?, ?)";
+
+        try {
+            connection = getConnection();   // Lấy kết nối đến database
+
+            // Tạo PreparedStatement để thực thi câu lệnh SQL. PreparedStatement là một interface trong JDBC cho phép thực thi các câu lệnh SQL với tham số. Nó giúp ngăn chặn SQL injection và tối ưu hiệu suất khi thực thi nhiều lần cùng một câu lệnh.
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            // Set các giá trị cho câu lệnh SQL. Các giá trị này sẽ thay thế cho dấu ? trong câu lệnh SQL. Số thứ tự của tham số bắt đầu từ 1.
+            ps.setString(1, project.getProjectName());
+            ps.setDate(2, new java.sql.Date(project.getProjectStartDate().getTime()));  // Chuyển đổi java.util.Date sang java.sql.Date để phù hợp với kiểu dữ liệu trong database
+            ps.setDate(3, new java.sql.Date(project.getProjectEndDate().getTime()));
+            ps.setString(4, project.getProjectDescription());
+
+            // Thực thi câu lệnh SQL. executeUpdate() trả về số lượng hàng bị ảnh hưởng bởi câu lệnh SQL. Nếu số lượng hàng > 0, nghĩa là chèn dữ liệu thành công.
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         return false;
+    }
+
+    // Thêm dự án và trả về ID vừa được tạo
+    public int createAndReturnId(Project project) {
+        final String sql = "INSERT INTO project (Pro_name, Pro_startDate, Pro_endDate, Pro_description) VALUES (?, ?, ?, ?)";
+        int generatedId = -1; // generatedId sẽ lưu ID của dự án vừa được tạo. Ban đầu đặt là -1 để biểu thị chưa có ID nào được tạo thành công
+
+        try {
+            connection = getConnection();
+            // Thêm tham số RETURN_GENERATED_KEYS vào prepareStatement
+            PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+
+            ps.setString(1, project.getProjectName());
+            ps.setDate(2, new java.sql.Date(project.getProjectStartDate().getTime()));
+            ps.setDate(3, new java.sql.Date(project.getProjectEndDate().getTime()));
+            ps.setString(4, project.getProjectDescription());
+
+            int rowsAffected = ps.executeUpdate();
+
+            // Nếu chèn thành công, lấy ID ra
+            if (rowsAffected > 0) {
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);
+                }
+                rs.close();
+                connection.commit();
+            }
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                if (connection != null) {       // Nếu có lỗi, rollback để đảm bảo dữ liệu không bị lỗi
+                    connection.rollback();      // rollback sẽ hoàn tác tất cả các thay đổi đã thực hiện trong transaction hiện tại, đưa database trở về trạng thái trước khi bắt đầu transaction. Điều này rất quan trọng để đảm bảo tính toàn vẹn của dữ liệu khi có lỗi xảy ra.
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return generatedId;
     }
 
     @Override
