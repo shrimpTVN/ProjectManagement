@@ -48,6 +48,33 @@ public class ProjectJoiningDAO extends AbstractDAO {
         return  adminName;
     }
 
+    public boolean assignRole(int projectId, int userId, int roleId) {
+        final String sql = "INSERT INTO PROJECT_JOINING (Pro_id, User_id, Role_id, PJo_dateJoin) VALUES (?, ?, ?, ?)";
+        try {
+            connection = getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            ps.setInt(1, projectId);
+            ps.setInt(2, userId);
+            ps.setInt(3, roleId);
+            ps.setTimestamp(4, new java.sql.Timestamp(System.currentTimeMillis())); // này là để lấy thời gian hiện tại
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    closeConnection(connection);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     @Override
     public Object findById(int id) {
         return null;
