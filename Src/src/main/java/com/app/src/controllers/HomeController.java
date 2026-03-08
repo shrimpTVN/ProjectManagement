@@ -20,6 +20,6 @@ public class HomeController {
     }
 
     public void handleAllTaskBtnClick(javafx.event.ActionEvent actionEvent) {
-
+        ViewNavigator.getInstance().loadSubScene("/scenes/tasklist.fxml");
     }
 }

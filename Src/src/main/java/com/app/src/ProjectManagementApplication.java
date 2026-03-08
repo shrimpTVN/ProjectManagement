@@ -15,8 +15,8 @@ public class ProjectManagementApplication extends Application {
 
         SceneManager sceneManager = SceneManager.getInstance();
         sceneManager.initStage(stage);
-        sceneManager.switchScene("/scenes/login.fxml");
-//        sceneManager.switchScene("/scenes/dashboard.fxml");
+//        sceneManager.switchScene("/scenes/login.fxml");
+        sceneManager.switchScene("/scenes/dashboard.fxml");
 
 //        load the FXML file from the classpath (src/main/resources)
 //        URL fxmlUrl = LoginApplication.class.getResource("/scenes/login.fxml");
