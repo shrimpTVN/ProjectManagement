@@ -7,8 +7,8 @@ public class Task {
     private int taskId;
     private String taskName;
     private String taskDescription;
-    private Date taskStartTime;
-    private Date taskEndTime;
+    private String taskStartTime;
+    private String taskEndTime;
     private User user;
 //    private ArrayList<StatusUpdating> statusUpdatingList;
 
@@ -16,13 +16,14 @@ public class Task {
 
     public Task(){}
 
-    public Task(int taskId, String taskName, String taskDescription, Date taskStartTime, Date taskEndTime) {
+    public Task(int taskId, String taskName, String taskDescription, String taskStartTime, String taskEndTime) {
         this.taskId = taskId;
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskStartTime = taskStartTime;
         this.taskEndTime = taskEndTime;
     }
+
 
     public User getUser() {
         return user;
@@ -56,20 +57,26 @@ public class Task {
         this.taskDescription = taskDescription;
     }
 
-    public Date getTaskStartTime() {
+    public String getTaskStartTime() {
         return taskStartTime;
     }
 
-    public void setTaskStartTime(Date taskStartTime) {
+    public void setTaskStartTime(String taskStartTime) {
         this.taskStartTime = taskStartTime;
     }
 
-    public Date getTaskEndTime() {
+    public String getTaskEndTime() {
         return taskEndTime;
     }
 
-    public void setTaskEndTime(Date taskEndTime) {
+    public void setTaskEndTime(String taskEndTime) {
         this.taskEndTime = taskEndTime;
     }
 
+    public String getProjectName(){
+        return "ProjectName";
+    }
+    public String getTaskStatus () {
+        return "TaskStatus";
+    }
 }

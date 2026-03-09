@@ -79,7 +79,7 @@
                   <Image url="@../image/Frame%20115_kobo.png" />
                </image></ImageView>
 
-            </children>
-        </AnchorPane>
-    </center>
+         </children>
+      </AnchorPane>
+   </center>
 </BorderPane>
