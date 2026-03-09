@@ -11,4 +11,3 @@ public interface BaseDAO<T> {
     boolean update(int id, T entity);
     boolean delete(int id);
 }
-
