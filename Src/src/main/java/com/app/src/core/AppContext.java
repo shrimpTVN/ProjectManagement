@@ -37,4 +37,9 @@ public class AppContext {
     public static ArrayList<Project> getProjects(){
         return projects;
     }
+
+    public static void refreshProjects() {      // cập nhật lại danh sách dự án sau khi có sự thay đổi (thêm, sửa, xóa dự án)
+        UserSession userSession = UserSession.getInstance();
+        projects = ProjectService.getAllProjects(userSession.getUser().getUserId());
+    }
 }

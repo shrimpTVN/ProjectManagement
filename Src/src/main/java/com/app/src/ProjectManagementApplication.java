@@ -21,6 +21,7 @@ public class ProjectManagementApplication extends Application {
 
         SceneManager sceneManager = SceneManager.getInstance();
         sceneManager.initStage(stage);
+<<<<<<< HEAD
         sceneManager.switchScene("/scenes/login.fxml");
 //        sceneManager.switchScene("/scenes/dashboard.fxml");
 
@@ -37,6 +38,10 @@ public class ProjectManagementApplication extends Application {
 //        stage.setTitle("Login");
 //        stage.setScene(scene);
 //        stage.show();
+=======
+//        sceneManager.switchScene("/scenes/login.fxml");
+        sceneManager.switchScene("/scenes/dashboard.fxml");
+>>>>>>> f2eb259a94befe8f8e920e9ceee8a31161643259
 
     }
 }

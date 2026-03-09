@@ -1,8 +1,7 @@
-package com.app.src.controllers;
+package com.app.src.controllers.project;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import com.app.src.models.Project;
 
 public class ProjectCardController {
     @FXML private Label projectNameLabel;
