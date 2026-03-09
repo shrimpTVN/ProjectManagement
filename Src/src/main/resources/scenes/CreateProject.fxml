@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox spacing="50" style="-fx-background-color: white; -fx-padding: 40;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.CreateProjectController">
+
+    <VBox spacing="10" HBox.hgrow="ALWAYS" maxWidth="500">
+
+        <VBox spacing="5" VBox.vgrow="NEVER">
+            <Label text="Name Project" styleClass="font-14" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="txtProjectName" style="-fx-pref-height: 35;"/>
+            <Label fx:id="lblErrorName" text="" style="-fx-text-fill: red; -fx-font-size: 12px;"/>
+        </VBox>
+
+        <VBox spacing="5" VBox.vgrow="NEVER">
+            <Label text="Start Date" styleClass="font-14" style="-fx-font-weight: bold;"/>
+            <DatePicker fx:id="dpStartDate" style="-fx-pref-height: 35; -fx-pref-width: 500;"/>
+            <Label fx:id="lblErrorStartDate" text="" style="-fx-text-fill: red; -fx-font-size: 12px;"/>
+        </VBox>
+
+        <VBox spacing="5" VBox.vgrow="NEVER">
+            <Label text="End Date" styleClass="font-14" style="-fx-font-weight: bold;"/>
+            <DatePicker fx:id="dpEndDate" style="-fx-pref-height: 35; -fx-pref-width: 500;"/>
+            <Label fx:id="lblErrorEndDate" text="" style="-fx-text-fill: red; -fx-font-size: 12px;"/>
+        </VBox>
+
+        <VBox spacing="5" VBox.vgrow="NEVER">
+            <Label text="Description" styleClass="font-14" style="-fx-font-weight: bold;"/>
+            <TextArea fx:id="txtDescription" prefRowCount="4" wrapText="true"/>
+        </VBox>
+
+        <VBox spacing="5" VBox.vgrow="NEVER">
+            <Label text="Assign Manager" styleClass="font-14" style="-fx-font-weight: bold;"/>
+            <ComboBox fx:id="cbManager" promptText="Select Manager..." style="-fx-pref-height: 35; -fx-pref-width: 500;"/>
+        </VBox>
+
+        <HBox spacing="15" style="-fx-padding: 10 0 0 0;">
+            <Button fx:id="btnCancel" text="× CANCEL" style="-fx-background-color: #666666; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-height: 35; -fx-pref-width: 100; -fx-cursor: hand;"/>
+            <Button fx:id="btnCreate" text="+ Create" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-text-fill: black; -fx-font-weight: bold; -fx-pref-height: 35; -fx-pref-width: 100; -fx-cursor: hand;"/>
+        </HBox>
+
+    </VBox>
+
+    <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
+        <StackPane prefHeight="300" prefWidth="400" style="-fx-border-color: #cccccc; -fx-border-width: 2; -fx-background-color: #f9f9f9;">
+            <ImageView fx:id="imgProject" fitHeight="280" fitWidth="380" preserveRatio="true">
+                <image>
+                    <Image url="@../image/Frame 115.png" />
+                </image>
+            </ImageView>
+        </StackPane>
+    </VBox>
+
+</HBox>

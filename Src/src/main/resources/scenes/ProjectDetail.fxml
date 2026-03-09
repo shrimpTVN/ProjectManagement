@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<VBox style="-fx-background-color: white;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.ProjectDetailController">
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.ProjectDetailController">
-   <children>
-      <Label alignment="CENTER" fx:id="label" layoutX="220.0" layoutY="182.0" prefHeight="37.0" prefWidth="161.0" text="Label">
+    <VBox spacing="5" style="-fx-padding: 20 20 0 20;" styleClass="font-36">
+        <Label styleClass="font-14" text="Chi tiết Project" />
+
+        <Label fx:id="lblProjectName" style="-fx-font-weight: bold;" text="Project A">
          <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-   </children>
-</AnchorPane>
+            <Font size="36.0" />
+         </font></Label>
+
+        <HBox fx:id="projectDetailNavBar"  spacing="30">
+            <Button onMouseClicked="#handleNavbarClick" fx:id="tabSummary"  prefHeight="43.0" prefWidth="102.0" styleClass="flat-btn" text="Summary" />
+            <Button onMouseClicked="#handleNavbarClick" fx:id="tabList" prefHeight="43.0" prefWidth="53.0" styleClass="flat-btn" text="List" />
+            <Button onMouseClicked="#handleNavbarClick" fx:id="tabBoard" prefHeight="43.0" prefWidth="72.0" styleClass="flat-btn" text="Board" />
+            <Button onMouseClicked="#handleNavbarClick" fx:id="tabMember" prefHeight="43.0" prefWidth="97.0" styleClass="flat-btn" text="Member" />
+            <Button onMouseClicked="#handleNavbarClick" fx:id="tabInfor" prefHeight="43.0" prefWidth="62.0" styleClass="flat-btn" text="Info" />
+        </HBox>
+      <Separator prefWidth="200.0" style="-fx-background-color: black;" />
+    </VBox>
+
+    <StackPane fx:id="tabContentArea" style="-fx-padding: 20;" VBox.vgrow="ALWAYS" />
+
+</VBox>

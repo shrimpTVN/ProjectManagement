@@ -20,9 +20,12 @@ public abstract class AbstractDAO<T> implements BaseDAO<T> {
     }
 
     public void closeResource(Statement statement, Connection connection) throws SQLException {
-        statement.close();
-        connection.commit();
-        connection.rollback();
+        if (statement != null) {    // Đảm bảo statement không null trước khi đóng
+            statement.close();
+        }
+        if (connection != null) {   // Đảm bảo connection không null trước khi đóng
+            connection.commit();
+        }
     }
     public void closeResource(Statement statement, Connection connection, ResultSet resultSet) throws SQLException {
 

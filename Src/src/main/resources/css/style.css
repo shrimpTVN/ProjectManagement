@@ -1,17 +1,15 @@
-﻿/*Font dùng chung
-@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
-Không hổ trợ
-*/
-
-/* Áp dụng cho toàn bộ ứng dụng */
+﻿/*Font.loadFont(*/
+/*getClass().getResource("").toExternalForm(),*/
+/*14*/
 * {
-    -fx-font-family: 'Urbanist', sans-serif; /* Lấy tên font từ khung dưới cùng của ảnh */
-    -fx-background-color: #FFFFFF;
+    -fx-font-family: "Urbanist";
 }
+/* Áp dụng cho toàn bộ ứng dụng */
 
 /* Các class quy định kích cỡ chữ */
 .font-36 {
     -fx-font-size: 36px;
+    -fx-font-weight: bold;
 }
 
 .font-20 {
@@ -28,7 +26,6 @@ Không hổ trợ
     -fx-border-color: transparent;
     -fx-text-fill: #333333;
     -fx-font-size: 20px;
-    -fx-font-weight: bold;
     -fx-padding: 5;
     -fx-cursor: hand;
 }
@@ -93,4 +90,25 @@ Không hổ trợ
     -fx-background-color: transparent;
     -fx-padding: 0;
     -fx-font-size: 16px;
+}
+
+/* --- CSS cho ProjectDetailInfo --- */
+.info-container {
+    -fx-background-color: white;
+    -fx-padding: 30;
+}
+
+.info-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666666;
+}
+
+.info-value {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.info-desc {
+    -fx-font-size: 14px;
+    -fx-line-spacing: 5px;
 }

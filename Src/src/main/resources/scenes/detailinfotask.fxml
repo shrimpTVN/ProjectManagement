@@ -168,17 +168,12 @@
                               <Insets left="20.0" right="149.0" />
                            </VBox.margin>
                            <children>
-                              <Button id="tabBtn" fx:id="btnAll" mnemonicParsing="false" style="-fx-font-weight: 700;" text="All">
+                              <Button id="tabBtn" fx:id="btnCmt" mnemonicParsing="false" style="-fx-font-weight: 700;" text="Cmt">
                                  <HBox.margin>
-                                    <Insets left="10.0" right="20.0" />
+                                    <Insets left="20.0" right="20.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button id="tabBtn" fx:id="btnCmt" mnemonicParsing="false" text="Cmt">
-                                 <HBox.margin>
-                                    <Insets right="20.0" />
-                                 </HBox.margin>
-                              </Button>
-                              <Button id="tabBtn" fx:id="btnHistory" mnemonicParsing="false" text="History">
+                              <Button id="tabBtn" fx:id="btnHistory" mnemonicParsing="false" text="Status">
                                  <HBox.margin>
                                     <Insets right="20.0" />
                                  </HBox.margin>

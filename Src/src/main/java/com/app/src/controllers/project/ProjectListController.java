@@ -1,21 +1,17 @@
-package com.app.src.controllers;
+package com.app.src.controllers.project;
 
+import com.app.src.controllers.ViewNavigator;
 import com.app.src.core.AppContext;
 import com.app.src.models.Project;
 import com.app.src.services.ProjectJoiningService;
-import com.app.src.services.ProjectService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 public class ProjectListController {
 
