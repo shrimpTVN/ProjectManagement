@@ -1,14 +1,24 @@
 package com.app.src.controllers.project;
 
+import com.app.src.controllers.ViewNavigator;
+import com.app.src.core.AppContext;
 import com.app.src.models.Project;
 import com.app.src.models.ProjectJoining;
 import com.app.src.services.ProjectJoiningService;
+import com.app.src.services.ProjectService;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import java.text.SimpleDateFormat;
 
-public class InforController implements IProjectDetailSubView {
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
+public class InforController implements IProjectDetailSubView, Initializable {
 
     @FXML private Label lblDescription;
     @FXML private Label lblStartDate;
@@ -20,8 +30,42 @@ public class InforController implements IProjectDetailSubView {
     @FXML private Button btnEdit;
     @FXML private Button btnDelete;
 
+    private Project currentProject;
+    private ProjectService projectService = new ProjectService();
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        btnEdit.setOnAction(e -> handleEdit());
+        btnDelete.setOnAction(e -> handleDelete());
+    }
+
+    private void handleEdit() {
+
+    }
+
+    private void handleDelete() {
+        System.out.println("ID chuẩn bị xóa là: " + currentProject.getProjectId());
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Xác nhận xóa");
+        alert.setHeaderText("Bạn có chắc chắn muốn xóa dự án này?");
+        alert.setContentText("Dữ liệu sau khi xóa sẽ KHÔNG thể khôi phục.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            boolean isDeleted = projectService.deleteProject(currentProject.getProjectId());
+
+            if (isDeleted) {
+                AppContext.refreshProjects();
+                ViewNavigator.getInstance().loadSubScene("/scenes/ProjectList.fxml");
+            } else {
+                System.out.println("Lỗi: Xóa dự án thất bại.");
+            }
+        }
+    }
+
     @Override
     public void renderData(Project project, String adminName) {
+        this.currentProject = project;
         if (project == null) return;
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");

@@ -24,32 +24,32 @@ public class ProjectDAO extends AbstractDAO {
         return instance;
     }
 
-    public  ArrayList<Project> findByUserId(int userId) {
+    public ArrayList<Project> findByUserId(int userId) {
         ArrayList<Project> projects = new ArrayList<>();
         final String sql = "select pr.Pro_id, pr.Pro_name, pr.Pro_startDate, pr.Pro_endDate, pr.Pro_description " +
                 "from project_joining PJ join user on PJ.user_id = user.user_id join project pr on PJ.pro_id=pr.pro_id" +
                 " where user.user_id = ?";
 
-        try{
-        connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setInt(1, userId);
-        ResultSet resultSet = statement.executeQuery();
+        try {
+            connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
 
-        while(resultSet.next()){
-            Project project = new Project();
-            project.setProjectId(resultSet.getInt("Pro_id"));
-            project.setProjectName(resultSet.getString("Pro_name"));
-            project.setProjectStartDate(resultSet.getDate("Pro_startDate"));
-            project.setProjectEndDate(resultSet.getDate("Pro_endDate"));
-            project.setProjectDescription(resultSet.getString("Pro_description"));
+            while (resultSet.next()) {
+                Project project = new Project();
+                project.setProjectId(resultSet.getInt("Pro_id"));
+                project.setProjectName(resultSet.getString("Pro_name"));
+                project.setProjectStartDate(resultSet.getDate("Pro_startDate"));
+                project.setProjectEndDate(resultSet.getDate("Pro_endDate"));
+                project.setProjectDescription(resultSet.getString("Pro_description"));
 //            System.out.println(project);
 
-            projects.add(project);
-        }
+                projects.add(project);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally{
+        } finally {
             if (connection != null) {
                 try {
                     connection.close();
@@ -235,5 +235,51 @@ public class ProjectDAO extends AbstractDAO {
     @Override
     public boolean delete(int id) {
         return false;
+    }
+
+    public boolean deleteByProjectId(int projectId) {
+        String sqlDeleteJoining = "DELETE FROM project_joining WHERE Pro_id = ?";
+        String sqlDeleteProject = "DELETE FROM project WHERE Pro_id = ?";
+
+        Connection conn = null;
+        PreparedStatement psJoining = null;
+        PreparedStatement psProject = null;
+
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false); // Bắt đầu Transaction
+
+            // 1. Xóa thành viên dự án
+            psJoining = conn.prepareStatement(sqlDeleteJoining);
+            psJoining.setInt(1, projectId);
+            psJoining.executeUpdate();
+
+            // 2. Xóa dự án
+            psProject = conn.prepareStatement(sqlDeleteProject);
+            psProject.setInt(1, projectId);
+            int rows = psProject.executeUpdate();
+
+            conn.commit(); // Áp dụng thay đổi xuống database
+            return rows > 0;
+
+        } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback(); // Có lỗi thì hủy bỏ toàn bộ thao tác xóa
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (psJoining != null) psJoining.close();
+                // Tận dụng hàm closeResource bạn đã viết sẵn ở Abstract DAO
+                closeResource(psProject, conn, null);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

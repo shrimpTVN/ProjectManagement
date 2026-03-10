@@ -41,4 +41,8 @@ public class ProjectService {
 
         return false;
     }
+
+    public boolean deleteProject(int projectId) {
+        return projectDAO.deleteByProjectId(projectId);
+    }
 }
