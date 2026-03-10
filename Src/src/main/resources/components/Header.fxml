@@ -41,7 +41,7 @@
                   <Image url="@../image/bell.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="User_Account" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleUserAccountClick" >
                <image>
                   <Image url="@../image/profile.png" />
                </image>
