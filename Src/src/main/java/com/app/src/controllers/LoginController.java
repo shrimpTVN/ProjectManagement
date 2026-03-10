@@ -41,20 +41,23 @@ public class LoginController {
 
     @FXML
     public void handleLoginBtnClick(ActionEvent event) throws SQLException {
-        if (!userNameInput.getText().isBlank() && passwordInput.getText().isBlank()) {
+        if (userNameInput.getText().isBlank() || passwordInput.getText().isBlank()) {
             labelLoginMess.setText("Type your user name and password!");
         } else {
-            LoginService loginService = new LoginService();
-            int userId = loginService.validateLogin(userNameInput.getText(), passwordInput.getText());
+            try {
+                LoginService loginService = new LoginService();
+                int userId = loginService.validateLogin(userNameInput.getText(), passwordInput.getText());
 
-            if (userId != -1) {
-                UserService userService = new UserService();
-
-                UserSession.getInstance().setUser(userService.getUserById(userId));
-
-                SceneManager.getInstance().switchScene("/scenes/dashboard.fxml");
-            } else {
-                labelLoginMess.setText("Invalid username or password!");
+                if (userId != -1) {
+                    UserService userService = new UserService();
+                    UserSession.getInstance().setUser(userService.getUserById(userId));
+                    SceneManager.getInstance().switchScene("/scenes/dashboard.fxml");
+                } else {
+                    labelLoginMess.setText("Invalid username or password!");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                labelLoginMess.setText("Error during login: " + e.getMessage());
             }
         }
     }

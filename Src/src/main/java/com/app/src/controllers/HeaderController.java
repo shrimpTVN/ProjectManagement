@@ -29,8 +29,8 @@ public class HeaderController {
         if (SideBarController.getInstance() != null) {
             SideBarController.getInstance().resetActive();
         }
-        // Change profile image to black
-        User_Account.setImage(new Image(getClass().getResource("/image/user-black.png").toExternalForm()));
-        ViewNavigator.getInstance().loadSubScene("/scenes/information.fxml");
+        // Load the information scene and get its controller
+        InformationController infoController = ViewNavigator.getInstance().loadSubScene("/scenes/information.fxml");
+        System.out.println("Information controller loaded: " + (infoController != null));
     }
 }
