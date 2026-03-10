@@ -20,15 +20,23 @@ import java.util.ResourceBundle;
 
 public class InforController implements IProjectDetailSubView, Initializable {
 
-    @FXML private Label lblDescription;
-    @FXML private Label lblStartDate;
-    @FXML private Label lblEndDate;
-    @FXML private Label lblMemberCount;
-    @FXML private Label lblAdminName;
-    @FXML private Label lblManagerName;
+    @FXML
+    private Label lblDescription;
+    @FXML
+    private Label lblStartDate;
+    @FXML
+    private Label lblEndDate;
+    @FXML
+    private Label lblMemberCount;
+    @FXML
+    private Label lblAdminName;
+    @FXML
+    private Label lblManagerName;
 
-    @FXML private Button btnEdit;
-    @FXML private Button btnDelete;
+    @FXML
+    private Button btnEdit;
+    @FXML
+    private Button btnDelete;
 
     private Project currentProject;
     private ProjectService projectService = new ProjectService();
@@ -86,8 +94,8 @@ public class InforController implements IProjectDetailSubView, Initializable {
             for (ProjectJoining joining : project.getJoinings()) {
                 // Kiểm tra Role ID = 1 (Project Manager) hoặc tên role là "Project Manager"
                 if (joining.getRole() != null &&
-                    (joining.getRole().getRoleId() == 1 ||
-                     "Project Manager".equalsIgnoreCase(joining.getRole().getRoleName()))) {
+                        (joining.getRole().getRoleId() == 1 ||
+                                "Project Manager".equalsIgnoreCase(joining.getRole().getRoleName()))) {
                     managerName = joining.getUser().getUserName();
                     break;
                 }

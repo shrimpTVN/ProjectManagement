@@ -16,24 +16,36 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
+
 // Initializable để tự động gọi hàm initialize() sau khi load FXML
 public class CreateProjectController implements Initializable {
 
-    @FXML private TextField txtProjectName;
-    @FXML private DatePicker dpStartDate;
-    @FXML private DatePicker dpEndDate;
-    @FXML private TextArea txtDescription;
+    @FXML
+    private TextField txtProjectName;
+    @FXML
+    private DatePicker dpStartDate;
+    @FXML
+    private DatePicker dpEndDate;
+    @FXML
+    private TextArea txtDescription;
 
-    @FXML private ComboBox<User> cbManager;
+    @FXML
+    private ComboBox<User> cbManager;
 
-    @FXML private Button btnCreate;
-    @FXML private Button btnCancel;
+    @FXML
+    private Button btnCreate;
+    @FXML
+    private Button btnCancel;
 
-    @FXML private Label lblErrorName;
-    @FXML private Label lblErrorStartDate;
-    @FXML private Label lblErrorEndDate;
+    @FXML
+    private Label lblErrorName;
+    @FXML
+    private Label lblErrorStartDate;
+    @FXML
+    private Label lblErrorEndDate;
 
     private ProjectService projectService;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         projectService = new ProjectService();
