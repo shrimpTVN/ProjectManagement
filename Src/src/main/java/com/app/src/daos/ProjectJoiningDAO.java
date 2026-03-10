@@ -1,9 +1,14 @@
 package com.app.src.daos;
 
+import com.app.src.models.ProjectJoining;
+import com.app.src.models.ProjectRole;
+import com.app.src.models.User;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectJoiningDAO extends AbstractDAO {
@@ -13,7 +18,7 @@ public class ProjectJoiningDAO extends AbstractDAO {
     private ProjectJoiningDAO() {
     }
 
-   public static ProjectJoiningDAO getInstance() {
+    public static ProjectJoiningDAO getInstance() {
         if (instance == null) {
             instance = new ProjectJoiningDAO();
         }
@@ -21,20 +26,19 @@ public class ProjectJoiningDAO extends AbstractDAO {
     }
 
     public String getAdmin(int projectId) {
-        String adminName ="";
-        final String sql ="select  user.user_name from project_joining PJ join user on PJ.user_id = user.user_id " +
-                "where PJ.Role_id=1 and PJ.pro_id = ?";
-        try{
+        String adminName = "";
+        final String sql = "select  user.user_name from project_joining PJ join user on PJ.user_id = user.user_id " +
+                "where PJ.Role_id=2 and PJ.pro_id = ?";
+        try {
             connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1,projectId);
+            preparedStatement.setInt(1, projectId);
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 adminName = resultSet.getString("user_name");
             }
 
-        } catch(Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
@@ -45,10 +49,11 @@ public class ProjectJoiningDAO extends AbstractDAO {
 
         }
 
-        return  adminName;
+        return adminName;
     }
 
-    public boolean assignRoleManager(int projectId, int userId, int roleId) {
+    // Method tổng quát để gán vai trò (Admin hoặc Manager)
+    public boolean assignRole(int projectId, int userId, int roleId) {
         final String sql = "INSERT INTO PROJECT_JOINING (Pro_id, User_id, Role_id, PJo_dateJoin) VALUES (?, ?, ?, ?)";
         try {
             connection = getConnection();
@@ -57,7 +62,7 @@ public class ProjectJoiningDAO extends AbstractDAO {
             ps.setInt(1, projectId);
             ps.setInt(2, userId);
             ps.setInt(3, roleId);
-            ps.setTimestamp(4, new java.sql.Timestamp(System.currentTimeMillis())); // này là để lấy thời gian hiện tại
+            ps.setTimestamp(4, new java.sql.Timestamp(System.currentTimeMillis()));
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {         // Nếu có ít nhất một hàng bị ảnh hưởng, commit transaction
@@ -86,6 +91,10 @@ public class ProjectJoiningDAO extends AbstractDAO {
         }
     }
 
+    public boolean assignRoleManager(int projectId, int userId, int roleId) {
+        return assignRole(projectId, userId, roleId);
+    }
+
     @Override
     public Object findById(int id) {
         return null;
@@ -111,4 +120,49 @@ public class ProjectJoiningDAO extends AbstractDAO {
         return false;
     }
 
+    public ArrayList<ProjectJoining> findAllJoiningsByProjectId(int projectId) {
+        ArrayList<ProjectJoining> projectJoinings = new ArrayList<>();
+        final String sql = "SELECT pj.*, u.User_name, pr.Role_name " +
+                "FROM project_joining pj " +
+                "JOIN user u ON pj.User_id = u.User_id " +
+                "JOIN project_role pr ON pj.Role_id = pr.Role_id " +
+                "WHERE pj.Pro_id = ?";
+
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, projectId);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                ProjectJoining projectJoining = new ProjectJoining();
+
+                User user = new User();
+                user.setUserId(resultSet.getInt("User_id"));
+                user.setUserName(resultSet.getString("User_name"));
+                projectJoining.setUser(user);
+
+                ProjectRole projectRole = new ProjectRole();
+                projectRole.setRoleId(resultSet.getInt("Role_id"));
+                projectRole.setRoleName(resultSet.getString("Role_name"));
+                projectJoining.setRole(projectRole);
+
+                projectJoining.setJoinDate(resultSet.getTimestamp("PJo_dateJoin"));
+                projectJoinings.add(projectJoining);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                closeResource(preparedStatement, connection, resultSet);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return projectJoinings;
+    }
 }

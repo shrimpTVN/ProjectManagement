@@ -17,12 +17,26 @@ public class ProjectService {
         return ProjectDAO.getInstance().findByUserId(userId);
     }
 
-    public boolean createProjectWithManager(Project project, int managerId) {
+    public boolean createProjectWithManager(Project project, int adminId, int managerId) {
         int newProjectId = projectDAO.createAndReturnId(project);
 
         if (newProjectId > 0) {
-            int managerRoleId = 1;  // theo database đang dùng thì role manager có id là 1
-            return ProjectJoiningDAO.getInstance().assignRoleManager(newProjectId, managerId, managerRoleId);
+            int adminRoleId = 2;    // role Admin có id là 2 (theo database)
+            int managerRoleId = 1;  // role Project Manager có id là 1
+
+            // Bước 3: Thêm Admin vào dự án
+            boolean adminAdded = ProjectJoiningDAO.getInstance().assignRole(newProjectId, adminId, adminRoleId);
+            if (!adminAdded) {
+                return false;
+            }
+
+            // Bước 4: Thêm Manager vào dự án (nếu khác Admin)
+            if (adminId != managerId) {
+                boolean managerAdded = ProjectJoiningDAO.getInstance().assignRole(newProjectId, managerId, managerRoleId);
+                return managerAdded;
+            }
+
+            return true;
         }
 
         return false;

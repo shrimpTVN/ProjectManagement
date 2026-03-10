@@ -105,6 +105,9 @@ public class CreateProjectController implements Initializable {
             // Lấy ID từ user đã chọn
             int managerId = selectedManager.getUserId();
 
+            // Lấy ID của Admin (người đang đăng nhập)
+            int adminId = AppContext.getInstance().getUserData().getUserId();
+
             // Đóng gói dữ liệu vào đối tượng Project
             Project newProject = new Project();
             newProject.setProjectName(name);
@@ -114,10 +117,10 @@ public class CreateProjectController implements Initializable {
 
             // Gọi Service lưu dữ liệu
             try {
-                boolean success = projectService.createProjectWithManager(newProject, managerId);
+                boolean success = projectService.createProjectWithManager(newProject, adminId, managerId);
 
                 if (success) {
-                    System.out.println("Tạo dự án và gán Manager thành công!");
+                    System.out.println("Tạo dự án và gán vai trò thành công!");
                     // Cập nhật danh sách projects trong AppContext
                     AppContext.refreshProjects();
                     // Chuyển về màn hình danh sách dự án

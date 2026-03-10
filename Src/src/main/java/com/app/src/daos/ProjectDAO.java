@@ -192,6 +192,41 @@ public class ProjectDAO extends AbstractDAO {
         return generatedId;
     }
 
+    // Lấy project cùng với dữ liệu project_joining (Admin & Manager)
+    public Project getProjectWithJoinings(int projectId) {
+        Project project = null;
+        final String sql = "SELECT * FROM project WHERE Pro_id = ?";
+
+        try {
+            connection = getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, projectId);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                project = new Project();
+                project.setProjectId(rs.getInt("Pro_id"));
+                project.setProjectName(rs.getString("Pro_name"));
+                project.setProjectDescription(rs.getString("Pro_description"));
+                project.setProjectStartDate(rs.getDate("Pro_startDate"));
+                project.setProjectEndDate(rs.getDate("Pro_endDate"));
+            }
+
+            closeResource(ps, connection, rs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return project;
+    }
+
     @Override
     public boolean update(int id, Object entity) {
         return false;
