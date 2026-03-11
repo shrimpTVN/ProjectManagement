@@ -77,4 +77,13 @@ public class TasklistService {
 
         return taskDAO.delete(taskId);
     }
+
+    /**
+     * Lấy danh sách công việc thuộc về một dự án cụ thể.
+     * Hàm này được gọi bởi ListController để hiển thị dữ liệu theo Tab.
+     * @param projectId ID của dự án cần lấy task.
+     */
+    public List<Task> getTasksByProject(int projectId) {
+        return taskDAO.findByProjectId(projectId);
+    }
 }

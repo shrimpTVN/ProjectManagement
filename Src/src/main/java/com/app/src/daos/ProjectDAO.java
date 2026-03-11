@@ -2,10 +2,7 @@ package com.app.src.daos;
 
 import com.app.src.models.Project;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,32 +21,32 @@ public class ProjectDAO extends AbstractDAO {
         return instance;
     }
 
-    public  ArrayList<Project> findByUserId(int userId) {
+    public ArrayList<Project> findByUserId(int userId) {
         ArrayList<Project> projects = new ArrayList<>();
         final String sql = "select pr.Pro_id, pr.Pro_name, pr.Pro_startDate, pr.Pro_endDate, pr.Pro_description " +
                 "from project_joining PJ join user on PJ.user_id = user.user_id join project pr on PJ.pro_id=pr.pro_id" +
                 " where user.user_id = ?";
 
-        try{
-        connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setInt(1, userId);
-        ResultSet resultSet = statement.executeQuery();
+        try {
+            connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
 
-        while(resultSet.next()){
-            Project project = new Project();
-            project.setProjectId(resultSet.getInt("Pro_id"));
-            project.setProjectName(resultSet.getString("Pro_name"));
-            project.setProjectStartDate(resultSet.getDate("Pro_startDate"));
-            project.setProjectEndDate(resultSet.getDate("Pro_endDate"));
-            project.setProjectDescription(resultSet.getString("Pro_description"));
+            while (resultSet.next()) {
+                Project project = new Project();
+                project.setProjectId(resultSet.getInt("Pro_id"));
+                project.setProjectName(resultSet.getString("Pro_name"));
+                project.setProjectStartDate(resultSet.getDate("Pro_startDate"));
+                project.setProjectEndDate(resultSet.getDate("Pro_endDate"));
+                project.setProjectDescription(resultSet.getString("Pro_description"));
 //            System.out.println(project);
 
-            projects.add(project);
-        }
+                projects.add(project);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally{
+        } finally {
             if (connection != null) {
                 try {
                     connection.close();
@@ -143,43 +140,29 @@ public class ProjectDAO extends AbstractDAO {
         return false;
     }
 
-    // Thêm dự án và trả về ID vừa được tạo
-    public int createAndReturnId(Project project) {
-        final String sql = "INSERT INTO project (Pro_name, Pro_startDate, Pro_endDate, Pro_description) VALUES (?, ?, ?, ?)";
-        int generatedId = -1; // generatedId sẽ lưu ID của dự án vừa được tạo. Ban đầu đặt là -1 để biểu thị chưa có ID nào được tạo thành công
+    // Lấy project cùng với dữ liệu project_joining (Admin & Manager)
+    public Project getProjectWithJoinings(int projectId) {
+        Project project = null;
+        final String sql = "SELECT * FROM project WHERE Pro_id = ?";
 
         try {
             connection = getConnection();
-            // Thêm tham số RETURN_GENERATED_KEYS vào prepareStatement
-            PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, projectId);
 
-            ps.setString(1, project.getProjectName());
-            ps.setDate(2, new java.sql.Date(project.getProjectStartDate().getTime()));
-            ps.setDate(3, new java.sql.Date(project.getProjectEndDate().getTime()));
-            ps.setString(4, project.getProjectDescription());
-
-            int rowsAffected = ps.executeUpdate();
-
-            // Nếu chèn thành công, lấy ID ra
-            if (rowsAffected > 0) {
-                ResultSet rs = ps.getGeneratedKeys();
-                if (rs.next()) {
-                    generatedId = rs.getInt(1);
-                }
-                rs.close();
-                connection.commit();
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                project = new Project();
+                project.setProjectId(rs.getInt("Pro_id"));
+                project.setProjectName(rs.getString("Pro_name"));
+                project.setProjectDescription(rs.getString("Pro_description"));
+                project.setProjectStartDate(rs.getDate("Pro_startDate"));
+                project.setProjectEndDate(rs.getDate("Pro_endDate"));
             }
-            ps.close();
 
-        } catch (SQLException e) {
+            closeResource(ps, connection, rs);
+        } catch (Exception e) {
             e.printStackTrace();
-            try {
-                if (connection != null) {       // Nếu có lỗi, rollback để đảm bảo dữ liệu không bị lỗi
-                    connection.rollback();      // rollback sẽ hoàn tác tất cả các thay đổi đã thực hiện trong transaction hiện tại, đưa database trở về trạng thái trước khi bắt đầu transaction. Điều này rất quan trọng để đảm bảo tính toàn vẹn của dữ liệu khi có lỗi xảy ra.
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
         } finally {
             if (connection != null) {
                 try {
@@ -189,16 +172,177 @@ public class ProjectDAO extends AbstractDAO {
                 }
             }
         }
-        return generatedId;
+        return project;
+    }
+
+    public boolean createProjectWithManagersTransaction(Project project, int adminId, int managerId) {
+        String sqlInsertProject = "INSERT INTO project (Pro_name, Pro_description, Pro_startDate, Pro_endDate) VALUES (?, ?, ?, ?)";
+        String sqlInsertJoining = "INSERT INTO project_joining (Pro_id, User_id, Role_id) VALUES (?, ?, ?)";
+
+        Connection conn = null;
+        PreparedStatement psProject = null;
+        PreparedStatement psJoining = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false); // Bắt đầu Transaction
+
+            // 1. Tạo dự án mới
+            psProject = conn.prepareStatement(sqlInsertProject, Statement.RETURN_GENERATED_KEYS);
+            psProject.setString(1, project.getProjectName());
+            psProject.setString(2, project.getProjectDescription());
+            psProject.setDate(3, new java.sql.Date(project.getProjectStartDate().getTime()));
+            psProject.setDate(4, new java.sql.Date(project.getProjectEndDate().getTime()));
+            psProject.executeUpdate();
+
+            // Lấy ID dự án vừa tạo
+            rs = psProject.getGeneratedKeys();
+            int newProjectId = 0;
+            if (rs.next()) {
+                newProjectId = rs.getInt(1);
+            }
+
+            if (newProjectId == 0) {
+                conn.rollback();
+                return false;
+            }
+
+            // 2. Thêm Admin (Role_id = 2) vào dự án
+            psJoining = conn.prepareStatement(sqlInsertJoining);
+            psJoining.setInt(1, newProjectId);
+            psJoining.setInt(2, adminId);
+            psJoining.setInt(3, 2);
+            psJoining.executeUpdate();
+
+            // 3. Thêm Manager (Role_id = 1) vào dự án nếu Manager khác Admin
+            if (adminId != managerId) {
+                psJoining.setInt(1, newProjectId);
+                psJoining.setInt(2, managerId);
+                psJoining.setInt(3, 1);
+                psJoining.executeUpdate();
+            }
+
+            conn.commit(); // Lưu tất cả xuống database
+            return true;
+
+        } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback(); // Có lỗi thì hủy toàn bộ
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (psJoining != null) psJoining.close();
+                closeResource(psProject, conn, null);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public boolean update(int id, Object entity) {
-        return false;
+        if (!(entity instanceof Project)) {
+            return false;
+        }
+        Project project = (Project) entity;
+
+        String sql = "UPDATE project SET Pro_name = ?, Pro_description = ?, Pro_startDate = ?, Pro_endDate = ? WHERE Pro_id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+
+            ps.setString(1, project.getProjectName());
+            ps.setString(2, project.getProjectDescription());
+
+            // Kiểm tra null để tránh lỗi NullPointerException
+            if (project.getProjectStartDate() != null) {
+                ps.setDate(3, new java.sql.Date(project.getProjectStartDate().getTime()));
+            } else {
+                ps.setNull(3, java.sql.Types.DATE);
+            }
+
+            if (project.getProjectEndDate() != null) {
+                ps.setDate(4, new java.sql.Date(project.getProjectEndDate().getTime()));
+            } else {
+                ps.setNull(4, java.sql.Types.DATE);
+            }
+
+            ps.setInt(5, id);
+
+            int rows = ps.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                closeResource(ps, conn, null);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
     public boolean delete(int id) {
         return false;
+    }
+
+    public boolean deleteByProjectId(int projectId) {
+        String sqlDeleteJoining = "DELETE FROM project_joining WHERE Pro_id = ?";
+        String sqlDeleteProject = "DELETE FROM project WHERE Pro_id = ?";
+
+        Connection conn = null;
+        PreparedStatement psJoining = null;
+        PreparedStatement psProject = null;
+
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false); // Bắt đầu Transaction
+
+            // 1. Xóa thành viên dự án
+            psJoining = conn.prepareStatement(sqlDeleteJoining);
+            psJoining.setInt(1, projectId);
+            psJoining.executeUpdate();
+
+            // 2. Xóa dự án
+            psProject = conn.prepareStatement(sqlDeleteProject);
+            psProject.setInt(1, projectId);
+            int rows = psProject.executeUpdate();
+
+            conn.commit(); // Áp dụng thay đổi xuống database
+            return rows > 0;
+
+        } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback(); // Có lỗi thì hủy bỏ toàn bộ thao tác xóa
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (psJoining != null) psJoining.close();
+                // Tận dụng hàm closeResource bạn đã viết sẵn ở Abstract DAO
+                closeResource(psProject, conn, null);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
