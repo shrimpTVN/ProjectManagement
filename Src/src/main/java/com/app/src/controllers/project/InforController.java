@@ -1,5 +1,6 @@
 package com.app.src.controllers.project;
 
+import com.app.src.controllers.CreateProjectController;
 import com.app.src.controllers.ViewNavigator;
 import com.app.src.core.AppContext;
 import com.app.src.models.Project;
@@ -48,7 +49,13 @@ public class InforController implements IProjectDetailSubView, Initializable {
     }
 
     private void handleEdit() {
+        // 1. Load màn hình và lấy ngay Controller của nó
+        CreateProjectController controller = ViewNavigator.getInstance().loadSubScene("/scenes/CreateProject.fxml");
 
+        // 2. Nếu load thành công, "nhồi" dữ liệu vào
+        if (controller != null) {
+            controller.setProjectInfo(currentProject);
+        }
     }
 
     private void handleDelete() {
@@ -85,7 +92,7 @@ public class InforController implements IProjectDetailSubView, Initializable {
 
         // Đếm số lượng thành viên và tìm Manager
         int memberCount = 0;
-        String managerName = "Chưa phân công";
+        String managerName = adminName;       // Mặc định là admin, nếu không tìm thấy Manager nào khác thì vẫn hiển thị admin
         ProjectJoiningService joiningService = new ProjectJoiningService();
         project.setJoinings(joiningService.findAllJoiningsByProjectId(project.getProjectId()));
         if (project.getJoinings() != null) {

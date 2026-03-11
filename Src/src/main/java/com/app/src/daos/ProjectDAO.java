@@ -249,7 +249,50 @@ public class ProjectDAO extends AbstractDAO {
 
     @Override
     public boolean update(int id, Object entity) {
-        return false;
+        if (!(entity instanceof Project)) {
+            return false;
+        }
+        Project project = (Project) entity;
+
+        String sql = "UPDATE project SET Pro_name = ?, Pro_description = ?, Pro_startDate = ?, Pro_endDate = ? WHERE Pro_id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+
+            ps.setString(1, project.getProjectName());
+            ps.setString(2, project.getProjectDescription());
+
+            // Kiểm tra null để tránh lỗi NullPointerException
+            if (project.getProjectStartDate() != null) {
+                ps.setDate(3, new java.sql.Date(project.getProjectStartDate().getTime()));
+            } else {
+                ps.setNull(3, java.sql.Types.DATE);
+            }
+
+            if (project.getProjectEndDate() != null) {
+                ps.setDate(4, new java.sql.Date(project.getProjectEndDate().getTime()));
+            } else {
+                ps.setNull(4, java.sql.Types.DATE);
+            }
+
+            ps.setInt(5, id);
+
+            int rows = ps.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                closeResource(ps, conn, null);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override

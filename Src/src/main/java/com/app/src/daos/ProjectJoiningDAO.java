@@ -165,4 +165,76 @@ public class ProjectJoiningDAO extends AbstractDAO {
         }
         return projectJoinings;
     }
+
+    public boolean updateManager(int projectId, int newManagerId) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false); // Gom thành 1 khối để tránh lỗi giữa chừng
+
+            // 1. Kiểm tra vai trò hiện tại của người được chọn
+            String checkSql = "SELECT Role_id FROM project_joining WHERE Pro_id = ? AND User_id = ?";
+            ps = conn.prepareStatement(checkSql);
+            ps.setInt(1, projectId);
+            ps.setInt(2, newManagerId);
+            rs = ps.executeQuery();
+
+            boolean userExists = rs.next();
+            int newRole = userExists ? rs.getInt("Role_id") : -1;
+
+            rs.close();
+            ps.close();
+
+            // 2. Đổi Manager cũ thành Member (Role_id = 3)
+            String demoteOldManager = "UPDATE project_joining SET Role_id = 3 WHERE Pro_id = ? AND Role_id = 1";
+            ps = conn.prepareStatement(demoteOldManager);
+            ps.setInt(1, projectId);
+            ps.executeUpdate();
+            ps.close();
+
+            // 3. Xử lý người quản lý mới
+            if (userExists) {
+                if (newRole == 3) {
+                    // Thăng chức Member lên Manager
+                    String promoteToManager = "UPDATE project_joining SET Role_id = 1 WHERE Pro_id = ? AND User_id = ?";
+                    ps = conn.prepareStatement(promoteToManager);
+                    ps.setInt(1, projectId);
+                    ps.setInt(2, newManagerId);
+                    ps.executeUpdate();
+                }
+                // Nếu newRole == 2 (Admin) thì giữ nguyên, hệ thống tự hiểu Admin kiêm nhiệm
+            } else {
+                // Người mới hoàn toàn chưa có trong dự án -> Thêm vào với Role_id = 1
+                String insertManager = "INSERT INTO project_joining (Pro_id, User_id, Role_id) VALUES (?, ?, 1)";
+                ps = conn.prepareStatement(insertManager);
+                ps.setInt(1, projectId);
+                ps.setInt(2, newManagerId);
+                ps.executeUpdate();
+            }
+
+            conn.commit();
+            return true;
+
+        } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (conn != null) conn.setAutoCommit(true);
+                closeResource(ps, conn, rs);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

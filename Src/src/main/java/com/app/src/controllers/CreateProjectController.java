@@ -45,6 +45,7 @@ public class CreateProjectController implements Initializable {
     private Label lblErrorEndDate;
 
     private ProjectService projectService;
+    private Project editingProject; // Biến để lưu thông tin dự án khi chỉnh sửa
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -79,72 +80,86 @@ public class CreateProjectController implements Initializable {
     }
 
     private void handleCreate() {
+        System.out.println("Xử lý tạo hoặc cập nhật dự án...");
         clearErrors();
-        boolean isValid = true;     // Biến cờ để kiểm tra tính hợp lệ của form
 
+        // 1. Lấy dữ liệu cơ bản từ Form
         String name = txtProjectName.getText();
         LocalDate startDate = dpStartDate.getValue();
         LocalDate endDate = dpEndDate.getValue();
         String description = txtDescription.getText();
-        User selectedManager = cbManager.getValue(); // Lấy trực tiếp đối tượng User
 
+        System.out.println("Dữ liệu trên form - Name: " + name + ", Start: " + startDate + ", End: " + endDate);
+
+        // 2. Validate dữ liệu chung
+        boolean isValid = true;
         if (name == null || name.trim().isEmpty()) {
             lblErrorName.setText("Vui lòng nhập tên dự án");
             isValid = false;
         }
-
         if (startDate == null) {
             lblErrorStartDate.setText("Vui lòng chọn ngày bắt đầu");
             isValid = false;
         }
-
         if (endDate == null) {
             lblErrorEndDate.setText("Vui lòng chọn ngày kết thúc");
             isValid = false;
         }
 
-        if (startDate != null && endDate != null && endDate.isBefore(startDate)) {
-            lblErrorEndDate.setText("Ngày kết thúc phải lớn hơn ngày bắt đầu");
-            isValid = false;
+        if (!isValid) {
+            System.out.println("Bị chặn lại vì thiếu dữ liệu trên form!");
+            return; // Dừng lại nếu form thiếu
         }
 
-        if (selectedManager == null) {
-            System.out.println("Vui lòng chọn Manager");
-            isValid = false;
-        }
+        // 3. Đóng gói vào Object
+        Project projectData = new Project();
+        projectData.setProjectName(name);
+        projectData.setProjectDescription(description);
+        projectData.setProjectStartDate(java.sql.Date.valueOf(startDate));
+        projectData.setProjectEndDate(java.sql.Date.valueOf(endDate));
 
-        if (isValid) {
-            // Lấy ID từ user đã chọn
+        // 4. Phân luồng
+        if (editingProject == null) {
+            System.out.println("Đang chạy luồng: TẠO MỚI");
+            // TẠO MỚI: Bắt buộc lấy Manager từ ComboBox
+            User selectedManager = cbManager.getValue();
+            if (selectedManager == null) {
+                System.out.println("Lỗi: Chưa chọn Manager cho dự án mới");
+                return;
+            }
+
             int managerId = selectedManager.getUserId();
-
-            // Lấy ID của Admin (người đang đăng nhập)
             int adminId = AppContext.getInstance().getUserData().getUserId();
 
-            // Đóng gói dữ liệu vào đối tượng Project
-            Project newProject = new Project();
-            newProject.setProjectName(name);
-            newProject.setProjectStartDate(java.sql.Date.valueOf(startDate));
-            newProject.setProjectEndDate(java.sql.Date.valueOf(endDate));
-            newProject.setProjectDescription(description);
+            if (projectService.createProjectWithManager(projectData, adminId, managerId)) {
+                finalizeAction("Tạo thành công!");
+            }
+        } else {
+            System.out.println("Đang chạy luồng: EDIT - ID dự án: " + editingProject.getProjectId());
+            // 1. Cập nhật thông tin cơ bản
+            projectData.setProjectId(editingProject.getProjectId());
+            boolean success = projectService.updateProject(projectData);
 
-            // Gọi Service lưu dữ liệu
-            try {
-                boolean success = projectService.createProjectWithManager(newProject, adminId, managerId);
+            // 2. Cập nhật Manager
+            User selectedManager = cbManager.getValue();
+            if (selectedManager != null) {
+                projectService.updateProjectManager(editingProject.getProjectId(), selectedManager.getUserId());
+            }
 
-                if (success) {
-                    System.out.println("Tạo dự án và gán vai trò thành công!");
-                    // Cập nhật danh sách projects trong AppContext
-                    AppContext.refreshProjects();
-                    // Chuyển về màn hình danh sách dự án
-                    ViewNavigator.getInstance().loadSubScene("/scenes/Home.fxml");
-                } else {
-                    System.out.println("Có lỗi xảy ra khi tạo dự án. Service trả về false");
-                }
-            } catch (Exception e) {
-                System.out.println("Có lỗi xảy ra khi tạo dự án: " + e.getMessage());
-                e.printStackTrace();
+            System.out.println("Kết quả update từ database: " + success);
+
+            if (success) {
+                finalizeAction("Cập nhật thành công!");
+            } else {
+                System.out.println("Lỗi: Hàm updateProject trả về false.");
             }
         }
+    }
+
+    private void finalizeAction(String message) {
+        System.out.println(message);
+        AppContext.refreshProjects();
+        ViewNavigator.getInstance().loadSubScene("/scenes/ProjectList.fxml");
     }
 
     private void handleCancel() {
@@ -156,5 +171,25 @@ public class CreateProjectController implements Initializable {
         lblErrorName.setText("");
         lblErrorStartDate.setText("");
         lblErrorEndDate.setText("");
+    }
+
+    public void setProjectInfo(Project project) {
+        this.editingProject = project;
+        txtProjectName.setText(project.getProjectName());
+
+        if (project.getProjectStartDate() != null) {
+            java.time.LocalDate localDate = new java.sql.Date(project.getProjectStartDate().getTime()).toLocalDate();
+            dpStartDate.setValue(localDate);
+        }
+
+        if (project.getProjectEndDate() != null) {
+            java.time.LocalDate localDate = new java.sql.Date(project.getProjectEndDate().getTime()).toLocalDate();
+            dpEndDate.setValue(localDate);
+        }
+
+        // Đổi tên nút bấm để người dùng biết họ đang Lưu chứ không phải Tạo mới
+        btnCreate.setText("Save Changes");
+
+        txtDescription.setText(project.getProjectDescription());
     }
 }

@@ -21,6 +21,15 @@ public class ProjectService {
         return projectDAO.createProjectWithManagersTransaction(project, adminId, managerId);
     }
 
+    public boolean updateProject(Project project) {
+        // Gọi hàm update của DAO với ID của dự án và đối tượng dữ liệu mới
+        return projectDAO.update(project.getProjectId(), project);
+    }
+
+    public boolean updateProjectManager(int projectId, int newManagerId) {
+        return ProjectJoiningDAO.getInstance().updateManager(projectId, newManagerId);
+    }
+
     public boolean deleteProject(int projectId) {
         return projectDAO.deleteByProjectId(projectId);
     }
