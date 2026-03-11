@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane fx:id="statusChangeItemRoot" prefHeight="61.0" prefWidth="325.6" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER_NAME">
+   <children>
+      <VBox fx:id="mainLayout" prefHeight="200.0" prefWidth="92.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox fx:id="headerBox" alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="326.0" spacing="5.0">
+               <children>
+                  <Label fx:id="lblUser" style="-fx-font-weight: 700;" text="Oitloc96" />
+                  <Label fx:id="lblAction" text="changed the status" />
+                  <Region prefHeight="20.0" prefWidth="87.0" HBox.hgrow="ALWAYS" />
+                  <Label fx:id="lblTime" text="8 phút trước" textFill="#888888">
+                     <font>
+                        <Font size="8.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <Label fx:id="lblStatusChange" text="In preview → Done" />
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>

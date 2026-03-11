@@ -130,4 +130,46 @@ public class TaskDAO extends AbstractDAO<Task> {
         // Tương tự, bạn dùng câu lệnh DELETE FROM task WHERE Task_id = ?
         return false;
     }
+
+
+    /**
+     * Lấy danh sách công việc thuộc về một dự án cụ thể.
+     * Sử dụng LEFT JOIN để lấy kèm tên người thực hiện (Assignee).
+     * @param projectId ID của dự án cần lọc.
+     */
+    public List<Task> findByProjectId(int projectId) {
+        List<Task> tasks = new ArrayList<>();
+        // JOIN với bảng user để lấy tên người thực hiện
+        String sql = "SELECT t.*, u.User_name FROM task t " +
+                "LEFT JOIN user u ON t.User_id = u.User_id " +
+                "WHERE t.Pro_id = ?";
+        Connection connection = null;
+
+        try {
+            connection = getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, projectId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Task task = new Task();
+                task.setTaskId(rs.getInt("Task_id"));
+                task.setTaskName(rs.getString("Task_name"));
+                task.setTaskStartTime(String.valueOf(rs.getTimestamp("Task_startDate")));
+                task.setTaskEndTime(String.valueOf(rs.getTimestamp("Task_endDate")));
+                task.setTaskDescription(rs.getString("Task_description"));
+
+                // Map dữ liệu User (Assignee)
+                com.app.src.models.User user = new com.app.src.models.User();
+                user.setUserName(rs.getString("User_name"));
+                task.setUser(user);
+
+                tasks.add(task);
+            }
+            this.closeResource(ps, connection, rs);
+        } catch (SQLException ex) {
+            throw new RuntimeException("Lỗi khi lấy Task theo Project ID: " + ex.getMessage(), ex);
+        }
+        return tasks;
+    }
 }
