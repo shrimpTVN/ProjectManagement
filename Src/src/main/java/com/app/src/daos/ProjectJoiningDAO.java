@@ -173,7 +173,7 @@ public class ProjectJoiningDAO extends AbstractDAO {
 
         try {
             conn = getConnection();
-            conn.setAutoCommit(false); // Gom thành 1 khối để tránh lỗi giữa chừng
+            conn.setAutoCommit(false); // Gom thành 1 khối (Transaction)
 
             // 1. Kiểm tra vai trò hiện tại của người được chọn
             String checkSql = "SELECT Role_id FROM project_joining WHERE Pro_id = ? AND User_id = ?";
@@ -182,38 +182,40 @@ public class ProjectJoiningDAO extends AbstractDAO {
             ps.setInt(2, newManagerId);
             rs = ps.executeQuery();
 
-            boolean userExists = rs.next();
-            int newRole = userExists ? rs.getInt("Role_id") : -1;
+            int newRole = rs.next() ? rs.getInt("Role_id") : -1;
 
             rs.close();
             ps.close();
 
-            // 2. Đổi Manager cũ thành Member (Role_id = 3)
-            String demoteOldManager = "UPDATE project_joining SET Role_id = 3 WHERE Pro_id = ? AND Role_id = 1";
-            ps = conn.prepareStatement(demoteOldManager);
+            // Nếu người được chọn ĐANG LÀ Manager rồi thì không cần làm gì cả
+            if (newRole == 1) {
+                return true;
+            }
+
+            // 2. "Đuổi" (Xóa) Manager cũ khỏi dự án
+            String deleteOldManager = "DELETE FROM project_joining WHERE Pro_id = ? AND Role_id = 1";
+            ps = conn.prepareStatement(deleteOldManager);
             ps.setInt(1, projectId);
             ps.executeUpdate();
             ps.close();
 
-            // 3. Xử lý người quản lý mới
-            if (userExists) {
-                if (newRole == 3) {
-                    // Thăng chức Member lên Manager
-                    String promoteToManager = "UPDATE project_joining SET Role_id = 1 WHERE Pro_id = ? AND User_id = ?";
-                    ps = conn.prepareStatement(promoteToManager);
-                    ps.setInt(1, projectId);
-                    ps.setInt(2, newManagerId);
-                    ps.executeUpdate();
-                }
-                // Nếu newRole == 2 (Admin) thì giữ nguyên, hệ thống tự hiểu Admin kiêm nhiệm
-            } else {
-                // Người mới hoàn toàn chưa có trong dự án -> Thêm vào với Role_id = 1
+            // 3. Phân quyền cho người mới
+            if (newRole == -1) {
+                // Người mới hoàn toàn -> Thêm vào với Role_id = 1
                 String insertManager = "INSERT INTO project_joining (Pro_id, User_id, Role_id) VALUES (?, ?, 1)";
                 ps = conn.prepareStatement(insertManager);
                 ps.setInt(1, projectId);
                 ps.setInt(2, newManagerId);
                 ps.executeUpdate();
+            } else if (newRole == 3) {
+                // Đang là Member -> Thăng chức lên Manager (Role_id = 1)
+                String promoteToManager = "UPDATE project_joining SET Role_id = 1 WHERE Pro_id = ? AND User_id = ?";
+                ps = conn.prepareStatement(promoteToManager);
+                ps.setInt(1, projectId);
+                ps.setInt(2, newManagerId);
+                ps.executeUpdate();
             }
+            // Nếu newRole == 2 (Admin) thì bỏ qua, hệ thống tự hiểu Admin kiêm nhiệm
 
             conn.commit();
             return true;
