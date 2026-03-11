@@ -129,13 +129,11 @@
     -fx-font-weight: bold;         /* Làm đậm chữ để nổi bật */
 }
 
-/* Bỏ viền xanh khi nhấn vào Hyperlink */
 .filter-link:focused {
     -fx-border-color: transparent;
     -fx-outline-color: transparent;
 }
 
-/* Trạng thái bình thường, đã xem, di chuột và khi đang nhấn */
 .filter-item,
 .filter-item:visited,
 .filter-item:hover,
@@ -157,14 +155,12 @@
     -fx-padding: 0;
 }
 
-/* Định dạng thanh tiêu đề (Header) */
 #taskListProject .column-header-background {
     -fx-background-color: white; /* Màu nền xám nhạt */
     -fx-border-color: white white black white; /* Chỉ giữ đường kẻ dưới */
     -fx-border-width: 0 0 1px 0;
 }
 
-/* Ẩn bớt các vạch ngăn cách cột để trông hiện đại hơn */
 #taskListProject .column-header {
     -fx-background-color: transparent;
     -fx-size: 40px; /* Độ cao của header */
@@ -177,7 +173,6 @@
     -fx-alignment: CENTER_LEFT;
 }
 
-/* Định dạng các dòng (Rows) */
 #taskListProject .table-row-cell {
     -fx-background-color: white;
     -fx-border-color: transparent transparent #E0E0E0 transparent; /* Đường kẻ ngang giữa các dòng */
