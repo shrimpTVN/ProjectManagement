@@ -13,7 +13,7 @@
     <children>
         <HBox fx:id="appLogo" alignment="CENTER" maxWidth="1.7976931348623157E308" onMouseClicked="#handleAppLogoClick" prefHeight="66.0" prefWidth="362.0">
             <children>
-            <ImageView fitHeight="54.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="64.0" fitWidth="63.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../image/Frame%20115.png" />
                </image>
@@ -41,7 +41,7 @@
                   <Image url="@../image/bell.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="User_Account" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleUserAccountClick" >
+            <ImageView fx:id="User_Account" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#handleUserAccountClick" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../image/profile.png" />
                </image>
