@@ -17,14 +17,20 @@ public class ProjectService {
         return ProjectDAO.getInstance().findByUserId(userId);
     }
 
-    public boolean createProjectWithManager(Project project, int managerId) {
-        int newProjectId = projectDAO.createAndReturnId(project);
+    public boolean createProjectWithManager(Project project, int adminId, int managerId) {
+        return projectDAO.createProjectWithManagersTransaction(project, adminId, managerId);
+    }
 
-        if (newProjectId > 0) {
-            int managerRoleId = 1;  // theo database đang dùng thì role manager có id là 1
-            return ProjectJoiningDAO.getInstance().assignRoleManager(newProjectId, managerId, managerRoleId);
-        }
+    public boolean updateProject(Project project) {
+        // Gọi hàm update của DAO với ID của dự án và đối tượng dữ liệu mới
+        return projectDAO.update(project.getProjectId(), project);
+    }
 
-        return false;
+    public boolean updateProjectManager(int projectId, int newManagerId) {
+        return ProjectJoiningDAO.getInstance().updateManager(projectId, newManagerId);
+    }
+
+    public boolean deleteProject(int projectId) {
+        return projectDAO.deleteByProjectId(projectId);
     }
 }
