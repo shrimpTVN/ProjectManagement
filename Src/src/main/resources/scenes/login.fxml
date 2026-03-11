@@ -74,9 +74,9 @@
                           <Font name="Urbanist Medium" size="13.0" />
                       </font>
                   </PasswordField>
-            <ImageView fitHeight="84.0" fitWidth="84.0" layoutX="599.0" layoutY="97.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="123.0" fitWidth="136.0" layoutX="579.0" layoutY="63.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../image/Frame%20115_kobo.png" />
+                  <Image url="@../image/Frame%20115.png" />
                </image></ImageView>
 
          </children>
