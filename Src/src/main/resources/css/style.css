@@ -115,7 +115,7 @@
 }
 
 /*------CSS CHUNG CHO LIST TRONG ProjectDetail------*/
-/*CSS cho tab All/Inpreview*/
+/*--CSS cho tab All/In preview--*/
 .filter-item {
     -fx-text-fill: black;
     -fx-cursor: hand;
@@ -147,33 +147,62 @@
     -fx-border-width: 0px;
 }
 
-/*CSS cho tableview List*/
+/*--CSS cho tableview List--*/
 #taskListProject {
-    -fx-background-color: transparent;
-    -fx-border-color: #DCDCDC;
+    -fx-background-color: white;
+    -fx-border-color: black;
     -fx-border-width: 1px;
     -fx-border-radius: 10px;    /* Bo tròn góc */
     -fx-background-radius: 10px;
+    -fx-padding: 0;
 }
 
 /* Định dạng thanh tiêu đề (Header) */
 #taskListProject .column-header-background {
-    -fx-background-color: #F8F8F8; /* Màu nền xám nhạt */
-    -fx-background-radius: 10px 10px 0 0;
-    -fx-border-color: transparent transparent #DCDCDC transparent;
+    -fx-background-color: white; /* Màu nền xám nhạt */
+    -fx-border-color: white white black white; /* Chỉ giữ đường kẻ dưới */
+    -fx-border-width: 0 0 1px 0;
 }
 
 /* Ẩn bớt các vạch ngăn cách cột để trông hiện đại hơn */
 #taskListProject .column-header {
     -fx-background-color: transparent;
-    -fx-border-color: transparent #DCDCDC transparent transparent;
+    -fx-size: 40px; /* Độ cao của header */
+    -fx-border-color: transparent;
+}
+
+#taskListProject .table-cell {
+    -fx-border-color: white;
+    -fx-padding: 10px;
+    -fx-alignment: CENTER_LEFT;
 }
 
 /* Định dạng các dòng (Rows) */
 #taskListProject .table-row-cell {
-    -fx-border-color: transparent transparent #E8E8E8 transparent;
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #E0E0E0 transparent; /* Đường kẻ ngang giữa các dòng */
+    -fx-border-width: 0 0 1px 0;
 }
 
 #taskListProject .table-row-cell:filled:selected {
-    -fx-background-color: #F0F7FF; /* Màu khi chọn dòng */
+    -fx-background-color: #F5F5F5;
+    -fx-background-insets: 0;
+}
+
+/*--CSS cho Btn Create--*/
+.btn-create {
+    -fx-background-color: white;
+    -fx-background-radius: 6px;
+    -fx-border-color: #333333;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.btn-create:hover {
+    -fx-background-color: #f4f4f4; /* Chuyển xám cực nhẹ */
+}
+
+.btn-create:pressed {
+    -fx-background-color: #e0e0e0;
 }
