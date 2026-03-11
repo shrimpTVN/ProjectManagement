@@ -113,3 +113,67 @@
     -fx-font-size: 14px;
     -fx-line-spacing: 5px;
 }
+
+/*------CSS CHUNG CHO LIST TRONG ProjectDetail------*/
+/*CSS cho tab All/Inpreview*/
+.filter-item {
+    -fx-text-fill: black;
+    -fx-cursor: hand;
+    -fx-background-radius: 10px; /* Bo tròn để tạo hiệu ứng viên thuốc */
+    -fx-underline: false;
+
+}
+
+.filter-item-active {
+    -fx-background-color: #E0E0E0; /* Màu xám nhạt như trong hình */
+    -fx-font-weight: bold;         /* Làm đậm chữ để nổi bật */
+}
+
+/* Bỏ viền xanh khi nhấn vào Hyperlink */
+.filter-link:focused {
+    -fx-border-color: transparent;
+    -fx-outline-color: transparent;
+}
+
+/* Trạng thái bình thường, đã xem, di chuột và khi đang nhấn */
+.filter-item,
+.filter-item:visited,
+.filter-item:hover,
+.filter-item:armed {
+    -fx-text-fill: black;      /* Giữ màu đen cố định */
+    -fx-underline: false;     /* Xóa bỏ gạch chân */
+    -fx-border-color: transparent; /* Xóa viền khi focus */
+    -fx-padding: 3px 15px;    /* Padding cho giống viên thuốc */
+    -fx-border-width: 0px;
+}
+
+/*CSS cho tableview List*/
+#taskListProject {
+    -fx-background-color: transparent;
+    -fx-border-color: #DCDCDC;
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;    /* Bo tròn góc */
+    -fx-background-radius: 10px;
+}
+
+/* Định dạng thanh tiêu đề (Header) */
+#taskListProject .column-header-background {
+    -fx-background-color: #F8F8F8; /* Màu nền xám nhạt */
+    -fx-background-radius: 10px 10px 0 0;
+    -fx-border-color: transparent transparent #DCDCDC transparent;
+}
+
+/* Ẩn bớt các vạch ngăn cách cột để trông hiện đại hơn */
+#taskListProject .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent #DCDCDC transparent transparent;
+}
+
+/* Định dạng các dòng (Rows) */
+#taskListProject .table-row-cell {
+    -fx-border-color: transparent transparent #E8E8E8 transparent;
+}
+
+#taskListProject .table-row-cell:filled:selected {
+    -fx-background-color: #F0F7FF; /* Màu khi chọn dòng */
+}
