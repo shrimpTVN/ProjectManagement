@@ -14,8 +14,8 @@ public class MySQLDatabaseConnection implements DatabaseConnection {
     {
         String databaseName = "mydb";
         String databaseUser = "root";
-        String databasePassword = "123456";
-//        String databasePassword = "Abcd1234";
+//        String databasePassword = "123456";
+        String databasePassword = "Abcd1234";
         String url = "jdbc:mysql://localhost:3306/" + databaseName;
 
         try
