@@ -14,7 +14,6 @@ public class UserService {
 
     public User getUserById(int userId) throws SQLException
     {
-
         return userDAO.findById(userId);
     }
 }

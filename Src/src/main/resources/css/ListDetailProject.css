@@ -63,8 +63,11 @@
     -fx-border-width: 0 0 1px 0;
 }
 
+/*click vào task*/
 #taskListProject .table-row-cell:filled:selected {
-    -fx-background-color: #F5F5F5;
+    -fx-background-color: #555555;
+    -fx-text-fill: #000000;
+    -fx-font-weight: 700;
     -fx-background-insets: 0;
 }
 

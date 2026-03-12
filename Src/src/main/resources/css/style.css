@@ -123,3 +123,60 @@
     -fx-text-fill: black;
 }
 
+/*-- Style chung cho các TableView --*/
+.custom-table {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 0.5px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+/* Màu nền của hàng khi được chọn */
+.custom-table .table-row-cell:filled:selected {
+    -fx-background-color: #E0E0E0;
+}
+
+/* Ép màu chữ thành đen cho các ô trong hàng đang chọn */
+.custom-table .table-row-cell:filled:selected .table-cell {
+    -fx-text-fill: black;
+}
+
+.custom-table .column-header-background {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent black transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.custom-table .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 40px;
+}
+
+.custom-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #E0E0E0 transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.custom-table .table-row-cell:filled:selected {
+    -fx-background-color: #F5F5F5;
+}
+
+/*-- Style cho Input và Button --*/
+.input-field {
+    -fx-background-color: white;
+    -fx-border-color: #CCCCCC;
+    -fx-border-radius: 5px;
+}
+
+.btn-action {
+    -fx-background-color: white;
+    -fx-border-color: #333333;
+    -fx-border-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.btn-action:hover {
+    -fx-background-color: #f4f4f4;
+}
