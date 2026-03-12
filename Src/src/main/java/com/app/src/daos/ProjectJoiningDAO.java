@@ -122,7 +122,7 @@ public class ProjectJoiningDAO extends AbstractDAO {
 
     public ArrayList<ProjectJoining> findAllJoiningsByProjectId(int projectId) {
         ArrayList<ProjectJoining> projectJoinings = new ArrayList<>();
-        final String sql = "SELECT pj.*, u.User_name, pr.Role_name " +
+        final String sql = "SELECT pj.*, u.User_name, u.User_dateOfBirth, u.User_phoneNumber, pr.Role_name " +
                 "FROM project_joining pj " +
                 "JOIN user u ON pj.User_id = u.User_id " +
                 "JOIN project_role pr ON pj.Role_id = pr.Role_id " +
@@ -144,6 +144,8 @@ public class ProjectJoiningDAO extends AbstractDAO {
                 User user = new User();
                 user.setUserId(resultSet.getInt("User_id"));
                 user.setUserName(resultSet.getString("User_name"));
+                user.setUserDoB(resultSet.getString("User_dateOfBirth"));
+                user.setUserPhoneNumber(resultSet.getString("User_phoneNumber"));
                 projectJoining.setUser(user);
 
                 ProjectRole projectRole = new ProjectRole();
