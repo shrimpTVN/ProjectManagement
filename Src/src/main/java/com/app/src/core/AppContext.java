@@ -18,7 +18,7 @@ public class AppContext {
         userSession = UserSession.getInstance();
         ProjectService projectService = new ProjectService();
        projects =  ProjectService.getAllProjects(userSession.getUser().getUserId());
-//       projects = ProjectService.getAllProjects(3);
+//       projects = ProjectService.getAllProjects(5);
     }
 
 

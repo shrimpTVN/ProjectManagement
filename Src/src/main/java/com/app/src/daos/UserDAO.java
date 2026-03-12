@@ -1,6 +1,7 @@
 package com.app.src.daos;
 
 import com.app.src.models.User;
+import com.app.src.models.Account;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -40,6 +41,12 @@ public class UserDAO extends AbstractDAO<User>{
                 user.setUserDoB(rs.getString("User_dateOfBirth"));
                 user.setUserGender(rs.getBoolean("User_gender"));
                 user.setUserPhoneNumber(rs.getString("User_phoneNumber"));
+
+                // Fetch Account information
+                Account account = fetchAccountByUserId(id);
+                if(account != null) {
+                    user.setAccount(account);
+                }
             }
 
             this.closeResource(ps, connection, rs);
@@ -54,6 +61,38 @@ public class UserDAO extends AbstractDAO<User>{
         }
 
         return user;
+    }
+
+    // Helper method to fetch Account by User ID
+    private Account fetchAccountByUserId(int userId) {
+        String sql = "select * from account where user_id = ?";
+        Account account = null;
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+                account = new Account();
+                account.setAccountId(rs.getInt("Acc_id"));
+                account.setUserName(rs.getString("Acc_userName"));
+                account.setPassword(rs.getString("Acc_password"));
+            }
+            this.closeResource(ps, conn, rs);
+        } catch (SQLException ex) {
+            // Log error but don't throw - Account may not exist
+            System.err.println("Error fetching account for user " + userId + ": " + ex.getMessage());
+        } finally {
+            try {
+                if(conn != null) {
+                    closeConnection(conn);
+                }
+            } catch (SQLException e) {
+                System.err.println("Error closing connection: " + e.getMessage());
+            }
+        }
+        return account;
     }
 
     @Override

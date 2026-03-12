@@ -12,7 +12,8 @@ public class Project {
     private ArrayList<Task> tasks;
     private ArrayList<ProjectJoining> joinings;
 
-    public Project() { }
+    public Project() {
+    }
 
     public Project(int projectId, String projectName, String projectDescription, Date projectStartDate, Date projectEndDate) {
         this.projectId = projectId;

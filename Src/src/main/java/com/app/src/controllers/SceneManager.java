@@ -1,5 +1,8 @@
 package com.app.src.controllers;
 
+import com.app.src.exceptions.ErrorCode;
+import com.app.src.exceptions.GlobalExceptionHandler;
+import com.app.src.exceptions.ServiceException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -37,8 +40,13 @@ public class SceneManager {
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {
-            System.err.println("Error loading scene: " + fxmlPath);
-            e.printStackTrace();
+            ServiceException exception = new ServiceException(
+                    ErrorCode.SCENE_LOAD_ERROR,
+                    "Error loading scene: " + fxmlPath,
+                    e
+            );
+            GlobalExceptionHandler.handle(exception);
+            throw exception;
         }
     }
 }
