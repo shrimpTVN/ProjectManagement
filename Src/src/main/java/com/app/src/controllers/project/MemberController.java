@@ -3,11 +3,8 @@ package com.app.src.controllers.project;
 import com.app.src.models.Project;
 import com.app.src.models.ProjectJoining;
 import com.app.src.models.ProjectRole;
-import com.app.src.models.User;
-import com.app.src.daos.ProjectJoiningDAO;
 import com.app.src.services.ProjectJoiningService;
 import com.app.src.services.ProjectRoleService;
-import com.app.src.services.UserService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -15,7 +12,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +19,13 @@ import java.util.List;
 public class MemberController implements IProjectDetailSubView {
     @FXML
     private TextField txtUserName;
-    
+
     @FXML
     private ComboBox<String> cbRole;
-    
+
     @FXML
     private Button btnAddUser;
-    
+
     @FXML
     private Button btnEditUser;
 
@@ -38,32 +34,35 @@ public class MemberController implements IProjectDetailSubView {
 
     @FXML
     private Button btnCancel;
-    
+
     @FXML
     private TableView<ProjectJoining> memberTable;
 
     @FXML
     private TableColumn<ProjectJoining, String> colName;
-    
+
     @FXML
     private TableColumn<ProjectJoining, String> colRole;
-    
+
     @FXML
     private TableColumn<ProjectJoining, String> colDOB;
-    
+
     @FXML
     private TableColumn<ProjectJoining, String> colPhone;
-    
+
     private Project currentProject;
     private String adminName;
+    private ProjectJoining selectedJoining;     // Biến để lưu User đang được chọn trong TableView
+    private List<ProjectRole> allRoles;         // Biến toàn cục để lưu danh sách tất cả Role, giúp tìm ID khi cần
 
     @FXML
     public void initialize() {
         setupTableColumns();
-
+        btnEditUser.setOnAction(event -> handleEditAction());
+        btnCancel.setOnAction(event -> handleCancelAction());
     }
 
-    public void setupTableColumns(){
+    public void setupTableColumns() {
         colName.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getUser().getUserName()));
         colRole.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getRole().getRoleName()));
         colDOB.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getUser().getUserDoB()));
@@ -74,27 +73,25 @@ public class MemberController implements IProjectDetailSubView {
     public void renderData(Project project, String adminName) {
         this.currentProject = project;
         this.adminName = adminName;
-        if(loadMembers()){
+        if (loadMembers()) {
             System.out.println("Members Loaded");
-        }else {
+        } else {
             System.out.println("Failed to load members");
         }
-        loadRoles();
+        loadRoleNames();
     }
 
-    private void loadRoles() {
+    private void loadRoleNames() {
         ProjectRoleService roleService = new ProjectRoleService();
-        List<ProjectRole> roles = roleService.getAllRoles();
+        allRoles = roleService.getAllRoles(); // Gán dữ liệu vào biến toàn cục
 
-        // Tạo một danh sách mới chỉ chứa chuỗi tên
         List<String> roleNames = new ArrayList<>();
-        for (ProjectRole item : roles) {
-            // Lấy tên role từ mỗi phần tử và thêm vào danh sách chuỗi
+        for (ProjectRole item : allRoles) {
             roleNames.add(item.getRoleName());
         }
-        // Đổ danh sách chuỗi vào ComboBox
         cbRole.getItems().setAll(roleNames);
     }
+
     private boolean loadMembers() {
         // Đổi sang dùng ProjectJoiningService
         ProjectJoiningService joiningService = new ProjectJoiningService();
@@ -109,5 +106,76 @@ public class MemberController implements IProjectDetailSubView {
             }
         }
         return false;
+    }
+
+    private void handleEditAction() {
+        // 1. Kiểm tra nếu nút đang ở trạng thái "Save" thì thực hiện lưu
+        if (btnEditUser.getText().equals("Save")) {
+            String selectedRoleName = cbRole.getValue();
+            int newRoleId = -1;
+
+            // Tìm ID Role tương ứng với tên được chọn trong ComboBox
+            for (ProjectRole role : allRoles) {
+                if (role.getRoleName().equals(selectedRoleName)) {
+                    newRoleId = role.getRoleId();
+                    break;
+                }
+            }
+
+            // Gọi service để cập nhật cơ sở dữ liệu
+            if (newRoleId != -1) {
+                ProjectJoiningService service = new ProjectJoiningService();
+                boolean success = service.updateRole(
+                        currentProject.getProjectId(),
+                        selectedJoining.getUser().getUserId(),
+                        newRoleId
+                );
+
+                if (success) {
+                    loadMembers(); // Tải lại bảng để hiện dữ liệu mới
+                    clearForm();   // Dọn dẹp form
+                } else {
+                    System.out.println("Lỗi cập nhật CSDL.");
+                }
+            }
+            return;
+        }
+
+        // 2. Lấy dòng dữ liệu đang được chọn dưới bảng
+        selectedJoining = memberTable.getSelectionModel().getSelectedItem();
+
+        // Nếu chưa chọn dòng nào thì không làm gì cả
+        if (selectedJoining == null) {
+            System.out.println("Vui lòng chọn một thành viên từ bảng.");
+            return;
+        }
+
+        // 3. Đẩy dữ liệu lên form
+        txtUserName.setText(selectedJoining.getUser().getUserName());
+        txtUserName.setEditable(false); // Khóa ô UserName để tránh chỉnh sửa
+
+        cbRole.setValue(selectedJoining.getRole().getRoleName()); // Đặt đúng role hiện tại
+
+        // 4. Chuyển đổi giao diện sang chế độ chỉnh sửa
+        btnEditUser.setText("Save");
+        btnAddUser.setDisable(true); // Tạm ẩn hoặc khóa nút Add để tránh xung đột
+    }
+
+    private void handleCancelAction() {
+        clearForm();
+    }
+
+    private void clearForm() {
+        // Xóa trắng dữ liệu và mở khóa các ô nhập liệu
+        txtUserName.clear();
+        txtUserName.setEditable(true);
+
+        cbRole.getSelectionModel().clearSelection();
+
+        // Trả các nút về trạng thái ban đầu
+        btnEditUser.setText("Edit");
+        btnAddUser.setDisable(false);
+
+        selectedJoining = null;
     }
 }

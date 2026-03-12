@@ -241,4 +241,30 @@ public class ProjectJoiningDAO extends AbstractDAO {
             }
         }
     }
+
+    public boolean updateRole(int projectId, int userId, int roleId) {
+        String sql = "UPDATE project_joining SET Role_id = ? WHERE Pro_id = ? AND User_id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, roleId);
+            ps.setInt(2, projectId);
+            ps.setInt(3, userId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                closeResource(ps, conn, null);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
