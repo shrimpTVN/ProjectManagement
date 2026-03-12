@@ -17,22 +17,23 @@
             <children>
                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                     <children>
-                        <TextField fx:id="txtUserName" prefWidth="200.0" promptText="Enter user name..."/>
-                        <ComboBox fx:id="cbRole" prefWidth="150.0" promptText="Select Role"/>
-                        <Button fx:id="btnAddUser" mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0"
+                        <TextField fx:id="txtUserName" prefHeight="30.0" prefWidth="200.0"
+                                   promptText="Enter user name..." styleClass="input-field"/>
+                        <ComboBox fx:id="cbRole" prefHeight="30.0" prefWidth="150.0" promptText="Select Role"
+                                  styleClass="input-field"/>
+                        <Button fx:id="btnAddUser" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0"
                                 styleClass="btn-action" text="Add"/>
-                        <Button fx:id="btnEditUser" mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0"
+                        <Button fx:id="btnEditUser" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0"
                                 styleClass="btn-action" text="Edit"/>
                     </children>
                 </HBox>
 
-                <TableView fx:id="memberTable" VBox.vgrow="ALWAYS">
+                <TableView fx:id="memberTable" styleClass="custom-table" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="colName" prefWidth="150.0" text="Name"/>
                         <TableColumn fx:id="colRole" prefWidth="120.0" text="Role"/>
                         <TableColumn fx:id="colDOB" prefWidth="120.0" style="-fx-alignment: CENTER;"
                                      text="Date of Birth"/>
-                        <TableColumn fx:id="colEmail" prefWidth="180.0" text="Email"/>
                         <TableColumn fx:id="colPhone" prefWidth="130.0" text="Phone number"/>
                     </columns>
                     <columnResizePolicy>
