@@ -30,7 +30,7 @@
                     </rowConstraints>
                 </GridPane>
 
-                <Label fx:id="labelLoginMess" alignment="CENTER" contentDisplay="CENTER" layoutX="515.0" layoutY="447.0" prefHeight="19.0" prefWidth="251.0" text="Invalid login. Please try again." textFill="#eb1111">
+                <Label fx:id="labelLoginMess" alignment="CENTER" contentDisplay="CENTER" layoutX="515.0" layoutY="447.0" prefHeight="19.0" prefWidth="251.0" text="" textFill="#eb1111">
                     <font>
                         <Font name="Urbanist Medium" size="14.0" />
                     </font>
