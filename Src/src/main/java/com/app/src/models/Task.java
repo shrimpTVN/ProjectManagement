@@ -72,11 +72,4 @@ public class Task {
     public void setTaskEndTime(String taskEndTime) {
         this.taskEndTime = taskEndTime;
     }
-
-    public String getProjectName(){
-        return "ProjectName";
-    }
-    public String getTaskStatus () {
-        return "TaskStatus";
-    }
 }

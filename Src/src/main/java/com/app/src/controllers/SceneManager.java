@@ -23,6 +23,9 @@ public class SceneManager {
         this.primaryStage = stage;
     }
 
+    public Stage getPrimaryStage() {
+        return this.primaryStage;
+    }
 
     public void switchScene(String fxmlPath) {
         try {

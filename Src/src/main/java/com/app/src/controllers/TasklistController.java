@@ -1,7 +1,10 @@
 package com.app.src.controllers;
 
-import com.app.src.models.Task;
+import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.services.TasklistService;
+import com.app.src.core.AppContext;
+import com.app.src.models.User;
+import com.app.src.controllers.SceneManager;
 
 import javafx.beans.property.SimpleStringProperty; // Import thêm cái này cho Lambda
 import javafx.collections.FXCollections;
@@ -14,8 +17,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
+import javafx.scene.control.TableRow;
+import javafx.fxml.FXMLLoader;
 
 import java.util.List;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import java.io.IOException;
 
 public class TasklistController {
 
@@ -33,20 +41,20 @@ public class TasklistController {
     @FXML private Button btnInpreview;
     @FXML private Button btnDone;
 
-    @FXML private TableView<Task> taskTable;
-    @FXML private TableColumn<Task, String> colName;
-    @FXML private TableColumn<Task, String> colProject;
-    @FXML private TableColumn<Task, String> colStart;
-    @FXML private TableColumn<Task, String> colDeadline;
-    @FXML private TableColumn<Task, String> colStatus;
-    @FXML private TableColumn<Task, String> colDescription;
+    @FXML private TableView<PersonalTaskDTO> taskTable;
+    @FXML private TableColumn<PersonalTaskDTO, String> colName;
+    @FXML private TableColumn<PersonalTaskDTO, String> colProject;
+    @FXML private TableColumn<PersonalTaskDTO, String> colStart;
+    @FXML private TableColumn<PersonalTaskDTO, String> colDeadline;
+    @FXML private TableColumn<PersonalTaskDTO, String> colStatus;
+    @FXML private TableColumn<PersonalTaskDTO, String> colDescription;
 
     // ==========================================
     // KHAI BÁO DỮ LIỆU VÀ SERVICE
     // ==========================================
     private TasklistService taskListService;
-    private ObservableList<Task> masterTaskList;
-    private FilteredList<Task> filteredData;
+    private ObservableList<PersonalTaskDTO> masterTaskList;
+    private FilteredList<PersonalTaskDTO> filteredData;
 
     public TasklistController() {
         this.taskListService = new TasklistService();
@@ -54,12 +62,45 @@ public class TasklistController {
 
     @FXML
     public void initialize() {
+        User currentUser = AppContext.getInstance().getUserData();
         setupTableColumns();
-        loadDataFromDatabase();
+        taskTable.setRowFactory(tv -> {
+            TableRow<PersonalTaskDTO> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                // Kiểm tra: Nếu là click đúp (clickCount == 2) và dòng đó có dữ liệu (không click vào vùng trống)
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+
+                    // 1. Lấy dữ liệu của dòng được click
+                    PersonalTaskDTO clickedTask = row.getItem();
+
+                    System.out.println("Bạn vừa double-click vào Task: " + clickedTask.getTaskName());
+
+                    // 2. Chuyển sang Scene khác (Sử dụng ViewNavigator của bạn)
+                    // Chú ý: Bạn cần truyền dữ liệu của clickedTask sang màn hình mới để hiển thị
+                    openTaskDetailScene(clickedTask);
+                }
+            });
+            return row;
+        });
+        loadDataFromDatabase(currentUser.getUserId());
         setupFilterButtons();
         setupNavigation();
     }
+    private void openTaskDetailScene(PersonalTaskDTO clickedTask) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/detailinfotask.fxml"));
+            Parent root = loader.load();
 
+            TaskDetailController detailController = loader.getController();
+
+            detailController.setTaskData(clickedTask);
+
+            SceneManager.getInstance().getPrimaryStage().setScene(new Scene(root));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     // ==========================================
     // 1. MAP DỮ LIỆU VÀO CỘT (DÙNG LAMBDA ĐƠN GIẢN, KHÔNG LỖI MODULE)
     // ==========================================
@@ -74,16 +115,16 @@ public class TasklistController {
         colStart.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getTaskStartTime())));
         colDeadline.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getTaskEndTime())));
 
-        colStatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTaskStatus()));
+        colStatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatusName()));
         colDescription.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTaskDescription()));
     }
 
     // ==========================================
     // 2. LẤY DỮ LIỆU TỪ DB VÀ ĐỔ VÀO BẢNG
     // ==========================================
-    private void loadDataFromDatabase() {
+    private void loadDataFromDatabase( int userID) {
         // Bước 1: Gọi Service để lấy danh sách Task từ Database (List Java thông thường)
-        List<Task> tasksFromDB = taskListService.getAllTasks();
+        List<PersonalTaskDTO> tasksFromDB = taskListService.getTaskByUser(userID);
 
         // Bước 2: Ép kiểu List thường thành ObservableList.
         // Tính năng hay nhất của ObservableList là: khi danh sách này thay đổi (thêm/xóa), giao diện tự động cập nhật theo!
@@ -118,8 +159,8 @@ public class TasklistController {
             }
 
             // Kiểm tra xem trạng thái của task có khớp với nút vừa bấm không (bỏ qua viết hoa/thường)
-            if (task.getTaskStatus() != null) {
-                return task.getTaskStatus().equalsIgnoreCase(status);
+            if (task.getStatusName() != null) {
+                return task.getStatusName().equalsIgnoreCase(status);
             }
             return false;
         });
