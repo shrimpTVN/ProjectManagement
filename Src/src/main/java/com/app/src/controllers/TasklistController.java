@@ -4,8 +4,8 @@ import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.services.TasklistService;
 import com.app.src.core.AppContext;
 import com.app.src.models.User;
-import com.app.src.controllers.SceneManager;
-
+//import com.app.src.controllers.SceneManager;
+import com.app.src.controllers.ViewNavigator;
 import javafx.beans.property.SimpleStringProperty; // Import thêm cái này cho Lambda
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,7 +23,7 @@ import javafx.fxml.FXMLLoader;
 import java.util.List;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import java.io.IOException;
+//import java.io.IOException;
 
 public class TasklistController {
 
@@ -87,15 +87,13 @@ public class TasklistController {
         setupNavigation();
     }
     private void openTaskDetailScene(PersonalTaskDTO clickedTask) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/detailinfotask.fxml"));
-            Parent root = loader.load();
+//        ViewNavigator.getInstance().loadSubScene("/scenes/detailinfotask.fxml");
 
-            TaskDetailController detailController = loader.getController();
+        try {
+
+            TaskDetailController detailController = ViewNavigator.getInstance().loadSubScene("/scenes/detailinfotask.fxml");
 
             detailController.setTaskData(clickedTask);
-
-            SceneManager.getInstance().getPrimaryStage().setScene(new Scene(root));
 
         } catch (Exception e) {
             e.printStackTrace();
