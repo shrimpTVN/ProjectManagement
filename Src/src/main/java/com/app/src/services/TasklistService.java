@@ -2,6 +2,7 @@ package com.app.src.services;
 
 import java.util.List;
 import com.app.src.daos.TaskDAO;
+import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.models.Task;
 
 public class TasklistService {
@@ -16,14 +17,16 @@ public class TasklistService {
     // ==========================================
     // 1. ĐỌC DỮ LIỆU (READ)
     // ==========================================
-    public List<Task> getAllTasks() {
+    public List<PersonalTaskDTO> getAllTasks() {
         return taskDAO.findAll();
     }
-
+    public List<PersonalTaskDTO> getTaskByUser(int userID){
+        return taskDAO.findAllByUserId(userID);
+    }
     // ==========================================
     // 2. THÊM MỚI (CREATE)
     // ==========================================
-    public boolean addTask(Task newTask) {
+    public boolean addTask(PersonalTaskDTO newTask) {
         // --- BƯỚC 1: VALIDATION ---
         if (newTask == null) {
             throw new IllegalArgumentException("Dữ liệu công việc không tồn tại!");
@@ -53,7 +56,7 @@ public class TasklistService {
     // ==========================================
     // 3. CẬP NHẬT (UPDATE)
     // ==========================================
-    public boolean toggleTaskStatus(Task task) {
+    public boolean toggleTaskStatus(PersonalTaskDTO task) {
         if (task == null || task.getTaskId() <= 0) {
             throw new IllegalArgumentException("Công việc không hợp lệ hoặc chưa được lưu!");
         }
@@ -74,9 +77,9 @@ public class TasklistService {
         if (taskId <= 0) {
             throw new IllegalArgumentException("ID công việc không hợp lệ!");
         }
-
         return taskDAO.delete(taskId);
     }
+
 
     /**
      * Lấy danh sách công việc thuộc về một dự án cụ thể.

@@ -73,10 +73,7 @@ public class Task {
         this.taskEndTime = taskEndTime;
     }
 
-    public String getProjectName(){
-        return "ProjectName";
-    }
-    public String getTaskStatus () {
-        return "TaskStatus";
+    public String getTaskStatus() {
+        return "Task_status";
     }
 }
