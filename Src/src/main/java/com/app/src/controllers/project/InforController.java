@@ -92,23 +92,26 @@ public class InforController implements IProjectDetailSubView, Initializable {
 
         // Đếm số lượng thành viên và tìm Manager
         int memberCount = 0;
-        String managerName = adminName;       // Mặc định là admin, nếu không tìm thấy Manager nào khác thì vẫn hiển thị admin
+        int countManager = 0;
+        String managerName = "";       // Mặc định là admin, nếu không tìm thấy Manager nào khác thì vẫn hiển thị admin
         ProjectJoiningService joiningService = new ProjectJoiningService();
         project.setJoinings(joiningService.findAllJoiningsByProjectId(project.getProjectId()));
         if (project.getJoinings() != null) {
             memberCount = project.getJoinings().size();
             // Duyệt danh sách để tìm người có Role là Project Manager (Role_id = 1)
+
             for (ProjectJoining joining : project.getJoinings()) {
                 // Kiểm tra Role ID = 1 (Project Manager) hoặc tên role là "Project Manager"
                 if (joining.getRole() != null &&
                         (joining.getRole().getRoleId() == 1 ||
                                 "Project Manager".equalsIgnoreCase(joining.getRole().getRoleName()))) {
-                    managerName = joining.getUser().getUserName();
-                    break;
+                    countManager += 1;
+                    System.out.println("Đã tìm thấy Manager: " + joining.getUser().getUserName());
+                    managerName = managerName.concat((countManager > 1 ? ", " : " ").concat(joining.getUser().getUserName()));
                 }
             }
         }
         lblMemberCount.setText(String.valueOf(memberCount));
-        lblManagerName.setText(managerName);
+        lblManagerName.setText(countManager > 0 ? managerName : adminName);
     }
 }
