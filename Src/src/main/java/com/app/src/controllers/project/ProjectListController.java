@@ -2,6 +2,7 @@ package com.app.src.controllers.project;
 
 import com.app.src.controllers.ViewNavigator;
 import com.app.src.core.AppContext;
+import com.app.src.daos.ProjectDAO;
 import com.app.src.models.Project;
 import com.app.src.services.ProjectJoiningService;
 import javafx.fxml.FXML;
@@ -70,13 +71,14 @@ public class ProjectListController {
 
             if (card != null && card.getUserData() != null) {
                 int index = (Integer) card.getUserData();
-//                System.out.println("Chuyển trang cho Project ID: " + projectId);
+                int projectId = projects.get(index).getProjectId();
 
                ProjectDetailController controller = ViewNavigator.getInstance().loadSubScene("/scenes/ProjectDetail.fxml");
 
-               Project project = projects.get(index);
-               String adminName = projectJoiningService.getAdmin(project.getProjectId());
-               controller.renderData(project, adminName);
+               // Lấy Project đầy đủ với PROJECT_JOINING data
+               Project fullProject = ProjectDAO.getInstance().getProjectWithJoinings(projectId);
+               String adminName = projectJoiningService.getAdmin(projectId);
+               controller.renderData(fullProject, adminName);
             }
         });
     }

@@ -1,6 +1,9 @@
 package com.app.src.services;
 
 import com.app.src.daos.ProjectJoiningDAO;
+import com.app.src.models.ProjectJoining;
+
+import java.util.ArrayList;
 
 public class ProjectJoiningService {
     private static ProjectJoiningDAO projectJoiningDao;
@@ -12,4 +15,7 @@ public class ProjectJoiningService {
         return projectJoiningDao.getAdmin(projectId);
     }
 
+    public ArrayList<ProjectJoining> findAllJoiningsByProjectId(int projectId) {
+        return projectJoiningDao.findAllJoiningsByProjectId(projectId);
+    }
 }

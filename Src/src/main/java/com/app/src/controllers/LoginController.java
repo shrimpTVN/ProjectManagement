@@ -1,6 +1,7 @@
 package com.app.src.controllers;
 
 import com.app.src.core.session.UserSession;
+import com.app.src.exceptions.AppException;
 import com.app.src.models.User;
 import com.app.src.services.LoginService;
 import com.app.src.services.UserService;
@@ -12,10 +13,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import static com.app.src.exceptions.ErrorCode.DATABASE_ERROR;
 
 public class LoginController {
     @FXML
@@ -41,20 +45,23 @@ public class LoginController {
 
     @FXML
     public void handleLoginBtnClick(ActionEvent event) throws SQLException {
-        if (!userNameInput.getText().isBlank() && passwordInput.getText().isBlank()) {
+        if (userNameInput.getText().isBlank() || passwordInput.getText().isBlank()) {
             labelLoginMess.setText("Type your user name and password!");
         } else {
-            LoginService loginService = new LoginService();
-            int userId = loginService.validateLogin(userNameInput.getText(), passwordInput.getText());
+            try {
+                LoginService loginService = new LoginService();
+                int userId = loginService.validateLogin(userNameInput.getText(), passwordInput.getText());
 
-            if (userId != -1) {
-                UserService userService = new UserService();
-
-                UserSession.getInstance().setUser(userService.getUserById(userId));
-
-                SceneManager.getInstance().switchScene("/scenes/dashboard.fxml");
-            } else {
-                labelLoginMess.setText("Invalid username or password!");
+                if (userId != -1) {
+                    UserService userService = new UserService();
+                    UserSession.getInstance().setUser(userService.getUserById(userId));
+                    SceneManager.getInstance().switchScene("/scenes/dashboard.fxml");
+                } else {
+                    labelLoginMess.setText("Invalid username or password!");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new AppException(DATABASE_ERROR, "Không thể truy cập dữ liệu để xác thực");
             }
         }
     }
