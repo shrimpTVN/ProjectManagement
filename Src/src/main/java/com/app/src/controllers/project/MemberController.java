@@ -2,9 +2,11 @@ package com.app.src.controllers.project;
 
 import com.app.src.models.Project;
 import com.app.src.models.ProjectJoining;
+import com.app.src.models.ProjectRole;
 import com.app.src.models.User;
 import com.app.src.daos.ProjectJoiningDAO;
 import com.app.src.services.ProjectJoiningService;
+import com.app.src.services.ProjectRoleService;
 import com.app.src.services.UserService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -14,6 +16,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class MemberController implements IProjectDetailSubView {
@@ -28,6 +32,12 @@ public class MemberController implements IProjectDetailSubView {
     
     @FXML
     private Button btnEditUser;
+
+    @FXML
+    private Button btnDeleteUser;
+
+    @FXML
+    private Button btnCancel;
     
     @FXML
     private TableView<ProjectJoining> memberTable;
@@ -50,6 +60,7 @@ public class MemberController implements IProjectDetailSubView {
     @FXML
     public void initialize() {
         setupTableColumns();
+
     }
 
     public void setupTableColumns(){
@@ -68,8 +79,22 @@ public class MemberController implements IProjectDetailSubView {
         }else {
             System.out.println("Failed to load members");
         }
+        loadRoles();
     }
 
+    private void loadRoles() {
+        ProjectRoleService roleService = new ProjectRoleService();
+        List<ProjectRole> roles = roleService.getAllRoles();
+
+        // Tạo một danh sách mới chỉ chứa chuỗi tên
+        List<String> roleNames = new ArrayList<>();
+        for (ProjectRole item : roles) {
+            // Lấy tên role từ mỗi phần tử và thêm vào danh sách chuỗi
+            roleNames.add(item.getRoleName());
+        }
+        // Đổ danh sách chuỗi vào ComboBox
+        cbRole.getItems().setAll(roleNames);
+    }
     private boolean loadMembers() {
         // Đổi sang dùng ProjectJoiningService
         ProjectJoiningService joiningService = new ProjectJoiningService();
