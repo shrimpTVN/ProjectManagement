@@ -123,6 +123,4 @@ public class TaskDetailController {
             lblTaskName.setStyle("-fx-font-size: 36px;"); // Ngắn -> font to (mặc định)
         }
     }
-
-
 }
