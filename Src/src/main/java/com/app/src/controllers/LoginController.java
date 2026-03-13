@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 
@@ -37,6 +38,14 @@ public class LoginController {
 
     //    we need to declare a variable has the same name with the fx:id in the FXML file, and annotate it with @FXML
 //    we need add @FXML annotation to the event handler method, so that the FXML loader can access it, and add onMouseClicked="#btnLoginHandle" in the button element
+    @FXML
+    private BorderPane authContainer;
+
+    @FXML
+    public void goToSignUp(javafx.scene.input.MouseEvent event) {
+        ViewNavigator.getInstance().loadSubScene("/scenes/signup.fxml");
+    }
+
     @FXML
     public void handleCancelBtnClick(ActionEvent event) {
         Stage stage = (Stage) cancelBtn.getScene().getWindow();

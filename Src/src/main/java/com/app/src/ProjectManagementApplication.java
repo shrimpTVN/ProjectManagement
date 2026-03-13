@@ -15,8 +15,8 @@ public class ProjectManagementApplication extends Application {
 
         SceneManager sceneManager = SceneManager.getInstance();
         sceneManager.initStage(stage);
-        sceneManager.switchScene("/scenes/login.fxml");
-//        sceneManager.switchScene("/scenes/dashboard.fxml");
 
+        // Load AuthWrapper làm màn hình gốc
+        sceneManager.switchScene("/scenes/AuthWrapper.fxml");
     }
 }
