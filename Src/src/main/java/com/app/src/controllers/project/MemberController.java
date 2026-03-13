@@ -7,14 +7,11 @@ import com.app.src.services.ProjectJoiningService;
 import com.app.src.services.ProjectRoleService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MemberController implements IProjectDetailSubView {
     @FXML
@@ -60,6 +57,7 @@ public class MemberController implements IProjectDetailSubView {
         setupTableColumns();
         btnEditUser.setOnAction(event -> handleEditAction());
         btnCancel.setOnAction(event -> handleCancelAction());
+        btnDeleteUser.setOnAction(event -> handleDeleteAction());
     }
 
     public void setupTableColumns() {
@@ -177,5 +175,38 @@ public class MemberController implements IProjectDetailSubView {
         btnAddUser.setDisable(false);
 
         selectedJoining = null;
+    }
+
+    private void handleDeleteAction() {
+        // Lấy dòng đang chọn
+        ProjectJoining selected = memberTable.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            System.out.println("Vui lòng chọn một thành viên để xóa.");
+            return;
+        }
+
+        // Hiển thị hộp thoại xác nhận
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Xác nhận xóa");
+        alert.setHeaderText("Bạn sắp xóa thành viên khỏi dự án");
+        alert.setContentText("Xóa " + selected.getUser().getUserName() + " khỏi danh sách?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Gọi service thực hiện xóa
+            ProjectJoiningService service = new ProjectJoiningService();
+            boolean success = service.removeMember(
+                    currentProject.getProjectId(),
+                    selected.getUser().getUserId()
+            );
+
+            if (success) {
+                loadMembers(); // Làm mới bảng
+                clearForm();   // Dọn dẹp form phía trên (nếu đang bấm vào dòng đó)
+            } else {
+                System.out.println("Lỗi khi xóa thành viên.");
+            }
+        }
     }
 }

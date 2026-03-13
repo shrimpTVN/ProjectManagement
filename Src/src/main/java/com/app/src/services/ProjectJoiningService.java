@@ -23,4 +23,8 @@ public class ProjectJoiningService {
     public boolean updateRole(int projectId, int userId, int newRoleId) {
         return projectJoiningDao.updateRole(projectId, userId, newRoleId);
     }
+
+    public boolean removeMember(int projectId, int userId) {
+        return projectJoiningDao.removeMember(projectId, userId);
+    }
 }
