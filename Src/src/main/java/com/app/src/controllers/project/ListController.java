@@ -66,7 +66,7 @@ public class ListController implements IProjectDetailSubView {
                     } else {
                         setText(item);
                         // Style để người dùng biết có thể tương tác
-                        setStyle("-fx-cursor: hand; -fx-font-weight: bold; -fx-text-fill: #2d3436;");
+                        setStyle("-fx-cursor: hand;");
 
                         // Sự kiện Double-click để xem chi tiết
                         setOnMouseClicked(event -> {
