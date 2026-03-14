@@ -18,7 +18,7 @@
    <children>
       <VBox prefHeight="651.2" prefWidth="983.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <padding>
-            <Insets bottom="107.0" top="20.0" />
+            <Insets top="20.0" />
          </padding>
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="38.0">
@@ -56,7 +56,7 @@
                   </Label>
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="63.0">
+            <HBox alignment="CENTER_LEFT" prefWidth="836.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets left="58.0" right="89.0" />
                </VBox.margin>
@@ -64,9 +64,9 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
                <children>
-                  <Label fx:id="lblTaskName" prefHeight="53.0" prefWidth="133.0" text="TASK 1:">
+                  <Label fx:id="lblTaskName" maxWidth="1.7976931348623157E308" prefHeight="46.0" prefWidth="504.0" text="TASK 1:" textOverrun="CLIP" wrapText="true" HBox.hgrow="ALWAYS">
                      <font>
-                        <Font size="36.0" />
+                        <Font size="30.0" />
                      </font>
                      <opaqueInsets>
                         <Insets />
@@ -75,8 +75,8 @@
                         <Insets />
                      </HBox.margin>
                   </Label>
-                  <Region prefHeight="56.0" prefWidth="495.0" HBox.hgrow="ALWAYS" />
-                  <MenuButton id="statusButton" fx:id="menubtnStatus" alignment="CENTER" maxHeight="31.0" maxWidth="99.0" minHeight="31.0" minWidth="99.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="99.0" style="-fx-padding: 0;" text="Status">
+                  <Region prefHeight="46.0" prefWidth="270.0" />
+                  <MenuButton id="statusButton" fx:id="menubtnStatus" alignment="CENTER" maxHeight="46.4" maxWidth="120.0" minHeight="46.4" minWidth="120.0" mnemonicParsing="false" prefHeight="46.4" prefWidth="120.0" style="-fx-padding: 0;" text="Status" wrapText="true">
                     <items>
                       <MenuItem mnemonicParsing="false" text="To do" />
                       <MenuItem mnemonicParsing="false" text="In progress" />
@@ -92,15 +92,15 @@
                   </MenuButton>
                </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="50.0" VBox.vgrow="ALWAYS">
+            <HBox maxHeight="1.7976931348623157E308" prefWidth="983.0" spacing="50.0" VBox.vgrow="ALWAYS">
                <children>
-                  <VBox prefHeight="200.0" prefWidth="200.0">
+                  <VBox maxWidth="1.7976931348623157E308" prefWidth="350.0" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="59.0" />
                      </HBox.margin>
                      <children>
                         <Label id="contentTitle" text="Name Project:" />
-                        <Label fx:id="lblNameProject" text="ABC">
+                        <Label fx:id="lblNameProject" prefHeight="26.0" prefWidth="347.0" text="ABC" wrapText="true">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -109,7 +109,7 @@
                            </VBox.margin>
                         </Label>
                         <Label id="contentTitle" text="Start:" />
-                        <Label fx:id="lblStart" text="1/1/2026">
+                        <Label fx:id="lblStart" prefHeight="26.0" prefWidth="337.0" text="1/1/2026">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -118,7 +118,7 @@
                            </VBox.margin>
                         </Label>
                         <Label id="contentTitle" text="Deadline:" />
-                        <Label fx:id="lblDeadline" text="10/1/2026">
+                        <Label fx:id="lblDeadline" prefHeight="26.0" prefWidth="338.0" text="10/1/2026">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -127,7 +127,7 @@
                            </VBox.margin>
                         </Label>
                         <Label id="contentTitle" text="Reporter:" />
-                        <Label fx:id="lblReporter" text="oitloc96">
+                        <Label fx:id="lblReporter" prefHeight="26.0" prefWidth="343.0" text="oitloc96" wrapText="true">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -136,7 +136,7 @@
                            </VBox.margin>
                         </Label>
                         <Label id="contentTitle" text="Author:" />
-                        <Label fx:id="lblAuthor" text="oitloc96">
+                        <Label fx:id="lblAuthor" prefHeight="26.0" prefWidth="345.0" text="oitloc96" wrapText="true">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -145,18 +145,15 @@
                            </VBox.margin>
                         </Label>
                         <Label id="contentTitle" text="Description:" />
-                        <Label fx:id="lblDescription" text="Description">
+                        <Label fx:id="lblDescription" alignment="TOP_LEFT" prefHeight="203.0" prefWidth="315.0" text="Descriptiom" wrapText="true">
                            <font>
                               <Font size="16.0" />
                            </font>
-                           <VBox.margin>
-                              <Insets bottom="10.0" />
-                           </VBox.margin>
                         </Label>
                      </children>
                   </VBox>
-                  <Region prefHeight="411.0" prefWidth="263.0" />
-                  <VBox prefHeight="409.0" prefWidth="419.0" style="-fx-border-color: black; fx-border-width: 1; -fx-border-style: solid; -fx-background-color: white;">
+                  <Region prefHeight="407.0" prefWidth="74.0" HBox.hgrow="ALWAYS" />
+                  <VBox maxHeight="376.0" prefHeight="409.0" prefWidth="419.0" style="-fx-border-color: black; fx-border-width: 1; -fx-border-style: solid; -fx-background-color: white;" HBox.hgrow="NEVER">
                      <HBox.margin>
                         <Insets bottom="40.0" right="84.0" />
                      </HBox.margin>
@@ -183,7 +180,7 @@
                         </HBox>
                         <ScrollPane fitToWidth="true" prefHeight="332.0" prefWidth="370.0" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
                            <content>
-                              <VBox fx:id="activityList" prefHeight="325.0" prefWidth="369.0">
+                              <VBox fx:id="activityList" maxHeight="325.6" prefHeight="325.0" prefWidth="369.0">
                                  <children>
                                     <VBox fx:id="commentInputBox" prefHeight="120.0" prefWidth="100.0" style="-fx-border-color: black; -fx-border-width: 1;">
                                        <VBox.margin>
