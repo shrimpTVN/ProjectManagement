@@ -1,10 +1,6 @@
-﻿/*Font.loadFont(*/
-/*getClass().getResource("").toExternalForm(),*/
-/*14*/
-* {
+﻿* {
     -fx-font-family: "Urbanist";
 }
-/* Áp dụng cho toàn bộ ứng dụng */
 
 /* Các class quy định kích cỡ chữ */
 .font-36 {

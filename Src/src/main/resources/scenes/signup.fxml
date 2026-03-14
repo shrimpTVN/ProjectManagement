@@ -16,106 +16,67 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0"
-            prefWidth="1280.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.app.src.controllers.SignUpController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.SignUpController">
     <children>
-        <VBox alignment="CENTER" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox alignment="CENTER" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <ImageView fitHeight="123.0" fitWidth="136.0" layoutX="579.0" layoutY="63.0" pickOnBounds="true"
-                           preserveRatio="true">
+                <ImageView fitHeight="77.0" fitWidth="82.0" layoutX="579.0" layoutY="63.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../image/Frame%20115.png"/>
+                        <Image url="@../image/Frame%20115.png" />
                     </image>
                 </ImageView>
-                <Label alignment="CENTER" onMouseClicked="#goToLogin" text="You have an account ? Login now"
-                       textFill="#4896fe">
+                <Label alignment="CENTER" onMouseClicked="#goToLogin" text="You have an account ? Login now" textFill="#4896fe">
                     <font>
-                        <Font name="Urbanist Medium" size="14.0"/>
+                        <Font name="Urbanist Medium" size="14.0" />
                     </font>
                     <cursor>
-                        <Cursor fx:constant="HAND"/>
+                        <Cursor fx:constant="HAND" />
                     </cursor>
                 </Label>
 
-                <VBox maxWidth="320.0" spacing="6.0">
+                <VBox maxWidth="320.0" spacing="4.0">
                     <children>
-                        <Label fx:id="userName" maxWidth="1.7976931348623157E308" text="Name">
-                            <font>
-                                <Font name="Urbanist Bold" size="14.0"/>
-                            </font>
-                        </Label>
-                        <TextField maxWidth="1.7976931348623157E308" prefHeight="35.0"
-                                   style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;"/>
+                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'Urbanist Bold';" styleClass="font-14" text="Username" />
+                        <TextField fx:id="usernameInput" maxWidth="1.7976931348623157E308" prefHeight="35.0" style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;" />
 
-                        <Label fx:id="userPhone" maxWidth="1.7976931348623157E308" text="Telephone">
-                            <font>
-                                <Font name="Urbanist Bold" size="14.0"/>
-                            </font>
-                        </Label>
-                        <TextField maxWidth="1.7976931348623157E308" prefHeight="35.0"
-                                   style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;"/>
+                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'Urbanist Bold';" styleClass="font-14" text="Name" />
+                        <TextField fx:id="nameInput" maxWidth="1.7976931348623157E308" prefHeight="35.0" style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;" />
 
-                        <Label fx:id="userDateOfBirth" maxWidth="1.7976931348623157E308" text="Date of birth">
-                            <font>
-                                <Font name="Urbanist Bold" size="14.0"/>
-                            </font>
-                        </Label>
-                        <DatePicker maxWidth="1.7976931348623157E308" prefHeight="35.0"
-                                    style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;"/>
+                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'Urbanist Bold';" styleClass="font-14" text="Telephone" />
+                        <TextField fx:id="phoneInput" maxWidth="1.7976931348623157E308" prefHeight="35.0" style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;" />
 
-                        <Label fx:id="userSex" maxWidth="1.7976931348623157E308" text="Sex">
-                            <font>
-                                <Font name="Urbanist Bold" size="14.0"/>
-                            </font>
-                        </Label>
-                        <HBox alignment="CENTER_LEFT" spacing="30.0">
+                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'Urbanist Bold';" styleClass="font-14" text="Date of Birth" />
+                        <DatePicker fx:id="dobInput" maxWidth="1.7976931348623157E308" prefHeight="35.0" style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;" />
+
+                        <Label maxWidth="1.7976931348623157E308" prefHeight="13.0" prefWidth="320.0" style="-fx-font-family: 'Urbanist Bold';" styleClass="font-14" text="Sex" />
+                        <HBox alignment="CENTER" spacing="30.0">
                             <children>
-                                <RadioButton mnemonicParsing="false" text="Male">
+                                <RadioButton mnemonicParsing="false" styleClass="font-14" style="-fx-font-family: 'Urbanist Bold';" text="Male">
                                     <toggleGroup>
-                                        <ToggleGroup fx:id="gender"/>
+                                        <ToggleGroup fx:id="gender" />
                                     </toggleGroup>
-                                    <font>
-                                        <Font name="Urbanist Medium" size="13.0"/>
-                                    </font>
                                 </RadioButton>
-                                <RadioButton mnemonicParsing="false" text="Female" toggleGroup="$gender">
-                                    <font>
-                                        <Font name="Urbanist Medium" size="13.0"/>
-                                    </font>
-                                </RadioButton>
+                                <RadioButton mnemonicParsing="false" styleClass="font-14" style="-fx-font-family: 'Urbanist Bold';" text="Female" toggleGroup="$gender" />
                             </children>
                             <VBox.margin>
-                                <Insets bottom="5.0" top="5.0"/>
+                                <Insets bottom="5.0" top="5.0" />
                             </VBox.margin>
                         </HBox>
 
-                        <Label fx:id="userPassword" maxWidth="1.7976931348623157E308" text="Password">
-                            <font>
-                                <Font name="Urbanist Bold" size="14.0"/>
-                            </font>
-                        </Label>
-                        <PasswordField maxWidth="1.7976931348623157E308" prefHeight="35.0"
-                                       style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;"/>
+                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'Urbanist Bold';" styleClass="font-14" text="Password" />
+                        <PasswordField fx:id="passwordInput" maxWidth="1.7976931348623157E308" prefHeight="35.0" style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;" />
 
-                        <Label fx:id="userPasswordAgain" maxWidth="1.7976931348623157E308" text="Password again">
-                            <font>
-                                <Font name="Urbanist Bold" size="14.0"/>
-                            </font>
-                        </Label>
-                        <PasswordField maxWidth="1.7976931348623157E308" prefHeight="35.0"
-                                       style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;"/>
+                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'Urbanist Bold';" styleClass="font-14" text="Password again" />
+                        <PasswordField fx:id="passwordAgainInput" maxWidth="1.7976931348623157E308" prefHeight="35.0" style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;" />
 
-                        <Button alignment="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
-                                prefHeight="35.0"
-                                style="-fx-background-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;"
-                                text="SIGN UP" textFill="WHITE">
+                        <Label fx:id="labelMess" alignment="CENTER" maxWidth="1.7976931348623157E308" text="" styleClass="font-14" />
+
+                        <Button alignment="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleSignUp" prefHeight="35.0" style="-fx-background-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;" text="SIGN UP" textFill="WHITE">
                             <font>
-                                <Font name="System Bold" size="16.0"/>
+                                <Font name="Urbanist Bold" size="16.0" />
                             </font>
                             <VBox.margin>
-                                <Insets top="15.0"/>
+                                <Insets top="5.0" />
                             </VBox.margin>
                         </Button>
                     </children>
