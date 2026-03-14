@@ -2,6 +2,7 @@ package com.app.src.controllers.project;
 
 import com.app.src.controllers.TaskDetailController;
 import com.app.src.controllers.ViewNavigator;
+import com.app.src.core.AppContext;
 import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.models.Project;
 import javafx.scene.control.Hyperlink;
@@ -16,13 +17,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 public class ListController implements IProjectDetailSubView {
-    @Override
-    public void renderData(Project project, String adminName) {
-        System.out.println(project.getProjectName() + " " + adminName);
-        if (project != null) {
-            loadData(project.getProjectId());
-        }
-    }
+
 
     // ==========================================
     // KHAI BÁO THÀNH PHẦN GIAO DIỆN (UI)
@@ -36,7 +31,7 @@ public class ListController implements IProjectDetailSubView {
     // ==========================================
     private TasklistService service = new TasklistService();
     private ObservableList<Task> masterData = FXCollections.observableArrayList();
-
+    private Project project;
 
     /**
      * Hàm tự động chạy khi file FXML được nạp thành công.
@@ -46,6 +41,15 @@ public class ListController implements IProjectDetailSubView {
     public void initialize() {
         setupTableColumns();
         setupLinkActions();
+    }
+
+    @Override
+    public void renderData(Project project, String adminName) {
+//        System.out.println(project.getProjectName() + " " + adminName);
+        this.project = project;
+        if (project != null) {
+            loadData(project.getProjectId());
+        }
     }
 
     /**
@@ -141,6 +145,7 @@ public class ListController implements IProjectDetailSubView {
 
             if (controller instanceof TaskDetailController) {
                 TaskDetailController detailController = (TaskDetailController) controller;
+                detailController.setProjectId(project.getProjectId());
 
                 // --- BƯỚC CẦU NỐI: Chuyển Task sang PersonalTaskDTO ---
                 PersonalTaskDTO dto = new PersonalTaskDTO();
@@ -148,6 +153,10 @@ public class ListController implements IProjectDetailSubView {
                 dto.setTaskDescription(task.getTaskDescription());
                 dto.setTaskStartTime(task.getTaskStartTime());
                 dto.setTaskEndTime(task.getTaskEndTime());
+                dto.setStatusName(task.getTaskStatus());
+                if (project != null) {
+                    dto.setProjectName(project.getProjectName());
+                }
                 // Map các trường khác nếu cần...
 
                 // Bây giờ truyền DTO đi sẽ không còn lỗi nữa

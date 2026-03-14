@@ -16,6 +16,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.TableRow;
 import javafx.fxml.FXMLLoader;
@@ -30,9 +31,6 @@ public class TasklistController {
     // ==========================================
     // KHAI BÁO CÁC THÀNH PHẦN GIAO DIỆN (@FXML)
     // ==========================================
-    @FXML private HBox breadcrumbBox;
-    @FXML private Hyperlink hlHome;
-    @FXML private Label lblCurrentPage;
     @FXML private Label lblTitle;
 
     @FXML private Button btnAll;
@@ -73,7 +71,7 @@ public class TasklistController {
                     // 1. Lấy dữ liệu của dòng được click
                     PersonalTaskDTO clickedTask = row.getItem();
 
-                    System.out.println("Bạn vừa double-click vào Task: " + clickedTask.getTaskName());
+//                    System.out.println("Bạn vừa double-click vào Task: " + clickedTask.getTaskName());
 
                     // 2. Chuyển sang Scene khác (Sử dụng ViewNavigator của bạn)
                     // Chú ý: Bạn cần truyền dữ liệu của clickedTask sang màn hình mới để hiển thị
@@ -84,16 +82,14 @@ public class TasklistController {
         });
         loadDataFromDatabase(currentUser.getUserId());
         setupFilterButtons();
-        setupNavigation();
     }
     private void openTaskDetailScene(PersonalTaskDTO clickedTask) {
 //        ViewNavigator.getInstance().loadSubScene("/scenes/detailinfotask.fxml");
 
         try {
-
             TaskDetailController detailController = ViewNavigator.getInstance().loadSubScene("/scenes/detailinfotask.fxml");
-
             detailController.setTaskData(clickedTask);
+            detailController.setProjectId(0);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -139,14 +135,12 @@ public class TasklistController {
     // 3. XỬ LÝ LỌC TRẠNG THÁI THEO NÚT BẤM
     // ==========================================
     private void setupFilterButtons() {
-        setActiveButton(btnAll); // Mặc định tô đậm nút All khi mới mở app
-
         // Gắn sự kiện click cho từng nút
-        btnAll.setOnAction(e -> { applyFilter("All"); setActiveButton(btnAll); });
-        btnTodo.setOnAction(e -> { applyFilter("To do"); setActiveButton(btnTodo); });
-        btnInprogress.setOnAction(e -> { applyFilter("In progress"); setActiveButton(btnInprogress); });
-        btnInpreview.setOnAction(e -> { applyFilter("In preview"); setActiveButton(btnInpreview); });
-        btnDone.setOnAction(e -> { applyFilter("Done"); setActiveButton(btnDone); });
+        btnAll.setOnAction(e -> { applyFilter("All");  });
+        btnTodo.setOnAction(e -> { applyFilter("To do");});
+        btnInprogress.setOnAction(e -> { applyFilter("In progress");  });
+        btnInpreview.setOnAction(e -> { applyFilter("In preview");  });
+        btnDone.setOnAction(e -> { applyFilter("Done"); ; });
     }
 
     private void applyFilter(String status) {
@@ -167,23 +161,17 @@ public class TasklistController {
     // ==========================================
     // 4. CHỈNH STYLE NÚT BẤM VÀ ĐIỀU HƯỚNG
     // ==========================================
-    private void setActiveButton(Button activeBtn) {
-        String normalStyle = "-fx-background-color: transparent; -fx-padding: 0; -fx-font-weight: normal;";
-        String activeStyle = "-fx-background-color: transparent; -fx-padding: 0; -fx-font-weight: 800;";
+//    private void setActiveButton(Button activeBtn) {
+//        String normalStyle = "-fx-background-color: transparent; -fx-padding: 0; -fx-font-weight: normal;";
+//        String activeStyle = "-fx-background-color: transparent; -fx-padding: 0; -fx-font-weight: 800;";
+//
+//        btnAll.setStyle(normalStyle);
+//        btnTodo.setStyle(normalStyle);
+//        btnInprogress.setStyle(normalStyle);
+//        btnInpreview.setStyle(normalStyle);
+//        btnDone.setStyle(normalStyle);
+//
+//        activeBtn.setStyle(activeStyle);
+//    }
 
-        btnAll.setStyle(normalStyle);
-        btnTodo.setStyle(normalStyle);
-        btnInprogress.setStyle(normalStyle);
-        btnInpreview.setStyle(normalStyle);
-        btnDone.setStyle(normalStyle);
-
-        activeBtn.setStyle(activeStyle);
-    }
-
-    private void setupNavigation() {
-        hlHome.setOnAction(e -> {
-            System.out.println("Đang chuyển hướng về trang chủ...");
-            // Code chuyển Scene (FXML) sẽ nằm ở đây
-        });
-    }
 }

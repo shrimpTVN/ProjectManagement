@@ -18,26 +18,23 @@
 
 package com.app.src.controllers;
 
+import com.app.src.controllers.project.ProjectDetailController;
+import com.app.src.daos.ProjectDAO;
 import com.app.src.dtos.PersonalTaskDTO;
+import com.app.src.models.Project;
+import com.app.src.services.ProjectJoiningService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.input.MouseEvent;
 
 public class TaskDetailController {
 
     // --- Các thành phần giao diện đã được khai báo trong file FXML ---
-
-    // Breadcrumbs
-    @FXML
-    private Hyperlink hlHome;
-    @FXML
-    private Hyperlink hlProjectList;
-    @FXML
-    private Hyperlink hlProject;
-
-    // Labels hiển thị thông tin chính
+    @FXML private Label lblProjectName;
+        // Labels hiển thị thông tin chính
     @FXML
     private Label lblTask;
     @FXML
@@ -65,23 +62,7 @@ public class TaskDetailController {
 
     // Biến lưu trữ Task hiện tại đang xem
     private PersonalTaskDTO currentTask;
-
-    /**
-     * Hàm này tự động chạy khi giao diện được tải lên
-     */
-    @FXML
-    public void initialize() {
-        // Cài đặt sự kiện click cho các nút chuyển hướng (Breadcrumbs)
-        hlHome.setOnAction(event -> {
-            System.out.println("Quay về trang Home");
-            SceneManager.getInstance().switchScene("/scenes/dashboard.fxml"); // Thay đường dẫn thật của bạn
-        });
-
-        hlProjectList.setOnAction(event -> {
-            System.out.println("Quay về danh sách Dự án");
-            // SceneManager.getInstance().switchScene("/scenes/project_list.fxml");
-        });
-    }
+    private int fromProject = 0;
 
     /**
      * Hàm này được gọi từ TasklistController để truyền dữ liệu Task vào
@@ -95,11 +76,12 @@ public class TaskDetailController {
         this.currentTask = task;
 
         // Đổ dữ liệu từ Object Task lên các Label trên màn hình
-        lblTaskName.setText(task.getTaskName()); // Cập nhật tên Task (cho tiêu đề lớn)
-        lblNameProject.setText(task.getProjectName() != null ? task.getProjectName() : "Chưa gắn dự án");
+        String safeTaskName = task.getTaskName() != null ? task.getTaskName() : "(Không có tên task)";
+        String safeProjectName = task.getProjectName() != null ? task.getProjectName() : "Chưa gắn dự án";
 
-        // Cập nhật Breadcrumb Dự án
-        hlProject.setText(task.getProjectName() != null ? task.getProjectName() : "No Project");
+        lblTaskName.setText(safeTaskName); // Cập nhật tên Task (cho tiêu đề lớn)
+        lblNameProject.setText(safeProjectName);
+        lblProjectName.setText("Project: " + safeProjectName);
 
         lblStart.setText(task.getTaskStartTime() != null ? task.getTaskStartTime() : "Chưa xác định");
         lblDeadline.setText(task.getTaskEndTime() != null ? task.getTaskEndTime() : "Chưa xác định");
@@ -114,7 +96,7 @@ public class TaskDetailController {
         // lblAuthor.setText(task.getUser().getUserName()); // Nếu Model của bạn hỗ trợ lấy người tạo
 
         // LOGIC TỰ ĐỘNG THU NHỎ FONT CHO TASK NAME
-        String taskName = task.getTaskName();
+        String taskName = safeTaskName;
         if (taskName.length() > 50) {
             lblTaskName.setStyle("-fx-font-size: 20px;"); // Rất dài -> font nhỏ
         } else if (taskName.length() > 25) {
@@ -123,4 +105,26 @@ public class TaskDetailController {
             lblTaskName.setStyle("-fx-font-size: 36px;"); // Ngắn -> font to (mặc định)
         }
     }
+
+    public void setProjectId(int id)
+    {
+        this.fromProject = id;
+    }
+
+    public void handleBackClick(MouseEvent mouseEvent) {
+        if (this.fromProject != 0) {
+            ProjectDetailController controller = ViewNavigator.getInstance().loadSubScene("/scenes/ProjectDetail.fxml");
+
+            // Lấy Project đầy đủ với PROJECT_JOINING data
+            Project fullProject = ProjectDAO.getInstance().getProjectWithJoinings(fromProject);
+            ProjectJoiningService projectJoiningService = new ProjectJoiningService();
+            String adminName = projectJoiningService.getAdmin(fromProject);
+            controller.renderData(fullProject, adminName);
+        }
+        else
+        {
+            ViewNavigator.getInstance().loadSubScene("/scenes/Home.fxml");
+        }
+    }
+
 }
