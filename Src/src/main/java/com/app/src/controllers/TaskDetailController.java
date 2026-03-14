@@ -112,5 +112,15 @@ public class TaskDetailController {
         // --- Phần này bạn cần bổ sung thêm nếu muốn hiển thị ---
         // lblReporter.setText("Người báo cáo...");
         // lblAuthor.setText(task.getUser().getUserName()); // Nếu Model của bạn hỗ trợ lấy người tạo
+
+        // LOGIC TỰ ĐỘNG THU NHỎ FONT CHO TASK NAME
+        String taskName = task.getTaskName();
+        if (taskName.length() > 50) {
+            lblTaskName.setStyle("-fx-font-size: 20px;"); // Rất dài -> font nhỏ
+        } else if (taskName.length() > 25) {
+            lblTaskName.setStyle("-fx-font-size: 28px;"); // Vừa phải -> font vừa
+        } else {
+            lblTaskName.setStyle("-fx-font-size: 36px;"); // Ngắn -> font to (mặc định)
+        }
     }
 }
