@@ -122,7 +122,7 @@ public class ProjectJoiningDAO extends AbstractDAO {
 
     public ArrayList<ProjectJoining> findAllJoiningsByProjectId(int projectId) {
         ArrayList<ProjectJoining> projectJoinings = new ArrayList<>();
-        final String sql = "SELECT pj.*, u.User_name, pr.Role_name " +
+        final String sql = "SELECT pj.*, u.User_name, u.User_dateOfBirth, u.User_phoneNumber, pr.Role_name " +
                 "FROM project_joining pj " +
                 "JOIN user u ON pj.User_id = u.User_id " +
                 "JOIN project_role pr ON pj.Role_id = pr.Role_id " +
@@ -144,6 +144,8 @@ public class ProjectJoiningDAO extends AbstractDAO {
                 User user = new User();
                 user.setUserId(resultSet.getInt("User_id"));
                 user.setUserName(resultSet.getString("User_name"));
+                user.setUserDoB(resultSet.getString("User_dateOfBirth"));
+                user.setUserPhoneNumber(resultSet.getString("User_phoneNumber"));
                 projectJoining.setUser(user);
 
                 ProjectRole projectRole = new ProjectRole();
@@ -234,6 +236,56 @@ public class ProjectJoiningDAO extends AbstractDAO {
             try {
                 if (conn != null) conn.setAutoCommit(true);
                 closeResource(ps, conn, rs);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean updateRole(int projectId, int userId, int roleId) {
+        String sql = "UPDATE project_joining SET Role_id = ? WHERE Pro_id = ? AND User_id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, roleId);
+            ps.setInt(2, projectId);
+            ps.setInt(3, userId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                closeResource(ps, conn, null);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean removeMember(int projectId, int userId) {
+        String sql = "DELETE FROM project_joining WHERE Pro_id = ? AND User_id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, projectId);
+            ps.setInt(2, userId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                closeResource(ps, conn, null);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

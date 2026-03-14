@@ -21,7 +21,9 @@ public class ProjectManagementApplication extends Application {
             SceneManager sceneManager = SceneManager.getInstance();
             sceneManager.initStage(stage);
 
-        sceneManager.switchScene("/scenes/login.fxml");
+            sceneManager.switchScene("/scenes/login.fxml");
+//        sceneManager.switchScene("/scenes/dashboard.fxml");
+
 
 
 
