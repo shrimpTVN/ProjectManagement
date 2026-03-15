@@ -1,9 +1,11 @@
 package com.app.src.daos;
 
+import com.app.src.models.Project;
 import com.app.src.models.ProjectJoining;
 import com.app.src.models.ProjectRole;
 import com.app.src.models.User;
 
+import javax.management.relation.Role;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -118,6 +120,39 @@ public class ProjectJoiningDAO extends AbstractDAO {
     @Override
     public boolean delete(int id) {
         return false;
+    }
+
+    public boolean createNewJoining(int project, int user, int role) {
+        final String sql = "INSERT INTO project_joining (PJo_dateJoin, User_id, Pro_id, Role_id) VALUES (?, ?, ?, ?)";
+        PreparedStatement preparedStatement = null;
+        boolean isSuccess = false; // Biến lưu kết quả
+
+        try {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+
+            java.sql.Timestamp currentTime = new java.sql.Timestamp(System.currentTimeMillis());
+            preparedStatement.setTimestamp(1, currentTime);
+            preparedStatement.setInt(2, user);
+            preparedStatement.setInt(3, project);
+            preparedStatement.setInt(4, role);
+
+            // executeUpdate() trả về số dòng bị ảnh hưởng. Nếu > 0 tức là insert thành công.
+            int rowAffected = preparedStatement.executeUpdate();
+            isSuccess = rowAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Thay vì throw RuntimeException làm crash app, mình in ra lỗi và để hàm trả về false
+        } finally {
+            try {
+                closeResource(preparedStatement, connection, null);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println(isSuccess + "...");
+        return isSuccess; // Trả về true hoặc false
     }
 
     public ArrayList<ProjectJoining> findAllJoiningsByProjectId(int projectId) {
