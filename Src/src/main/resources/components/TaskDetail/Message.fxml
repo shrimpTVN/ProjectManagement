@@ -6,44 +6,47 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="hboxRoot" alignment="CENTER_LEFT" maxWidth="1.737658922E9" prefWidth="325.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER">
-   <children>
-      <VBox fx:id="vboxBubble" maxWidth="260.0" style="-fx-background-color: #f0f0f0; -fx-background-radius: 12;">
-         <children>
-            <Label fx:id="lblCommentUser" style="-fx-font-weight: 700;" text="Manager" textFill="#2c3e50">
-               <font>
-                  <Font size="11.0" />
-               </font>
-               <VBox.margin>
-                  <Insets bottom="2.0" />
-               </VBox.margin>
-            </Label>
+<HBox fx:id="hboxRoot" alignment="CENTER_LEFT" maxWidth="1.737658922E9" prefWidth="325.0"
+      xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.app.src.controllers.task.MessageController">
+    <children>
+        <VBox fx:id="vboxBubble" maxWidth="260.0" style="-fx-background-color: #f0f0f0; -fx-background-radius: 12;">
+            <children>
+                <Label fx:id="lblCommentUser" style="-fx-font-weight: 700;" text="Manager" textFill="#2c3e50">
+                    <font>
+                        <Font size="11.0"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets bottom="2.0"/>
+                    </VBox.margin>
+                </Label>
 
-            <Label fx:id="lblCommentContent" text="Thiết kế bảng USER, PROJECT, TASK và các bảng liên quan" wrapText="true" VBox.vgrow="ALWAYS">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
+                <Label fx:id="lblCommentContent" text="Thiết kế bảng USER, PROJECT, TASK và các bảng liên quan"
+                       wrapText="true" VBox.vgrow="ALWAYS">
+                    <font>
+                        <Font size="13.0"/>
+                    </font>
+                </Label>
 
-            <HBox alignment="BOTTOM_RIGHT">
-               <children>
-                  <Label fx:id="lblCommentTime" text="08:00" textFill="#888888">
-                     <font>
-                        <Font size="9.0" />
-                     </font>
-                  </Label>
-               </children>
-               <VBox.margin>
-                  <Insets top="2.0" />
-               </VBox.margin>
-            </HBox>
-         </children>
-         <padding>
-            <Insets bottom="8.0" left="10.0" right="10.0" top="8.0" />
-         </padding>
-      </VBox>
-   </children>
-   <padding>
-      <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-   </padding>
+                <HBox alignment="BOTTOM_RIGHT">
+                    <children>
+                        <Label fx:id="lblCommentTime" text="08:00" textFill="#888888">
+                            <font>
+                                <Font size="9.0"/>
+                            </font>
+                        </Label>
+                    </children>
+                    <VBox.margin>
+                        <Insets top="2.0"/>
+                    </VBox.margin>
+                </HBox>
+            </children>
+            <padding>
+                <Insets bottom="8.0" left="10.0" right="10.0" top="8.0"/>
+            </padding>
+        </VBox>
+    </children>
+    <padding>
+        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
+    </padding>
 </HBox>
