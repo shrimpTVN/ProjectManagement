@@ -10,31 +10,27 @@ import java.util.ArrayList;
 public class AppContext {
 
     private static AppContext instance;
-    private final UserSession userSession;
     private static ArrayList<Project> projects;
+    private final UserSession userSession;
 
 
-    private AppContext(){
+    private AppContext() {
         userSession = UserSession.getInstance();
         ProjectService projectService = new ProjectService();
        projects =  ProjectService.getAllProjects(userSession.getUser().getUserId());
-//       projects = ProjectService.getAllProjects(5);
+//        projects = ProjectService.getAllProjects(3);
     }
 
 
-    public static AppContext getInstance(){
-        if (instance == null){
+    public static AppContext getInstance() {
+        if (instance == null) {
             instance = new AppContext();
         }
 
         return instance;
     }
 
-    public User getUserData(){
-        return userSession.getUser();
-    }
-
-    public static ArrayList<Project> getProjects(){
+    public static ArrayList<Project> getProjects() {
         return projects;
     }
 
@@ -42,4 +38,9 @@ public class AppContext {
         UserSession userSession = UserSession.getInstance();
         projects = ProjectService.getAllProjects(userSession.getUser().getUserId());
     }
+
+    public User getUserData() {
+        return userSession.getUser();
+    }
+
 }

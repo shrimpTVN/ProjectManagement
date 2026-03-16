@@ -1,11 +1,15 @@
 package com.app.src;
 
 import com.app.src.controllers.SceneManager;
+import com.app.src.core.AppContext;
+import com.app.src.core.session.UserSession;
+import com.app.src.services.UserService;
 import javafx.application.Application;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class ProjectManagementApplication extends Application {
 
