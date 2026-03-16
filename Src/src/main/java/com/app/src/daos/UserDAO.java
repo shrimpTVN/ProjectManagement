@@ -2,12 +2,9 @@ package com.app.src.daos;
 
 import com.app.src.models.User;
 import com.app.src.models.Account;
+import com.app.src.utils.MySQLDatabaseConnection;
 
-import java.io.Console;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -18,10 +15,9 @@ public class UserDAO extends AbstractDAO<User>{
 
     private UserDAO() {}
 
-    public static UserDAO getInstance(){
-        if(instance == null){
+    public static UserDAO getInstance() {
+        if (instance == null) {
             instance = new UserDAO();
-
         }
         return instance;
     }
@@ -186,5 +182,68 @@ public class UserDAO extends AbstractDAO<User>{
     @Override
     public boolean delete(int id) {
         return false;
+    }
+
+    public boolean registerUser(String username, String name, String phone, String dob, String gender, String password) {
+        Connection conn = null;
+        PreparedStatement psUser = null;
+        PreparedStatement psAccount = null;
+        ResultSet rs = null;
+
+        try {
+            conn = this.getConnection();
+            conn.setAutoCommit(false); // Tắt tự động lưu để bắt đầu Transaction
+
+            // 1. Tạo User trước
+            String sqlUser = "INSERT INTO user (User_name, User_dateOfBirth, User_gender, User_phoneNumber) VALUES (?, ?, ?, ?)";
+            psUser = conn.prepareStatement(sqlUser, Statement.RETURN_GENERATED_KEYS);   // Yêu cầu trả về ID tự động sinh ra
+            psUser.setString(1, name);
+            psUser.setString(2, dob);
+            psUser.setBoolean(3, "Male".equalsIgnoreCase(gender)); // Ép kiểu String sang boolean
+            psUser.setString(4, phone);
+            psUser.executeUpdate();
+
+            // Lấy ID của User vừa tạo
+            rs = psUser.getGeneratedKeys();
+            int userId = -1;
+            if (rs.next()) {
+                userId = rs.getInt(1);
+            }
+
+            // 2. Tạo Account với userId vừa lấy
+            String sqlAccount = "INSERT INTO account (Acc_userName, Acc_password, User_id) VALUES (?, ?, ?)";
+            psAccount = conn.prepareStatement(sqlAccount);
+            psAccount.setString(1, username);
+            psAccount.setString(2, password);
+            psAccount.setInt(3, userId);
+            psAccount.executeUpdate();
+
+            // Nếu không có lỗi, xác nhận lưu cả 2 bảng
+            conn.commit();
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.rollback(); // Hoàn tác nếu có lỗi (ví dụ trùng username)
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            return false;
+        } finally {
+            try {
+                if (psUser != null) psUser.close();
+                if (psAccount != null) psAccount.close();
+                if (rs != null) rs.close();
+                if (conn != null) {
+                    conn.setAutoCommit(true); // Trả lại trạng thái mặc định
+                    this.closeConnection(conn);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
