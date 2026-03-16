@@ -1,5 +1,6 @@
 package com.app.src.controllers.project;
 
+import com.app.src.controllers.ViewNavigator;
 import com.app.src.models.Project;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -43,5 +44,9 @@ public class ProjectDetailController {
 
         IProjectDetailSubView controller = ProjectDetailNavigator.getInstance().loadSubView("/components/ProjectDetail/"+btnId.substring(3) + ".fxml");
         controller.renderData(project, adminName);
+    }
+
+    public void handleBackClick(MouseEvent mouseEvent) {
+        ViewNavigator.getInstance().loadSubScene("/scenes/ProjectList.fxml");
     }
 }

@@ -5,6 +5,8 @@ import com.app.src.models.ProjectJoining;
 import com.app.src.models.ProjectRole;
 import com.app.src.services.ProjectJoiningService;
 import com.app.src.services.ProjectRoleService;
+import com.app.src.services.UserService;
+import com.app.src.models.User;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -55,6 +57,7 @@ public class MemberController implements IProjectDetailSubView {
     @FXML
     public void initialize() {
         setupTableColumns();
+        btnAddUser.setOnAction(event -> handleAddMemberAction());
         btnEditUser.setOnAction(event -> handleEditAction());
         btnCancel.setOnAction(event -> handleCancelAction());
         btnDeleteUser.setOnAction(event -> handleDeleteAction());
@@ -159,6 +162,54 @@ public class MemberController implements IProjectDetailSubView {
         btnAddUser.setDisable(true); // Tạm ẩn hoặc khóa nút Add để tránh xung đột
     }
 
+    @FXML
+    private void handleAddMemberAction() {
+        String inputUserName = txtUserName.getText().trim();
+        String selectedRoleName = cbRole.getValue();
+
+        // 1. Kiểm tra đầu vào (Validation)
+        if (inputUserName.isEmpty() || selectedRoleName == null) {
+            System.out.println("[DEBUG - Add Member] Thất bại: Thiếu thông tin UserName hoặc Role.");
+            return;
+        }
+
+        // 2. Tìm Role tương ứng dựa trên tên được chọn
+        ProjectRole selectedRole = null;
+        for (ProjectRole role : allRoles) {
+            if (role.getRoleName().equals(selectedRoleName)) {
+                selectedRole = role;
+                break;
+            }
+        }
+
+        if (selectedRole == null) {
+            System.out.println("[DEBUG - Add Member] Thất bại: Không tìm thấy Role hợp lệ.");
+            return;
+        }
+
+        // 3. Tìm User trong Database dựa trên UserName
+        UserService userService = new UserService();
+        User foundUser = userService.findByUserName(inputUserName);
+
+        if (foundUser == null) {
+            System.out.println("[DEBUG - Add Member] Thất bại: User '" + inputUserName + "' không tồn tại trong DB.");
+            return;
+        }
+
+        int userId = foundUser.getUserId();
+        int selectRoleId = selectedRole.getRoleId();
+        // 4. Gọi Service để thêm vào Database
+        ProjectJoiningService joiningService = new ProjectJoiningService();
+        boolean isSuccess = joiningService.createNewJoining(currentProject.getProjectId(), userId, selectRoleId);
+
+        if (isSuccess) {
+            System.out.println("[DEBUG - Add Member] Thành công: Đã thêm user '" + inputUserName + "' vào dự án.");
+            loadMembers(); // Load lại bảng dữ liệu để hiển thị dòng mới
+            clearForm();   // Reset lại form nhập liệu
+        } else {
+            System.out.println("[DEBUG - Add Member] Thất bại: Không thể insert vào DB. (Có thể do trùng lặp hoặc lỗi SQL)");
+        }
+    }
     private void handleCancelAction() {
         clearForm();
     }

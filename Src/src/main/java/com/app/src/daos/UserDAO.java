@@ -5,6 +5,11 @@ import com.app.src.models.Account;
 import com.app.src.utils.MySQLDatabaseConnection;
 
 import java.sql.*;
+import java.io.Console;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -126,6 +131,47 @@ public class UserDAO extends AbstractDAO<User>{
             }
         }
         return users;
+    }
+    public User findByUserName(String userName) {
+        User user = null;
+        final String sql = "SELECT * FROM user WHERE User_name = ?";
+
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, userName);
+
+            resultSet = preparedStatement.executeQuery();
+
+            // Dùng 'if' thay vì 'while' vì ta chỉ cần lấy 1 user đầu tiên tìm được
+            if (resultSet.next()) {
+                user = new User();
+                user.setUserId(resultSet.getInt("User_id"));
+                user.setUserName(resultSet.getString("User_name"));
+
+                // Theo code cũ của bạn, DoB được lưu dưới dạng String
+                user.setUserDoB(resultSet.getString("User_dateOfBirth"));
+
+                // Cột User_gender trong ảnh lưu giá trị 0 hoặc 1, nên dùng getInt
+                user.setUserGender(resultSet.getInt("User_gender")==1);
+
+                user.setUserPhoneNumber(resultSet.getString("User_phoneNumber"));
+                System.out.println("Đã lấy được user " + user.getUserId() + " " + user.getUserName());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                // Có ResultSet nên truyền đầy đủ cả 3 tham số để đóng
+                closeResource(preparedStatement, connection, resultSet);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return user;
     }
 
     @Override

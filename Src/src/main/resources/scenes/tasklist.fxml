@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="652.0" prefWidth="983.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.TasklistController">
+<AnchorPane prefHeight="652.0" prefWidth="983.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.task.TasklistController">
    <children>
       <VBox layoutY="6.0" prefHeight="522.0" prefWidth="468.0" AnchorPane.bottomAnchor="-6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="6.0">
          <padding>
@@ -49,7 +49,7 @@
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblSep" layoutX="53.0" layoutY="20.0" text="/">
+                  <Label fx:id="lblSep2" layoutX="53.0" layoutY="20.0" text="/">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -74,7 +74,7 @@
                         <Insets left="76.0" right="76.0" top="11.0" />
                      </VBox.margin>
                      <children>
-                        <Button fx:id="btnAll" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-padding: 0; -fx-font-weight: 800;" text="All">
+                        <Button fx:id="btnAll" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-padding: 0;" text="All">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
