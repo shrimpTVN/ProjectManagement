@@ -56,7 +56,6 @@
 
 /*chỉnh css breadcrumblink*/
 .breadcrumb-item {
-    -fx-padding: 0;
     -fx-border-width: 0;
     -fx-background-insets: 0;
     -fx-text-fill: black;
@@ -178,4 +177,14 @@
 
 .btn-action:hover {
     -fx-background-color: #f4f4f4;
+}
+
+.subview-button {
+    -fx-font-weight: 400;
+    /* other base styles here */
+}
+
+/* Active state is controlled by adding/removing the 'active-tab' style class in controller */
+.subview-button.active-tab {
+    -fx-font-weight: 700;
 }
