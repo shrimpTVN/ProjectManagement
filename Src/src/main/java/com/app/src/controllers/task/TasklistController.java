@@ -1,4 +1,4 @@
-package com.app.src.controllers;
+package com.app.src.controllers.task;
 
 import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.services.TasklistService;
@@ -12,18 +12,12 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.control.TableRow;
-import javafx.fxml.FXMLLoader;
 
 import java.util.List;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 //import java.io.IOException;
 
 public class TasklistController {

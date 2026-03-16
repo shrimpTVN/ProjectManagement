@@ -1,14 +1,13 @@
 package com.app.src.controllers.project;
 
-import com.app.src.controllers.TaskDetailController;
+import com.app.src.controllers.task.TaskDetailController;
 import com.app.src.controllers.ViewNavigator;
-import com.app.src.core.AppContext;
 import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.models.Project;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Hyperlink;
 import com.app.src.models.Task;
 import com.app.src.services.TasklistService;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

@@ -16,25 +16,28 @@
 //}
 //
 
-package com.app.src.controllers;
+package com.app.src.controllers.task;
 
+import com.app.src.controllers.ViewNavigator;
 import com.app.src.controllers.project.ProjectDetailController;
 import com.app.src.daos.ProjectDAO;
 import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.models.Project;
 import com.app.src.services.ProjectJoiningService;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+
+import java.io.IOException;
 
 public class TaskDetailController {
 
     // --- Các thành phần giao diện đã được khai báo trong file FXML ---
-    @FXML private Label lblProjectName;
-        // Labels hiển thị thông tin chính
+    @FXML
+    private Label lblProjectName;
+    // Labels hiển thị thông tin chính
     @FXML
     private Label lblTask;
     @FXML
@@ -59,10 +62,14 @@ public class TaskDetailController {
     private Button btnCmt;
     @FXML
     private Button btnHistory;
+    @FXML
+    ScrollPane taskDetailSubViewContainer;
 
     // Biến lưu trữ Task hiện tại đang xem
     private PersonalTaskDTO currentTask;
     private int fromProject = 0;
+    private String currentSubView;
+    private static final String ACTIVE_TAB_STYLE_CLASS = "active-tab";
 
     /**
      * Hàm này được gọi từ TasklistController để truyền dữ liệu Task vào
@@ -104,10 +111,13 @@ public class TaskDetailController {
         } else {
             lblTaskName.setStyle("-fx-font-size: 36px;"); // Ngắn -> font to (mặc định)
         }
+
+        this.currentSubView = "Comment";
+        loadTaskDetailSubView(currentSubView);
+        applySubViewButtonStyle();
     }
 
-    public void setProjectId(int id)
-    {
+    public void setProjectId(int id) {
         this.fromProject = id;
     }
 
@@ -120,11 +130,73 @@ public class TaskDetailController {
             ProjectJoiningService projectJoiningService = new ProjectJoiningService();
             String adminName = projectJoiningService.getAdmin(fromProject);
             controller.renderData(fullProject, adminName);
-        }
-        else
-        {
+        } else {
             ViewNavigator.getInstance().loadSubScene("/scenes/Home.fxml");
         }
     }
+
+    public void loadTaskDetailSubView(String componentName){
+        System.out.println("Loading task detail subview for: " + componentName);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/components/TaskDetail/"+ componentName+ ".fxml"));
+        try {
+            if (currentTask == null) {
+                throw new IllegalStateException("Task data is not initialized before loading subview");
+            }
+            Node taskDetailSubView = loader.load();
+            taskDetailSubViewContainer.setContent(taskDetailSubView);
+
+            Object childController = loader.getController();
+            if (childController instanceof CommentController commentController) {
+                commentController.renderData(currentTask.getTaskId());
+            } else if (childController instanceof StatusHistoryController statusHistoryController) {
+                statusHistoryController.renderData(currentTask.getTaskId());
+            }
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void handleSwitchSubViewClick(MouseEvent mouseEvent) {
+        Object target = mouseEvent.getSource();
+
+        if (target instanceof Button clickedButton) {
+            String buttonText = clickedButton.getText();
+
+            if (buttonText.equals("Cmt") & !currentSubView.equals("Comment")) {
+                loadTaskDetailSubView("Comment");
+                currentSubView = "Comment";
+                applySubViewButtonStyle();
+            } else if (!currentSubView.equals("StatusChangeNoti") & buttonText.equals("Status")) {
+                loadTaskDetailSubView("StatusChangeNoti");
+                currentSubView = "StatusChangeNoti";
+                applySubViewButtonStyle();
+            }
+        }
+    }
+
+    private void applySubViewButtonStyle() {
+        boolean isCommentActive = "Comment".equals(currentSubView);
+        boolean isStatusActive = "StatusChangeNoti".equals(currentSubView);
+
+        toggleActiveTabStyle(btnCmt, isCommentActive);
+        toggleActiveTabStyle(btnHistory, isStatusActive);
+    }
+
+    private void toggleActiveTabStyle(Button button, boolean active) {
+        if (button == null) {
+            return;
+        }
+
+        if (active) {
+            if (!button.getStyleClass().contains(ACTIVE_TAB_STYLE_CLASS)) {
+                button.getStyleClass().add(ACTIVE_TAB_STYLE_CLASS);
+            }
+            return;
+        }
+
+        button.getStyleClass().remove(ACTIVE_TAB_STYLE_CLASS);
+    }
+
 
 }

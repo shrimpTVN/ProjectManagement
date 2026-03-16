@@ -195,6 +195,7 @@ public class MemberController implements IProjectDetailSubView {
             System.out.println("[DEBUG - Add Member] Thất bại: User '" + inputUserName + "' không tồn tại trong DB.");
             return;
         }
+
         int userId = foundUser.getUserId();
         int selectRoleId = selectedRole.getRoleId();
         // 4. Gọi Service để thêm vào Database
