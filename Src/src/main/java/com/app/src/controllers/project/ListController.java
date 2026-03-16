@@ -51,7 +51,7 @@ public class ListController implements IProjectDetailSubView, Initializable {
 
         // Gán sự kiện mở form tạo task
         btnCreate.setOnAction(event -> {
-            CreateTaskController controller = ViewNavigator.getInstance().loadSubScene("/components/TaskDetail/CreateTask.fxml");
+            CreateTaskController controller = ViewNavigator.getInstance().loadSubScene("/scenes/CreateTask.fxml");
             if (controller != null) {
                 controller.setProject(this.project); // Truyền thông tin project hiện tại sang
             }
