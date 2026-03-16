@@ -127,6 +127,7 @@ public class UserDAO extends AbstractDAO<User>{
         }
         return users;
     }
+
     public User findByUserName(String userName) {
         User user = null;
         final String sql = "SELECT * FROM user WHERE User_name = ?";
@@ -157,7 +158,7 @@ public class UserDAO extends AbstractDAO<User>{
                 System.out.println("Đã lấy được user " + user.getUserId() + " " + user.getUserName());
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } finally {
             try {
                 // Có ResultSet nên truyền đầy đủ cả 3 tham số để đóng
