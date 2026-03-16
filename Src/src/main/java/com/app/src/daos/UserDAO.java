@@ -5,11 +5,6 @@ import com.app.src.models.Account;
 import com.app.src.utils.MySQLDatabaseConnection;
 
 import java.sql.*;
-import java.io.Console;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -132,6 +127,7 @@ public class UserDAO extends AbstractDAO<User>{
         }
         return users;
     }
+
     public User findByUserName(String userName) {
         User user = null;
         final String sql = "SELECT * FROM user WHERE User_name = ?";
@@ -162,7 +158,7 @@ public class UserDAO extends AbstractDAO<User>{
                 System.out.println("Đã lấy được user " + user.getUserId() + " " + user.getUserName());
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } finally {
             try {
                 // Có ResultSet nên truyền đầy đủ cả 3 tham số để đóng

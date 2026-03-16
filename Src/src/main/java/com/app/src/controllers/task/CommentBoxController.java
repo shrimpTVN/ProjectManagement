@@ -3,7 +3,7 @@ package com.app.src.controllers.task;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 
-public class CommentController {
+public class CommentBoxController {
     @FXML
     AnchorPane commentItemRoot;
 
