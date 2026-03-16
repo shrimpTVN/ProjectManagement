@@ -15,11 +15,12 @@ public class UserService {
         return userDAO.findById(userId);
     }
 
+    public User getUserByName(String userName) {
+        return userDAO.findByUserName(userName);
+    }
+
     // Gọi hàm đăng ký từ UserDAO
     public boolean register(String username, String name, String phone, String dob, String selectedGender, String password) {
         return userDAO.registerUser(username, name, phone, dob, selectedGender, password);
-    }
-    public User findByUserName( String userName ){
-        return userDAO.findByUserName(userName);
     }
 }

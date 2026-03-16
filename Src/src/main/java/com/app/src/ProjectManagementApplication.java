@@ -5,8 +5,8 @@ import com.app.src.core.AppContext;
 import com.app.src.core.session.UserSession;
 import com.app.src.services.UserService;
 import javafx.application.Application;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.scene.text.Font;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -40,23 +40,16 @@ public class ProjectManagementApplication extends Application {
 
         SceneManager sceneManager = SceneManager.getInstance();
         sceneManager.initStage(stage);
-        sceneManager.switchScene("/scenes/login.fxml");
 
-//        try {
-//            loadExampleData();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-
-
+        // Load AuthWrapper làm màn hình gốc
+        sceneManager.switchScene("/scenes/AuthWrapper.fxml");
     }
+
     private void loadExampleData() throws SQLException {
         SceneManager sceneManager = SceneManager.getInstance();
         UserService userService = new UserService();
         UserSession.getInstance().setUser(userService.getUserById(3)); //id=3 -> van nghia
         AppContext.getInstance();
         sceneManager.switchScene("/scenes/dashboard.fxml");
-        // Load AuthWrapper làm màn hình gốc
-        sceneManager.switchScene("/scenes/AuthWrapper.fxml");
     }
 }
