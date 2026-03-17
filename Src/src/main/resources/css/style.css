@@ -425,6 +425,41 @@
     -fx-faint-focus-color: transparent;
 }
 
+.project-detail-header {
+    -fx-padding: 4 0 2 14;
+}
+
+.project-detail-back-button {
+    -fx-background-color: #F7F9FC;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-border-radius: 999px;
+    -fx-background-radius: 999px;
+    -fx-padding: 7 16 7 16;
+    -fx-font-family: "Urbanist Medium";
+    -fx-font-size: 14px;
+    -fx-text-fill: #1F2937;
+    -fx-cursor: hand;
+
+}
+
+.project-detail-back-button:hover {
+    -fx-background-color: #EEF4FF;
+    -fx-border-color: transparent;
+    -fx-text-fill: #2563EB;
+}
+
+.project-detail-back-button:pressed {
+    -fx-background-color: #E2ECFF;
+    -fx-border-color: transparent;
+}
+
+.project-detail-header-label {
+    -fx-font-family: "Urbanist Medium";
+    -fx-font-size: 15px;
+    -fx-text-fill: #667085;
+}
+
 .project-detail-tab:hover {
     -fx-background-color: transparent;
     -fx-text-fill: #333333;
