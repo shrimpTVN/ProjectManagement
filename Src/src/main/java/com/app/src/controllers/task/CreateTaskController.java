@@ -10,33 +10,88 @@ import com.app.src.models.Task;
 import com.app.src.models.User;
 import com.app.src.services.ProjectJoiningService;
 import com.app.src.services.TasklistService;
-import com.app.src.services.UserService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.util.StringConverter;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CreateTaskController {
-    @FXML private TextField txtName;
-    @FXML private TextArea txtDescription;
-    @FXML private DatePicker dpStart;
-    @FXML private DatePicker dpEnd;
-    @FXML private Label lblErrorName;
-
-    // Sửa FXML ID thành cbAssignee
-    @FXML private ComboBox<String> cbAssignee;
-    @FXML private Label lblErrorAssignee;
-
+    // Lưu trữ thông tin thành viên để đối chiếu khi lưu
+    private final Map<String, User> projectMembersMap = new HashMap<>();
+    private final ObservableList<String> memberUsernames = FXCollections.observableArrayList();
+    @FXML
+    private TextField txtName;
+    @FXML
+    private TextArea txtDescription;
+    @FXML
+    private DatePicker dpStart;
+    @FXML
+    private DatePicker dpEnd;
+    @FXML
+    private Label lblErrorName;
+    @FXML
+    private ComboBox<String> cbAssignee;
+    @FXML
+    private Label lblErrorAssignee;
     private Project currentProject;
 
-    // Lưu trữ thông tin thành viên để đối chiếu khi lưu
-    private Map<String, User> projectMembersMap = new HashMap<>();
-    private ObservableList<String> memberUsernames = FXCollections.observableArrayList();
+    @FXML
+    public void initialize() {
+        // Cấu hình DatePicker để bắt lỗi khi gõ bậy
+        setupDatePickerValidation(dpStart);
+        setupDatePickerValidation(dpEnd);
+    }
+
+    // Hàm thiết lập bộ chuyển đổi an toàn cho DatePicker
+    private void setupDatePickerValidation(DatePicker datePicker) { // Cấu hình DatePicker để bắt lỗi khi gõ bậy
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        datePicker.setConverter(new StringConverter<LocalDate>() {
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return dateFormatter.format(date);
+                }
+                return "";
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.trim().isEmpty()) {
+                    try {
+                        // Thử parse chuỗi người dùng nhập
+                        return LocalDate.parse(string, dateFormatter);
+                    } catch (DateTimeParseException e) {
+                        // Nếu gõ bậy (vd: "dsd"), bắt lỗi ở đây và trả về null (xóa ô nhập)
+                        return null;
+                    }
+                }
+                return null;
+            }
+        });
+
+        // Tuỳ chọn thêm: Làm sạch text khi người dùng click ra ngoài (mất focus) mà nhập sai
+        datePicker.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) { // Khi mất focus
+                try {
+                    // Cố ép kiểu text hiện tại, nếu lỗi thì tự động xóa
+                    LocalDate.parse(datePicker.getEditor().getText(), dateFormatter);
+                } catch (DateTimeParseException e) {
+                    datePicker.getEditor().setText("");
+                    datePicker.setValue(null);
+                }
+            }
+        });
+    }
 
     public void setProject(Project project) {
         this.currentProject = project;
@@ -46,20 +101,22 @@ public class CreateTaskController {
     private void loadProjectMembers() {
         if (currentProject == null) return;
 
-        // Dùng ProjectJoiningService thay vì UserDAO
         ProjectJoiningService joiningService = new ProjectJoiningService();
         List<ProjectJoining> joinings = joiningService.findAllJoiningsByProjectId(currentProject.getProjectId());
 
         for (ProjectJoining joining : joinings) {
-            User u = joining.getUser();
-            if (u != null) {
-                // Tùy thuộc vào việc ProjectJoiningDAO của bạn có join với bảng Account hay không.
-                // Nếu có, dùng: String displayName = u.getAccount().getUserName();
-                // Nếu chưa có, tạm thời dùng Full Name:
-                String displayName = u.getUserName();
+            User basicUser = joining.getUser();
+            if (basicUser != null) {
+                // Gọi UserDAO lấy thông tin User đầy đủ (bao gồm cả Account)
+                User fullUser = UserDAO.getInstance().findById(basicUser.getUserId());
 
-                projectMembersMap.put(displayName, u);
-                memberUsernames.add(displayName);
+                // Bắt buộc phải có Account thì mới cho vào danh sách
+                if (fullUser != null && fullUser.getAccount() != null) {
+                    String accountUsername = fullUser.getAccount().getUserName();
+
+                    projectMembersMap.put(accountUsername, fullUser);   // Lưu fullUser vào map với key là username của Account
+                    memberUsernames.add(accountUsername);   // Thêm username vào ObservableList để hiển thị trong ComboBox
+                }
             }
         }
 
