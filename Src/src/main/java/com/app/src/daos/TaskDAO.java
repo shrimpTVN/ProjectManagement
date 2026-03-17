@@ -1,6 +1,7 @@
 package com.app.src.daos;
 
 import com.app.src.dtos.PersonalTaskDTO; // Đã sửa import
+import com.app.src.models.StatusUpdating;
 import com.app.src.models.Task;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -116,21 +117,9 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
     // --- Bổ sung thêm hàm lấy task theo User (Vì bài toán ban đầu là Bảng Task Cá Nhân) ---
     public List<PersonalTaskDTO> findAllByUserId(int userId) {
         List<PersonalTaskDTO> tasks = new ArrayList<>();
-        String sql = "SELECT t.*, p.Pro_name, ts.Sta_name " +
-                "FROM TASK t " +
-                "LEFT JOIN PROJECT p ON t.Pro_id = p.Pro_id " +
-                "LEFT JOIN ( " +
-                "    SELECT su.Task_id, su.Sta_id " +
-                "    FROM STATUS_UPDATING su " +
-                "    JOIN ( " +
-                "        SELECT Task_id, MAX(StU_id) AS max_stu_id " +
-                "        FROM STATUS_UPDATING " +
-                "        GROUP BY Task_id " +
-                "    ) latest ON su.Task_id = latest.Task_id AND su.StU_id = latest.max_stu_id " +
-                ") last_su ON t.Task_id = last_su.Task_id " +
-                "LEFT JOIN TASK_STATUS ts ON last_su.Sta_id = ts.Sta_id " +
-                "WHERE t.User_id = ?";
-
+        String sql = "SELECT t.*, p.Pro_name FROM TASK t "+
+                "    LEFT JOIN PROJECT p ON t.Pro_id = p.Pro_id "+
+                "   WHERE t.USER_id = ?;";
         Connection connection = null;
         try {
             connection = getConnection();
@@ -152,9 +141,8 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
 
                 task.setTaskDescription(rs.getString("Task_description"));
                 task.setProjectName(rs.getString("Pro_name"));
-                String status = rs.getString("Sta_name");
-                task.setStatusName(status == null ? "To Do" : status);
-
+//                task.setStatusName(rs.getString("Sta_name"));
+                System.out.println(task.getTaskName());
                 tasks.add(task);
             }
             this.closeResource(ps, connection, rs);
@@ -221,6 +209,46 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
         }
         return tasks;
     }
+
+    /**
+     * Lấy lịch sử thay đổi trạng thái của một công việc.
+     * Sử dụng Window Function LAG() để xác định trạng thái trước đó mà không cần truy vấn nhiều lần.
+     * * @param taskId ID của công việc cần lấy lịch sử.
+     * @return Danh sách các bản ghi thay đổi trạng thái kèm chuỗi định dạng (Cũ ➜ Mới).
+//     */
+   public List<StatusUpdating> getStatusHistory(int taskId) {
+       List<StatusUpdating> list = new ArrayList<>();
+       // SQL sử dụng Window Function LAG để lấy trạng thái trước đó của cùng một Task
+       String sql = "SELECT h.StU_date, s_curr.Sta_name AS new_status, " +
+               "LAG(s_curr.Sta_name) OVER (PARTITION BY h.Task_id ORDER BY h.StU_date ASC) AS old_status " +
+               "FROM status_updating h " +
+               "JOIN task_status s_curr ON h.Sta_id = s_curr.Sta_id " +
+               "WHERE h.Task_id = ? " +
+               "ORDER BY h.StU_date DESC";
+
+       try (Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+           ps.setInt(1, taskId);
+           ResultSet rs = ps.executeQuery();
+
+           while (rs.next()) {
+               String newSta = rs.getString("new_status");
+               String oldSta = rs.getString("old_status");
+
+               // Nếu là dòng đầu tiên (không có trạng thái cũ), ta để là "None" hoặc tên trạng thái mới luôn
+               String displayOld = (oldSta == null) ? "None" : oldSta;
+               String formattedContent = displayOld + " \u279F " + newSta; // Tạo chuỗi: To Do ➔ In Progressing
+
+               StatusUpdating item = new StatusUpdating();
+               item.setDate(rs.getTimestamp("StU_date"));
+               item.setContent(formattedContent); // Ghi đè chuỗi đẹp vào biến content của Model
+               list.add(item);
+           }
+       } catch (SQLException e) {
+           e.printStackTrace();
+       }
+       return list;
+   }
 
     // Cập nhật trạng thái task và chặn chuyển In Preview -> Done nếu user chỉ là Member.
     public boolean appendStatusUpdating(int taskId, String oldStatus, String newStatus, String content, int userId) {
@@ -367,6 +395,9 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             }
         }
     }
+
+//    public List<StatusUpdating> getStatusHistory(int taskId) {
+//    }
 }
 
 

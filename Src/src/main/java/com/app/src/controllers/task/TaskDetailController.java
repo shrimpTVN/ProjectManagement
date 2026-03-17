@@ -148,8 +148,9 @@ public class TaskDetailController {
             Object childController = loader.getController();
             if (childController instanceof CommentBoxController commentController) {
                 commentController.renderData(currentTask.getTaskId());
-            } else if (childController instanceof StatusHistoryController statusHistoryController) {
-                statusHistoryController.renderData(currentTask.getTaskId());
+            } else if (childController instanceof StatusNotiController statusNotiController) {
+                //gọi renderData từ container chứa status
+                statusNotiController.renderData(currentTask.getTaskId());
             }
 
 
@@ -169,9 +170,9 @@ public class TaskDetailController {
                 loadTaskDetailSubView(currentSubView);
                 applySubViewButtonStyle();
             } else if (!currentSubView.equals("StatusChangeNoti") & buttonText.equals("Status")) {
-
+                //StatusNotiContainer là Vbox bao các status -> load vbox lên
+                loadTaskDetailSubView("StatusNotiContainer");
                 currentSubView = "StatusChangeNoti";
-                loadTaskDetailSubView(currentSubView);
                 applySubViewButtonStyle();
             }
         }
