@@ -15,8 +15,8 @@
 <?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.LoginController">
-    <center>
-        <AnchorPane prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/style.css" BorderPane.alignment="CENTER">
+   <top>
+        <AnchorPane prefHeight="720.0" prefWidth="1112.0" stylesheets="@../css/style.css" BorderPane.alignment="CENTER">
             <children>
                 <ImageView fitHeight="54.0" fitWidth="87.0" layoutX="143.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true" />
                 <GridPane layoutX="151.0" layoutY="218.0" prefHeight="83.0" prefWidth="299.0">
@@ -36,9 +36,9 @@
                     </font>
                 </Label>
                 <!--            control button-->
-                <Button fx:id="loginBtn" layoutX="489.0" layoutY="474.0" mnemonicParsing="false" onAction="#handleLoginBtnClick" prefHeight="35.0" prefWidth="308.0" style="-fx-background-color: #4896FE; -fx-border-radius: 10; -fx-background-radius: 10;" text="Login" textFill="WHITE">
+                <Button fx:id="loginBtn" layoutX="490.0" layoutY="474.0" mnemonicParsing="false" onAction="#handleLoginBtnClick" prefHeight="35.0" prefWidth="308.0" style="-fx-background-color: #4896FE; -fx-border-radius: 10; -fx-background-radius: 10;" text="Login" textFill="WHITE">
                     <font>
-                        <Font name="System Bold" size="16.0" />
+                        <Font name="Urbanist Medium" size="16.0" />
                     </font>
                 </Button>
                 <Button fx:id="cancelBtn" layoutX="490.0" layoutY="524.0" mnemonicParsing="false" onAction="#handleCancelBtnClick" prefHeight="35.0" prefWidth="308.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;" text="Cancel" textFill="#4896fe">
@@ -57,19 +57,19 @@
                   <Font name="Urbanist Medium" size="14.0" />
                </font>
             </Label>
-                  <Label layoutX="501.0" layoutY="351.0" text="Password: ">
+                  <Label layoutX="490.0" layoutY="366.0" text="Password: ">
                       <font>
-                          <Font name="Urbanist Bold" size="14.0" />
+                          <Font name="Urbanist Medium" size="14.0" />
                       </font>
                   </Label>
                   <!--                  input user name and password-->
-                  <TextField fx:id="userNameInput" layoutX="490.0" layoutY="303.0" prefHeight="35.0" prefWidth="308.0" promptText="Username" style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;">
+                  <TextField fx:id="userNameInput" layoutX="490.0" layoutY="303.0" onAction="#handleLoginBtnClick" prefHeight="35.0" prefWidth="308.0" promptText="Username" style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;">
                   </TextField>
-                  <Label layoutX="500.0" layoutY="283.0" text="Username: ">
+                  <Label layoutX="489.0" layoutY="276.0" text="Username: ">
                <font>
-                  <Font name="Urbanist Bold" size="14.0" />
+                  <Font name="Urbanist Medium" size="14.0" />
                </font></Label>
-                  <PasswordField fx:id="passwordInput" layoutX="490.0" layoutY="369.0" prefHeight="35.0" prefWidth="308.0" promptText="Password" style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;">
+                  <PasswordField fx:id="passwordInput" layoutX="490.0" layoutY="391.0" onAction="#handleLoginBtnClick" prefHeight="35.0" prefWidth="308.0" promptText="Password" style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;">
                       <font>
                           <Font name="Urbanist Medium" size="13.0" />
                       </font>
@@ -81,5 +81,5 @@
 
          </children>
       </AnchorPane>
-   </center>
+   </top>
 </BorderPane>

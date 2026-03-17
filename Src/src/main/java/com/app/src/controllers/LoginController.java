@@ -5,19 +5,15 @@ import com.app.src.exceptions.AppException;
 import com.app.src.models.User;
 import com.app.src.services.LoginService;
 import com.app.src.services.UserService;
-import com.app.src.utils.MySQLDatabaseConnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import static com.app.src.exceptions.ErrorCode.DATABASE_ERROR;
 
@@ -25,7 +21,7 @@ public class LoginController {
     @FXML
     private TextField userNameInput;
     @FXML
-    private TextField passwordInput;
+    private PasswordField passwordInput;
     @FXML
     private Label labelLoginMess;
     @FXML

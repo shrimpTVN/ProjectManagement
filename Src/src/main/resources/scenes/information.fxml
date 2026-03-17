@@ -40,7 +40,7 @@
                          <Insets left="100.0" />
                       </padding>
                       <font>
-                         <Font name="Urbanist Bold" size="26.0" />
+                         <Font name="Urbanist Regular" size="26.0" />
                       </font>
                    </Label>
                </children>
@@ -57,7 +57,7 @@
                   </Label>
                    <Label fx:id="dataSexLabel" text="Date_sex">
                      <font>
-                        <Font name="Urbanist Bold" size="26.0" />
+                        <Font name="Urbanist Regular" size="26.0" />
                      </font>
                   </Label>
                </children>
@@ -74,7 +74,7 @@
                   </Label>
                    <Label fx:id="dataDateofbirthLabel" text="Data_dateofbirth">
                      <font>
-                        <Font name="Urbanist Bold" size="26.0" />
+                        <Font name="Urbanist Regular" size="26.0" />
                      </font>
                      <padding>
                         <Insets left="100.0" />
@@ -91,7 +91,7 @@
                   </Label>
                    <Label fx:id="dataTeleLabel" text="Date_tele">
                      <font>
-                        <Font name="Urbanist Bold" size="26.0" />
+                        <Font name="Urbanist Regular" size="26.0" />
                      </font>
                   </Label>
                </children>
@@ -102,7 +102,7 @@
           <children>
              <Label fx:id="nameLabel" alignment="CENTER" text="Name" textFill="#fff9f9">
                 <font>
-                   <Font name="Urbanist Bold" size="36.0" />
+                   <Font name="Urbanist Medium" size="36.0" />
                 </font>
              </Label>
           </children>

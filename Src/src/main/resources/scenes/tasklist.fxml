@@ -74,7 +74,7 @@
                         <Insets left="76.0" right="76.0" top="11.0" />
                      </VBox.margin>
                      <children>
-                        <Button fx:id="btnAll" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-padding: 0; -fx-font-weight: 800;" text="All">
+                        <Button fx:id="btnAll" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-padding: 0;" text="All">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -118,9 +118,9 @@
                </VBox.margin>
             </VBox>
 <!--             Table component-->
-            <TableView fx:id="taskTable" prefHeight="200.0" prefWidth="843.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #000000; -fx-border-width: 0.5;" VBox.vgrow="ALWAYS">
+            <TableView fx:id="taskTable" prefHeight="200.0" prefWidth="843.0" styleClass="custom-table task-table" VBox.vgrow="ALWAYS">
               <columns>
-                <TableColumn fx:id="colName" prefWidth="245.5" style="-fx-alignment: CENTER_LEFT; -fx-border-color: black; -fx-border-width: 0 0 0.5 0;" text="Name" />
+                <TableColumn fx:id="colName" prefWidth="245.5" style="-fx-alignment: CENTER_LEFT; -fx-border-color: black; -fx-border-width: 0 0 0 0;" text="Name" />
                 <TableColumn fx:id="colProject" prefWidth="100.5" style="-fx-alignment: CENTER_LEFT;" text="Project" />
                   <TableColumn fx:id="colStart" prefWidth="105.0" style="-fx-alignment: CENTER;" text="Start" />
                   <TableColumn fx:id="colDeadline" prefWidth="105.0" style="-fx-alignment: CENTER;" text="Deadline" />

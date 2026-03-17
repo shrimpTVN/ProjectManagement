@@ -159,6 +159,9 @@ public class CreateProjectController implements Initializable {
     private void finalizeAction(String message) {
         System.out.println(message);
         AppContext.refreshProjects();
+        if (SideBarController.getInstance() != null) {
+            SideBarController.getInstance().reloadProjects();
+        }
         ViewNavigator.getInstance().loadSubScene("/scenes/ProjectList.fxml");
     }
 

@@ -116,9 +116,21 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
     // --- Bổ sung thêm hàm lấy task theo User (Vì bài toán ban đầu là Bảng Task Cá Nhân) ---
     public List<PersonalTaskDTO> findAllByUserId(int userId) {
         List<PersonalTaskDTO> tasks = new ArrayList<>();
-        String sql = "SELECT t.*, p.Pro_name FROM TASK t "+
-                "    LEFT JOIN PROJECT p ON t.Pro_id = p.Pro_id "+
-                "   WHERE t.USER_id = ?;";
+        String sql = "SELECT t.*, p.Pro_name, ts.Sta_name " +
+                "FROM TASK t " +
+                "LEFT JOIN PROJECT p ON t.Pro_id = p.Pro_id " +
+                "LEFT JOIN ( " +
+                "    SELECT su.Task_id, su.Sta_id " +
+                "    FROM STATUS_UPDATING su " +
+                "    JOIN ( " +
+                "        SELECT Task_id, MAX(StU_id) AS max_stu_id " +
+                "        FROM STATUS_UPDATING " +
+                "        GROUP BY Task_id " +
+                "    ) latest ON su.Task_id = latest.Task_id AND su.StU_id = latest.max_stu_id " +
+                ") last_su ON t.Task_id = last_su.Task_id " +
+                "LEFT JOIN TASK_STATUS ts ON last_su.Sta_id = ts.Sta_id " +
+                "WHERE t.User_id = ?";
+
         Connection connection = null;
         try {
             connection = getConnection();
@@ -126,7 +138,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
 
-            while(rs.next()) {
+            while (rs.next()) {
                 PersonalTaskDTO task = new PersonalTaskDTO();
                 task.setTaskId(rs.getInt("Task_id"));
                 task.setTaskName(rs.getString("Task_name"));
@@ -140,8 +152,9 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
 
                 task.setTaskDescription(rs.getString("Task_description"));
                 task.setProjectName(rs.getString("Pro_name"));
-//                task.setStatusName(rs.getString("Sta_name"));
-                System.out.println(task.getTaskName());
+                String status = rs.getString("Sta_name");
+                task.setStatusName(status == null ? "To Do" : status);
+
                 tasks.add(task);
             }
             this.closeResource(ps, connection, rs);
@@ -208,4 +221,101 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
         }
         return tasks;
     }
+
+    // Cập nhật trạng thái task và chặn chuyển In Preview -> Done nếu user chỉ là Member.
+    public boolean appendStatusUpdating(int taskId, String oldStatus, String newStatus, String content, int userId) {
+        String normalizedNew = newStatus == null ? "" : newStatus.trim().toLowerCase();
+        int statusId = mapStatusId(normalizedNew);
+        if (statusId == -1) {
+            return false;
+        }
+
+        String sqlInsert = "INSERT INTO STATUS_UPDATING (StU_date, StU_content, Task_id, Sta_id) VALUES (CURRENT_TIMESTAMP, ?, ?, ?)";
+
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = getConnection();
+
+            // Kiểm tra rule bằng cả trạng thái cũ trên UI và trạng thái mới nhất trong DB để tránh lọt logic.
+            int currentStatusId = getCurrentStatusId(connection, taskId);
+            String normalizedOld = oldStatus == null ? "" : oldStatus.trim().toLowerCase();
+            boolean fromPreviewToDoneByUi = (normalizedOld.equals("in preview") && statusId == 4);
+            boolean fromPreviewToDoneByDb = (currentStatusId == 3 && statusId == 4);
+
+            if (fromPreviewToDoneByUi || fromPreviewToDoneByDb) {
+                // Chỉ Admin(2) hoặc Manager(1) mới được duyệt In Preview -> Done.
+                int roleId = getRoleIdByTaskAndUser(connection, taskId, userId);
+                if (roleId != 1 && roleId != 2) {
+                    throw new RuntimeException("Chi Admin/Manager moi duoc chuyen In Preview sang Done");
+                }
+            }
+
+            ps = connection.prepareStatement(sqlInsert);
+            ps.setString(1, content);
+            ps.setInt(2, taskId);
+            ps.setInt(3, statusId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            throw new RuntimeException("Lỗi khi cập nhật trạng thái task: " + ex.getMessage(), ex);
+        } finally {
+            try {
+                closeResource(ps, connection, null);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    // Map tên trạng thái về ID trong bảng TASK_STATUS.
+    private int mapStatusId(String normalizedStatus) {
+        if (normalizedStatus.equals("to do") || normalizedStatus.equals("todo")) {
+            return 1;
+        }
+        if (normalizedStatus.equals("in progress") || normalizedStatus.equals("in processing") || normalizedStatus.equals("in progressing")) {
+            return 2;
+        }
+        if (normalizedStatus.equals("in preview")) {
+            return 3;
+        }
+        if (normalizedStatus.equals("done")) {
+            return 4;
+        }
+        return -1;
+    }
+
+    // Lấy trạng thái mới nhất của task theo STATUS_UPDATING.
+    private int getCurrentStatusId(Connection connection, int taskId) throws SQLException {
+        final String sql = "SELECT su.Sta_id FROM STATUS_UPDATING su WHERE su.Task_id = ? ORDER BY su.StU_id DESC LIMIT 1";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, taskId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("Sta_id");
+                }
+            }
+        }
+        return 1;
+    }
+
+    // Lấy role hiện tại của user trong project chứa task.
+    private int getRoleIdByTaskAndUser(Connection connection, int taskId, int userId) throws SQLException {
+        final String sql = "SELECT pj.Role_id " +
+                "FROM TASK t " +
+                "LEFT JOIN PROJECT_JOINING pj ON t.Pro_id = pj.Pro_id AND pj.User_id = ? " +
+                "WHERE t.Task_id = ? " +
+                "ORDER BY pj.PJo_dateJoin DESC LIMIT 1";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, taskId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("Role_id");
+                }
+            }
+        }
+        return -1;
+    }
 }
+

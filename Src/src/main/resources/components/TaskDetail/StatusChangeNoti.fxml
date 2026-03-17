@@ -15,12 +15,12 @@
          <children>
             <HBox fx:id="headerBox" alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="326.0" spacing="5.0">
                <children>
-                  <Label fx:id="lblUser" style="-fx-font-weight: 700;" text="Oitloc96" />
+                  <Label fx:id="lblUser" style="-fx-font-family: 'Urbanist Medium';" text="Oitloc96" />
                   <Label fx:id="lblAction" text="changed the status" />
                   <Region prefHeight="20.0" prefWidth="87.0" HBox.hgrow="ALWAYS" />
                   <Label fx:id="lblTime" text="8 phút trước" textFill="#888888">
                      <font>
-                        <Font size="8.0" />
+                        <Font name="Urbanist Light" size="8.0" />
                      </font>
                   </Label>
                </children>

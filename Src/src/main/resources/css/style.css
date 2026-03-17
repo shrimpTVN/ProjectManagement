@@ -2,8 +2,37 @@
 /*getClass().getResource("").toExternalForm(),*/
 /*14*/
 * {
-    -fx-font-family: "Urbanist";
+    -fx-font-family: "Urbanist Regular";
 }
+
+.font-title {
+    -fx-font-family: "Urbanist Medium";
+}
+
+.font-body {
+    -fx-font-family: "Urbanist Regular";
+}
+
+.font-note {
+    -fx-font-family: "Urbanist Light";
+}
+
+.urbanist-regular {
+    -fx-font-family: "Urbanist Regular";
+}
+
+.urbanist-medium {
+    -fx-font-family: "Urbanist Medium";
+}
+
+.urbanist-light {
+    -fx-font-family: "Urbanist Light";
+}
+
+.urbanist-bold {
+    -fx-font-family: "Urbanist Bold";
+}
+
 /* Áp dụng cho toàn bộ ứng dụng */
 
 /* Các class quy định kích cỡ chữ */
@@ -41,18 +70,17 @@
 }
 
 /*---CSS for TaskTable----*/
-/*Kẻ đường dọc cho các ô bên trong taskTable */
 #taskTable .table-cell {
-    -fx-border-color: black;
-    -fx-border-width: 0 1 0 0;
-    -fx-padding: 0 10 0 10;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0 12 0 12;
+    -fx-font-size: 15px;
 }
 
-/*Chỉnh tiêu đề cột của riêng bảng này */
-#taskTable .column-header {
-    -fx-background-color: white;
-    -fx-border-color: black;
-    -fx-border-width: 0 0 0.5 0.5;
+#taskTable .table-row-cell {
+    -fx-cell-size: 44px;
+    -fx-border-width: 0;
+    -fx-table-cell-border-color: transparent;
 }
 
 /*chỉnh css breadcrumblink*/
@@ -163,6 +191,75 @@
     -fx-background-color: #F5F5F5;
 }
 
+/* --- Task list table visual tuning --- */
+.task-table {
+    -fx-background-color: white;
+    -fx-border-color: #000000;
+    -fx-border-width: 0.5px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+/* Chỉ áp dụng riêng bảng All My Tasks */
+#taskTable {
+    -fx-border-width: 0.2px;
+}
+
+.task-table .column-header-background {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #E0E0E0 transparent;
+    -fx-border-width: 0 0 0.5px 0;
+}
+
+#taskTable .column-header-background {
+    -fx-border-width: 0 0 0.2px 0;
+}
+
+#taskTable .column-header,
+#taskTable .filler {
+    -fx-border-width: 0 0 0.2px 0;
+}
+
+.task-table .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 11px;
+    -fx-padding: 0;
+}
+
+.task-table .scroll-bar:vertical .track {
+    -fx-background-color: #EEF2F6;
+    -fx-background-radius: 999px;
+    -fx-border-radius: 999px;
+    -fx-background-insets: 0 2 0 2;
+}
+
+.task-table .scroll-bar:vertical .thumb {
+    -fx-background-color: #C9CED6;
+    -fx-background-radius: 999px;
+    -fx-border-radius: 999px;
+    -fx-background-insets: 0 2 0 2;
+}
+
+.task-table .scroll-bar:vertical .thumb:hover,
+.task-table .scroll-bar:vertical .thumb:pressed {
+    -fx-background-color: #B8BEC7;
+}
+
+.task-table .scroll-bar:vertical .increment-button,
+.task-table .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-pref-height: 0;
+    -fx-opacity: 0;
+}
+
+.task-table .scroll-bar:vertical .increment-arrow,
+.task-table .scroll-bar:vertical .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+    -fx-opacity: 0;
+}
+
 /*-- Style cho Input và Button --*/
 .input-field {
     -fx-background-color: white;
@@ -179,4 +276,236 @@
 
 .btn-action:hover {
     -fx-background-color: #f4f4f4;
+}
+
+/* Sidebar project scrollbar */
+.project-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.project-scroll-pane > .viewport {
+    -fx-background-color: white;
+}
+
+.project-scroll-pane > .corner {
+    -fx-background-color: white;
+}
+
+.project-scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8px;
+    -fx-padding: 0;
+}
+
+.project-scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: #EEF2F6;
+    -fx-background-radius: 999px;
+    -fx-border-radius: 999px;
+    -fx-background-insets: 0 3 0 3;
+}
+
+.project-scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #7FB3FF;
+    -fx-background-radius: 999px;
+    -fx-border-radius: 999px;
+    -fx-background-insets: 0 3 0 3;
+}
+
+.project-scroll-pane .scroll-bar:vertical .thumb:hover,
+.project-scroll-pane .scroll-bar:vertical .thumb:pressed {
+    -fx-background-color: #4896FE;
+}
+
+.project-scroll-pane .scroll-bar:vertical .increment-button,
+.project-scroll-pane .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-pref-height: 0;
+    -fx-opacity: 0;
+}
+
+.project-scroll-pane .scroll-bar:vertical .increment-arrow,
+.project-scroll-pane .scroll-bar:vertical .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+    -fx-opacity: 0;
+}
+
+/* Sidebar project item states */
+.project-item-label {
+    -fx-font-size: 15px;
+    -fx-text-fill: #1f1f1f;
+    -fx-padding: 6 8 6 8;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.project-item-label:hover {
+    -fx-background-color: #F1F3F5;
+}
+
+.project-item-active {
+    -fx-background-color: #E9ECEF;
+}
+
+/* --- EP RIENG TASK TABLE THEO ID DE TRANH BI DE CSS KHAC --- */
+#taskTable {
+    -fx-background-color: white;
+    -fx-border-color: #000000;
+    -fx-border-width: 0.2px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+#taskTable .column-header-background {
+    -fx-background-color: #F5F5F5;
+    -fx-border-color: transparent transparent #000000 transparent;
+    -fx-border-width: 0 0 0.2px 0;
+}
+
+#taskTable .column-header,
+#taskTable .filler {
+    -fx-background-color: #F5F5F5;
+    -fx-border-width: 0 0 0.2px 0;
+}
+
+#taskTable .column-header .label {
+    -fx-font-size: 15px;
+    -fx-text-fill: #111111;
+}
+
+#taskTable .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 11px;
+    -fx-padding: 0;
+}
+
+#taskTable .scroll-bar:vertical .track {
+    -fx-background-color: #EEF2F6;
+    -fx-background-radius: 999px;
+    -fx-border-radius: 999px;
+    -fx-background-insets: 0 2 0 2;
+}
+
+#taskTable .scroll-bar:vertical .thumb {
+    -fx-background-color: #C9CED6;
+    -fx-background-radius: 999px;
+    -fx-border-radius: 999px;
+    -fx-background-insets: 0 2 0 2;
+}
+
+#taskTable .scroll-bar:vertical .thumb:hover,
+#taskTable .scroll-bar:vertical .thumb:pressed {
+    -fx-background-color: #B8BEC7;
+}
+
+#taskTable .scroll-bar:vertical .increment-button,
+#taskTable .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-pref-height: 0;
+    -fx-opacity: 0;
+}
+
+#taskTable .scroll-bar:vertical .increment-arrow,
+#taskTable .scroll-bar:vertical .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+    -fx-opacity: 0;
+}
+
+/* ProjectDetail nav tabs - same active feel as TaskList filters */
+.project-detail-tab {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent transparent transparent;
+    -fx-border-width: 0 0 2px 0;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 0;
+    -fx-font-family: "Urbanist Medium";
+    -fx-font-size: 20px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #666666;
+    -fx-cursor: hand;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.project-detail-tab:hover {
+    -fx-background-color: transparent;
+    -fx-text-fill: #333333;
+}
+
+.project-detail-tab-active {
+    -fx-text-fill: #111111;
+    -fx-font-weight: 700;
+    -fx-border-color: transparent transparent #111111 transparent;
+    -fx-border-width: 0 0 2px 0;
+}
+
+/* Project page main title: same visual rhythm as big task/project headers */
+.project-main-title {
+    -fx-font-family: "Urbanist Medium";
+    -fx-font-size: 36px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #111111;
+    -fx-padding: 10 10 10 10;
+}
+
+/* Project card - refreshed visual */
+.project-card {
+    -fx-background-color: linear-gradient(to bottom right, #FFFFFF, #F8FAFF);
+    -fx-background-radius: 14px;
+    -fx-border-color: #D9E2F2;
+    -fx-border-width: 1px;
+    -fx-border-radius: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(38, 68, 116, 0.12), 16, 0.2, 0, 4);
+}
+
+.project-card:hover {
+    -fx-background-color: linear-gradient(to bottom right, #FFFFFF, #F3F8FF);
+    -fx-border-color: #9FC2FF;
+    -fx-effect: dropshadow(gaussian, rgba(38, 68, 116, 0.2), 20, 0.25, 0, 7);
+    -fx-translate-y: -1px;
+}
+
+.project-card:pressed {
+    -fx-translate-y: 0px;
+    -fx-effect: dropshadow(gaussian, rgba(38, 68, 116, 0.12), 12, 0.2, 0, 3);
+}
+
+.project-card-title {
+    -fx-font-family: "Urbanist Medium";
+    -fx-font-size: 20px;
+    -fx-text-fill: #101828;
+}
+
+.project-card-badge {
+    -fx-background-color: #E8F1FF;
+    -fx-text-fill: #1C63C7;
+    -fx-font-family: "Urbanist Medium";
+    -fx-font-size: 11px;
+    -fx-padding: 3 8 3 8;
+    -fx-background-radius: 999px;
+}
+
+.project-card-meta-label {
+    -fx-font-family: "Urbanist Light";
+    -fx-font-size: 13px;
+    -fx-text-fill: #667085;
+}
+
+.project-card-meta-value {
+    -fx-font-family: "Urbanist Regular";
+    -fx-font-size: 14px;
+    -fx-text-fill: #344054;
+}
+
+.project-list-heading {
+    -fx-font-family: "Urbanist Medium";
+    -fx-font-size: 36px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #111111;
 }

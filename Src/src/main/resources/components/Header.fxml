@@ -11,11 +11,11 @@
 
 <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="68.0" prefWidth="1280.0" style="-fx-border-color: black; -fx-border-width: 0.2;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.HeaderController">
     <children>
-        <HBox fx:id="appLogo" alignment="CENTER" maxWidth="1.7976931348623157E308" onMouseClicked="#handleAppLogoClick" prefHeight="66.0" prefWidth="362.0">
+        <HBox alignment="CENTER" onMouseClicked="#handleAppLogoClick" prefHeight="66.0" prefWidth="362.0">
             <children>
             <ImageView fitHeight="64.0" fitWidth="63.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../image/Frame%20115.png" />
+                  <Image url="@../image/Frame 115.png" />
                </image>
             </ImageView>
                 <Label prefHeight="53.0" prefWidth="208.0" text="TiskTask">
@@ -33,25 +33,22 @@
             <Insets />
          </HBox.margin>
         </HBox>
-        <Region maxWidth="1.7976931348623157E308" prefHeight="65.0" prefWidth="786.0" style="-fx-border-width: 0,1;" />
-        <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="63.0" prefWidth="186.0" spacing="30.0">
+        <Region maxWidth="1.7976931348623157E308" minWidth="0.0" prefHeight="65.0" HBox.hgrow="ALWAYS" />
+        <HBox alignment="CENTER_RIGHT" prefHeight="63.0" prefWidth="186.0" spacing="30.0">
             <children>
-            <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="30.0" fitWidth="30.0" onMouseClicked="#handleNotificationClick" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../image/bell.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="User_Account" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#handleUserAccountClick" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="30.0" fitWidth="30.0" onMouseClicked="#handleUserAccountClick" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../image/profile.png" />
                </image>
             </ImageView>
             </children>
-            <opaqueInsets>
-                <Insets right="50.0" />
-            </opaqueInsets>
          <HBox.margin>
-            <Insets right="30.0" />
+            <Insets right="60.0" />
          </HBox.margin>
         </HBox>
     </children>

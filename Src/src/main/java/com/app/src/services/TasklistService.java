@@ -70,6 +70,20 @@ public class TasklistService {
         return taskDAO.update(task.getTaskId(), task);
     }
 
+    // Cập nhật trạng thái task và truyền cả trạng thái cũ/mới để kiểm tra rule nghiệp vụ chắc chắn hơn.
+    public boolean updateTaskStatus(int taskId, String oldStatus, String newStatus, String content, int userId) {
+        if (taskId <= 0) {
+            throw new IllegalArgumentException("ID công việc không hợp lệ!");
+        }
+        if (newStatus == null || newStatus.trim().isEmpty()) {
+            throw new IllegalArgumentException("Trạng thái không hợp lệ!");
+        }
+        if (userId <= 0) {
+            throw new IllegalArgumentException("Người dùng không hợp lệ!");
+        }
+        return taskDAO.appendStatusUpdating(taskId, oldStatus, newStatus, content, userId);
+    }
+
     // ==========================================
     // 4. XÓA CÔNG VIỆC (DELETE)
     // ==========================================

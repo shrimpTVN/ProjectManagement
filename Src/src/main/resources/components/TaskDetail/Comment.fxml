@@ -15,11 +15,11 @@
          <children>
             <HBox prefHeight="20.0" prefWidth="326.0" spacing="5.0">
                <children>
-                  <Label fx:id="lblCommentUser" style="-fx-font-weight: 700;" text="Member" />
+                  <Label fx:id="lblCommentUser" style="-fx-font-family: 'Urbanist Medium';" text="Member" />
                   <Region prefHeight="20.0" prefWidth="160.0" HBox.hgrow="ALWAYS" />
                   <Label fx:id="lblCommentTime" text="8 phút trước" textFill="#888888">
                      <font>
-                        <Font size="8.0" />
+                        <Font name="Urbanist Light" size="8.0" />
                      </font>
                   </Label>
                </children></HBox>

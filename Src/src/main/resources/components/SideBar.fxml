@@ -5,6 +5,7 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -62,53 +63,33 @@
                 <Insets left="20.0" right="20.0" />
             </VBox.margin>
         </HBox>
-      <VBox fx:id="projectListContainer" prefHeight="200.0" prefWidth="100.0" visible="false">
+      <VBox fx:id="projectListContainer" managed="false" prefHeight="320.0" prefWidth="286.0" visible="false">
          <children>
-            <TextField promptText="Search project" style="-fx-border-width: 1 1 1 1;">
+            <TextField fx:id="searchProjectField" maxWidth="1.7976931348623157E308" prefHeight="34.0" prefWidth="270.0" promptText="Search project" style="-fx-border-width: 1 1 1 1;">
                <VBox.margin>
-                  <Insets left="40.0" right="40.0" top="10.0" />
+                  <Insets left="20.0" right="20.0" top="10.0" />
                </VBox.margin>
             </TextField>
             <Label text="All">
                <VBox.margin>
-                  <Insets left="40.0" top="10.0" />
+                  <Insets left="38.0" top="10.0" />
                </VBox.margin>
                <font>
-                  <Font name="Urbanist Bold" size="14.0" />
+                  <Font name="Urbanist Medium" size="16.0" />
                </font>
             </Label>
-            <Label text="Name project">
-               <font>
-                  <Font name="Urbanist Light" size="15.0" />
-               </font>
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" prefHeight="260.0" style="-fx-background-color: white; -fx-padding: 0;" styleClass="project-scroll-pane">
                <VBox.margin>
-                  <Insets left="40.0" top="10.0" />
+                  <Insets left="12.0" right="10.0" />
                </VBox.margin>
-            </Label>
-            <Label text="Name project">
-               <font>
-                  <Font name="Urbanist Light" size="15.0" />
-               </font>
-               <VBox.margin>
-                  <Insets left="40.0" top="10.0" />
-               </VBox.margin>
-            </Label>
-            <Label text="Name project">
-               <font>
-                  <Font name="Urbanist Light" size="15.0" />
-               </font>
-               <VBox.margin>
-                  <Insets left="40.0" top="10.0" />
-               </VBox.margin>
-            </Label>
-            <Label text="Name project">
-               <font>
-                  <Font name="Urbanist Light" size="15.0" />
-               </font>
-               <VBox.margin>
-                  <Insets left="40.0" top="10.0" />
-               </VBox.margin>
-            </Label>
+               <content>
+                  <VBox fx:id="projectItemsBox" spacing="6.0" style="-fx-background-color: white;">
+                     <padding>
+                        <Insets bottom="10.0" left="20.0" right="20.0" top="8.0" />
+                     </padding>
+                  </VBox>
+               </content>
+            </ScrollPane>
          </children>
       </VBox>
     </children>
@@ -117,6 +98,5 @@
     </cursor>
    <stylesheets>
       <URL value="@../css/style.css" />
-      <URL value="@../css/sidebar.css" />
    </stylesheets>
 </VBox>
