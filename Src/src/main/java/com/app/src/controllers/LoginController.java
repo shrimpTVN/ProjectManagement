@@ -26,7 +26,6 @@ public class LoginController implements Initializable {
     @FXML
     private TextField userNameInput;
     @FXML
-    private PasswordField passwordInput;
     private PasswordField passwordInput; // Cập nhật thành PasswordField
     @FXML
     private Label labelLoginMess;

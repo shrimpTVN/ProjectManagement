@@ -103,4 +103,22 @@ public class TasklistService {
     public List<Task> getTasksByProject(int projectId) {
         return taskDAO.findByProjectId(projectId);
     }
+
+    public boolean addTask(Task newTask) {
+        if (newTask == null) {
+            throw new IllegalArgumentException("Dữ liệu công việc không tồn tại!");
+        }
+
+        if (newTask.getTaskName() == null || newTask.getTaskName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Tên công việc không được để trống!");
+        }
+
+        if (newTask.getTaskName().length() > 255) {
+            throw new IllegalArgumentException("Tên công việc quá dài (tối đa 255 ký tự)!");
+        }
+
+        newTask.setTaskName(newTask.getTaskName().trim());
+
+        return taskDAO.createTask(newTask);
+    }
 }

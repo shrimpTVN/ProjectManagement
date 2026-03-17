@@ -19,8 +19,7 @@ public class ProjectManagementApplication extends Application {
     public void start(Stage stage) throws IOException {
         GlobalExceptionHandler.registerDefaultHandler();
 
-        try {
-            loadAppFonts();
+
 
         // Danh sách các font chữ Urbanist hay dùng trong giao diện
         String[] fontFiles = {

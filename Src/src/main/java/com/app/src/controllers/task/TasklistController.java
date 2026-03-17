@@ -374,13 +374,6 @@ public class TasklistController {
 
         activeBtn.setStyle(FILTER_BTN_ACTIVE_STYLE);
     }
-
-    private void setupNavigation() {
-        hlHome.setOnAction(e -> {
-            System.out.println("Đang chuyển hướng về trang chủ...");
-            // Code chuyển Scene (FXML) sẽ nằm ở đây
-        });
-    }
 }
 
 

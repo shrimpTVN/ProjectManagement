@@ -138,7 +138,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
+            while(rs.next()) {
                 PersonalTaskDTO task = new PersonalTaskDTO();
                 task.setTaskId(rs.getInt("Task_id"));
                 task.setTaskName(rs.getString("Task_name"));
@@ -317,5 +317,58 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
         }
         return -1;
     }
+    public boolean createTask(Task task) {
+        final String sql = "INSERT INTO TASK (Task_name, Task_description, Task_startDate, Task_endDate, Pro_id, User_id) VALUES (?, ?, ?, ?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+
+            ps.setString(1, task.getTaskName());
+            ps.setString(2, task.getTaskDescription());
+
+            if (task.getTaskStartTime() != null && !task.getTaskStartTime().isEmpty()) {
+                ps.setDate(3, java.sql.Date.valueOf(task.getTaskStartTime()));
+            } else {
+                ps.setNull(3, java.sql.Types.DATE);
+            }
+
+            if (task.getTaskEndTime() != null && !task.getTaskEndTime().isEmpty()) {
+                ps.setDate(4, java.sql.Date.valueOf(task.getTaskEndTime()));
+            } else {
+                ps.setNull(4, java.sql.Types.DATE);
+            }
+
+            if (task.getProjectId() > 0) {
+                ps.setInt(5, task.getProjectId());
+            } else {
+                ps.setNull(5, java.sql.Types.INTEGER);
+            }
+
+            if (task.getUser() != null && task.getUser().getUserId() > 0) {
+                ps.setInt(6, task.getUser().getUserId());
+            } else {
+                ps.setNull(6, java.sql.Types.INTEGER);
+            }
+
+            int rows = ps.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                closeResource(ps, conn, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
+
+
+
 
