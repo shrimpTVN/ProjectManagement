@@ -12,6 +12,10 @@ public class Task {
     private User user;
 //    private ArrayList<StatusUpdating> statusUpdatingList;
 
+    private int projectId;
+
+    public int getProjectId() { return projectId; }
+    public void setProjectId(int projectId) { this.projectId = projectId; }
 
 
     public Task(){}

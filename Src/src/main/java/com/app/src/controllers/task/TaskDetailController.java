@@ -112,7 +112,7 @@ public class TaskDetailController {
             lblTaskName.setStyle("-fx-font-size: 36px;"); // Ngắn -> font to (mặc định)
         }
 
-        this.currentSubView = "Comment";
+        this.currentSubView = "CommentBox";
         loadTaskDetailSubView(currentSubView);
         applySubViewButtonStyle();
     }
@@ -146,7 +146,7 @@ public class TaskDetailController {
             taskDetailSubViewContainer.setContent(taskDetailSubView);
 
             Object childController = loader.getController();
-            if (childController instanceof CommentController commentController) {
+            if (childController instanceof CommentBoxController commentController) {
                 commentController.renderData(currentTask.getTaskId());
             } else if (childController instanceof StatusNotiController statusNotiController) {
                 //gọi renderData từ container chứa status
@@ -165,8 +165,9 @@ public class TaskDetailController {
             String buttonText = clickedButton.getText();
 
             if (buttonText.equals("Cmt") & !currentSubView.equals("Comment")) {
-                loadTaskDetailSubView("Comment");
-                currentSubView = "Comment";
+
+                currentSubView = "CommentBox";
+                loadTaskDetailSubView(currentSubView);
                 applySubViewButtonStyle();
             } else if (!currentSubView.equals("StatusChangeNoti") & buttonText.equals("Status")) {
                 //StatusNotiContainer là Vbox bao các status -> load vbox lên
@@ -178,7 +179,7 @@ public class TaskDetailController {
     }
 
     private void applySubViewButtonStyle() {
-        boolean isCommentActive = "Comment".equals(currentSubView);
+        boolean isCommentActive = "CommentBox".equals(currentSubView);
         boolean isStatusActive = "StatusChangeNoti".equals(currentSubView);
 
         toggleActiveTabStyle(btnCmt, isCommentActive);

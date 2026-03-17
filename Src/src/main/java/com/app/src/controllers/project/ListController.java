@@ -1,29 +1,34 @@
 package com.app.src.controllers.project;
 
+import com.app.src.controllers.task.CreateTaskController;
 import com.app.src.controllers.task.TaskDetailController;
 import com.app.src.controllers.ViewNavigator;
 import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.models.Project;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.Hyperlink;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
 import com.app.src.models.Task;
 import com.app.src.services.TasklistService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 
-public class ListController implements IProjectDetailSubView {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class ListController implements IProjectDetailSubView, Initializable {
 
 
     // ==========================================
     // KHAI BÁO THÀNH PHẦN GIAO DIỆN (UI)
     // ==========================================
-    @FXML private TableView<Task> taskTable;
-    @FXML private TableColumn<Task, String> colName, colAssignee, colStart, colDeadline, colStatus, colDescription;
-    @FXML private Hyperlink hlAll, hlInPreview;
+    @FXML
+    private TableView<Task> taskTable;
+    @FXML
+    private TableColumn<Task, String> colName, colAssignee, colStart, colDeadline, colStatus, colDescription;
+    @FXML
+    private Hyperlink hlAll, hlInPreview;
 
     // ==========================================
     // KHAI BÁO DỮ LIỆU & SERVICE
@@ -37,9 +42,20 @@ public class ListController implements IProjectDetailSubView {
      * Dùng để thiết lập cấu trúc bảng và sự kiện nút bấm.
      */
     @FXML
-    public void initialize() {
+    private Button btnCreate; // Khai báo nút Create từ FXML
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         setupTableColumns();
         setupLinkActions();
+
+        // Gán sự kiện mở form tạo task
+        btnCreate.setOnAction(event -> {
+            CreateTaskController controller = ViewNavigator.getInstance().loadSubScene("/scenes/CreateTask.fxml");
+            if (controller != null) {
+                controller.setProject(this.project); // Truyền thông tin project hiện tại sang
+            }
+        });
     }
 
     @Override

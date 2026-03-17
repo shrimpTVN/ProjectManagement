@@ -11,6 +11,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -189,7 +190,7 @@ public class MemberController implements IProjectDetailSubView {
 
         // 3. Tìm User trong Database dựa trên UserName
         UserService userService = new UserService();
-        User foundUser = userService.findByUserName(inputUserName);
+        User foundUser = userService.getUserByName(inputUserName);
 
         if (foundUser == null) {
             System.out.println("[DEBUG - Add Member] Thất bại: User '" + inputUserName + "' không tồn tại trong DB.");
