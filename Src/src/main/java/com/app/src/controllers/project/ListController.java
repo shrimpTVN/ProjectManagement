@@ -146,8 +146,8 @@ public class ListController implements IProjectDetailSubView {
                 TaskDetailController detailController = (TaskDetailController) controller;
                 detailController.setProjectId(project.getProjectId());
 
-                // --- BƯỚC CẦU NỐI: Chuyển Task sang PersonalTaskDTO ---
                 PersonalTaskDTO dto = new PersonalTaskDTO();
+                dto.setTaskId(task.getTaskId());
                 dto.setTaskName(task.getTaskName());
                 dto.setTaskDescription(task.getTaskDescription());
                 dto.setTaskStartTime(task.getTaskStartTime());
@@ -156,9 +156,7 @@ public class ListController implements IProjectDetailSubView {
                 if (project != null) {
                     dto.setProjectName(project.getProjectName());
                 }
-                // Map các trường khác nếu cần...
 
-                // Bây giờ truyền DTO đi sẽ không còn lỗi nữa
                 detailController.setTaskData(dto);
             }
         } catch (Exception e) {
