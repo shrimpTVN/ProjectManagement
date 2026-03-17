@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic type
@@ -216,7 +215,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
      * Sử dụng Window Function LAG() để xác định trạng thái trước đó mà không cần truy vấn nhiều lần.
      * * @param taskId ID của công việc cần lấy lịch sử.
      * @return Danh sách các bản ghi thay đổi trạng thái kèm chuỗi định dạng (Cũ ➜ Mới).
-     */
+//     */
    public List<StatusUpdating> getStatusHistory(int taskId) {
        List<StatusUpdating> list = new ArrayList<>();
        // SQL sử dụng Window Function LAG để lấy trạng thái trước đó của cùng một Task
@@ -251,6 +250,101 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
        return list;
    }
 
+    // Cập nhật trạng thái task và chặn chuyển In Preview -> Done nếu user chỉ là Member.
+    public boolean appendStatusUpdating(int taskId, String oldStatus, String newStatus, String content, int userId) {
+        String normalizedNew = newStatus == null ? "" : newStatus.trim().toLowerCase();
+        int statusId = mapStatusId(normalizedNew);
+        if (statusId == -1) {
+            return false;
+        }
+
+        String sqlInsert = "INSERT INTO STATUS_UPDATING (StU_date, StU_content, Task_id, Sta_id) VALUES (CURRENT_TIMESTAMP, ?, ?, ?)";
+
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = getConnection();
+
+            // Kiểm tra rule bằng cả trạng thái cũ trên UI và trạng thái mới nhất trong DB để tránh lọt logic.
+            int currentStatusId = getCurrentStatusId(connection, taskId);
+            String normalizedOld = oldStatus == null ? "" : oldStatus.trim().toLowerCase();
+            boolean fromPreviewToDoneByUi = (normalizedOld.equals("in preview") && statusId == 4);
+            boolean fromPreviewToDoneByDb = (currentStatusId == 3 && statusId == 4);
+
+            if (fromPreviewToDoneByUi || fromPreviewToDoneByDb) {
+                // Chỉ Admin(2) hoặc Manager(1) mới được duyệt In Preview -> Done.
+                int roleId = getRoleIdByTaskAndUser(connection, taskId, userId);
+                if (roleId != 1 && roleId != 2) {
+                    throw new RuntimeException("Chi Admin/Manager moi duoc chuyen In Preview sang Done");
+                }
+            }
+
+            ps = connection.prepareStatement(sqlInsert);
+            ps.setString(1, content);
+            ps.setInt(2, taskId);
+            ps.setInt(3, statusId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            throw new RuntimeException("Lỗi khi cập nhật trạng thái task: " + ex.getMessage(), ex);
+        } finally {
+            try {
+                closeResource(ps, connection, null);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    // Map tên trạng thái về ID trong bảng TASK_STATUS.
+    private int mapStatusId(String normalizedStatus) {
+        if (normalizedStatus.equals("to do") || normalizedStatus.equals("todo")) {
+            return 1;
+        }
+        if (normalizedStatus.equals("in progress") || normalizedStatus.equals("in processing") || normalizedStatus.equals("in progressing")) {
+            return 2;
+        }
+        if (normalizedStatus.equals("in preview")) {
+            return 3;
+        }
+        if (normalizedStatus.equals("done")) {
+            return 4;
+        }
+        return -1;
+    }
+
+    // Lấy trạng thái mới nhất của task theo STATUS_UPDATING.
+    private int getCurrentStatusId(Connection connection, int taskId) throws SQLException {
+        final String sql = "SELECT su.Sta_id FROM STATUS_UPDATING su WHERE su.Task_id = ? ORDER BY su.StU_id DESC LIMIT 1";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, taskId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("Sta_id");
+                }
+            }
+        }
+        return 1;
+    }
+
+    // Lấy role hiện tại của user trong project chứa task.
+    private int getRoleIdByTaskAndUser(Connection connection, int taskId, int userId) throws SQLException {
+        final String sql = "SELECT pj.Role_id " +
+                "FROM TASK t " +
+                "LEFT JOIN PROJECT_JOINING pj ON t.Pro_id = pj.Pro_id AND pj.User_id = ? " +
+                "WHERE t.Task_id = ? " +
+                "ORDER BY pj.PJo_dateJoin DESC LIMIT 1";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, taskId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("Role_id");
+                }
+            }
+        }
+        return -1;
+    }
     public boolean createTask(Task task) {
         final String sql = "INSERT INTO TASK (Task_name, Task_description, Task_startDate, Task_endDate, Pro_id, User_id) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
@@ -301,4 +395,11 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             }
         }
     }
+
+//    public List<StatusUpdating> getStatusHistory(int taskId) {
+//    }
 }
+
+
+
+

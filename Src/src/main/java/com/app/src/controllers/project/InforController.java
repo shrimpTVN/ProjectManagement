@@ -1,6 +1,7 @@
 package com.app.src.controllers.project;
 
 import com.app.src.controllers.CreateProjectController;
+import com.app.src.controllers.SideBarController;
 import com.app.src.controllers.ViewNavigator;
 import com.app.src.core.AppContext;
 import com.app.src.models.Project;
@@ -71,6 +72,9 @@ public class InforController implements IProjectDetailSubView, Initializable {
 
             if (isDeleted) {
                 AppContext.refreshProjects();
+                if (SideBarController.getInstance() != null) {
+                    SideBarController.getInstance().reloadProjects();
+                }
                 ViewNavigator.getInstance().loadSubScene("/scenes/ProjectList.fxml");
             } else {
                 System.out.println("Lỗi: Xóa dự án thất bại.");

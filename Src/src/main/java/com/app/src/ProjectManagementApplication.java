@@ -1,20 +1,25 @@
 package com.app.src;
 
 import com.app.src.controllers.SceneManager;
+import com.app.src.exceptions.GlobalExceptionHandler;
 import com.app.src.core.AppContext;
 import com.app.src.core.session.UserSession;
 import com.app.src.services.UserService;
 import javafx.application.Application;
-import javafx.stage.Stage;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 
 public class ProjectManagementApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        GlobalExceptionHandler.registerDefaultHandler();
+
+
 
         // Danh sách các font chữ Urbanist hay dùng trong giao diện
         String[] fontFiles = {

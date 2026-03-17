@@ -8,77 +8,95 @@ import com.app.src.services.ProjectJoiningService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ProjectListController {
 
     @FXML
     private FlowPane allProjectsFlowPane;
 
+    @FXML
+    private TextField searchProjectField;
+
     private final ProjectJoiningService projectJoiningService = new ProjectJoiningService();
+    private final ArrayList<Project> allProjects = new ArrayList<>();
+
     @FXML
     public void initialize() {
-        renderProjectList();
+        loadProjects();
+        renderProjects(allProjects);
+        setupSearch();
+        setupCardClickHandler();
     }
 
-    private void setData(ArrayList<Project> projects) {
-//        System.out.println("Set data");
-        for (int index = 0; index < projects.size(); index++) {
+    private void loadProjects() {
+        AppContext.getInstance();
+        allProjects.clear();
+        allProjects.addAll(AppContext.getProjects());
+    }
 
-            Project project = projects.get(index);
+    private void renderProjects(ArrayList<Project> projects) {
+        allProjectsFlowPane.getChildren().clear();
 
+        for (Project project : projects) {
             String adminName = projectJoiningService.getAdmin(project.getProjectId());
 
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/components/ProjectCard.fxml"));
                 VBox card = loader.load();
 
-                // set data for project card
                 ProjectCardController projectCardController = loader.getController();
                 projectCardController.setData(project.getProjectName(), adminName);
 
-                // Gắn ID vào UserData để nhận diện khi click
-                card.setUserData(index);
+                // Gắn thẳng object Project để click vẫn đúng ngay cả khi danh sách đã lọc.
+                card.setUserData(project);
 
                 allProjectsFlowPane.getChildren().add(card);
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Khong the tai ProjectCard.fxml", e);
             }
         }
     }
 
+    private void setupSearch() {
+        if (searchProjectField == null) {
+            return;
+        }
 
+        searchProjectField.textProperty().addListener((observable, oldValue, newValue) -> {
+            String keyword = newValue == null ? "" : newValue.trim().toLowerCase(Locale.ROOT);
+            ArrayList<Project> filteredProjects = new ArrayList<>();
 
-    private void renderProjectList() {
-//        System.out.println("Project List controller");
-//        get all projects data and set for project card
-        AppContext.getInstance();
-        ArrayList<Project> projects = AppContext.getProjects();
-//        System.out.println("project list" + projects.size());
-        setData(projects);
+            for (Project project : allProjects) {
+                String projectName = project.getProjectName() == null ? "" : project.getProjectName().toLowerCase(Locale.ROOT);
+                if (keyword.isEmpty() || projectName.contains(keyword)) {
+                    filteredProjects.add(project);
+                }
+            }
 
-        // Gắn 1 listener duy nhất cho container cha
+            renderProjects(filteredProjects);
+        });
+    }
+
+    private void setupCardClickHandler() {
         allProjectsFlowPane.setOnMouseClicked(event -> {
-            // Kiểm tra xem đối tượng bị click có phải là (hoặc nằm trong) Project Card không
             Node clickedNode = (Node) event.getTarget();
-
-            // Truy ngược lên để tìm VBox (Project Card)
             Node card = findProjectCard(clickedNode);
 
-            if (card != null && card.getUserData() != null) {
-                int index = (Integer) card.getUserData();
-                int projectId = projects.get(index).getProjectId();
+            if (card != null && card.getUserData() instanceof Project project) {
+                int projectId = project.getProjectId();
 
-               ProjectDetailController controller = ViewNavigator.getInstance().loadSubScene("/scenes/ProjectDetail.fxml");
+                ProjectDetailController controller = ViewNavigator.getInstance().loadSubScene("/scenes/ProjectDetail.fxml");
 
-               // Lấy Project đầy đủ với PROJECT_JOINING data
-               Project fullProject = ProjectDAO.getInstance().getProjectWithJoinings(projectId);
-               String adminName = projectJoiningService.getAdmin(projectId);
-               controller.renderData(fullProject, adminName);
+                Project fullProject = ProjectDAO.getInstance().getProjectWithJoinings(projectId);
+                String adminName = projectJoiningService.getAdmin(projectId);
+                controller.renderData(fullProject, adminName);
             }
         });
     }
@@ -88,7 +106,7 @@ public class ProjectListController {
     // Hàm hỗ trợ tìm Project Card từ node bị click
     private Node findProjectCard(Node node) {
         while (node != null && node != allProjectsFlowPane) {
-            if (node instanceof VBox && node.getUserData() != null) {
+            if (node instanceof VBox && node.getUserData() instanceof Project) {
                 return node;
             }
             node = node.getParent();

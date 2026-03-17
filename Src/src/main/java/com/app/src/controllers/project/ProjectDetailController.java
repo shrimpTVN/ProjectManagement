@@ -22,6 +22,23 @@ public class ProjectDetailController {
     @FXML
     HBox projectDetailNavBar;
 
+    @FXML
+    private Button tabSummary;
+
+    @FXML
+    private Button tabList;
+
+    @FXML
+    private Button tabBoard;
+
+    @FXML
+    private Button tabMember;
+
+    @FXML
+    private Button tabInfor;
+
+    private static final String TAB_ACTIVE_CLASS = "project-detail-tab-active";
+
     private Project project;
     private String adminName;
 
@@ -34,6 +51,9 @@ public class ProjectDetailController {
         ProjectDetailNavigator.getInstance().setMainContentArea(tabContentArea);
         SummaryController summaryController = ProjectDetailNavigator.getInstance().loadSubView("/components/ProjectDetail/Summary.fxml");
         summaryController.renderData(project, adminName);
+
+        // Mặc định highlight tab Summary khi mở màn hình Project Detail.
+        setActiveTab(tabSummary);
     }
 
 
@@ -44,6 +64,20 @@ public class ProjectDetailController {
 
         IProjectDetailSubView controller = ProjectDetailNavigator.getInstance().loadSubView("/components/ProjectDetail/"+btnId.substring(3) + ".fxml");
         controller.renderData(project, adminName);
+
+        setActiveTab(clickedNode);
+    }
+
+    private void setActiveTab(Button selectedTab) {
+        for (Node node : projectDetailNavBar.getChildren()) {
+            if (node instanceof Button button) {
+                button.getStyleClass().remove(TAB_ACTIVE_CLASS);
+            }
+        }
+
+        if (!selectedTab.getStyleClass().contains(TAB_ACTIVE_CLASS)) {
+            selectedTab.getStyleClass().add(TAB_ACTIVE_CLASS);
+        }
     }
 
     public void handleBackClick(MouseEvent mouseEvent) {
