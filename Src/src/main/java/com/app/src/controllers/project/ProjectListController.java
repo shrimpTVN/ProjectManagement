@@ -101,6 +101,8 @@ public class ProjectListController {
         });
     }
 
+
+
     // Hàm hỗ trợ tìm Project Card từ node bị click
     private Node findProjectCard(Node node) {
         while (node != null && node != allProjectsFlowPane) {

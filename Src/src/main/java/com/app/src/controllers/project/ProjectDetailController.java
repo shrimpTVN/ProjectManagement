@@ -1,5 +1,6 @@
 package com.app.src.controllers.project;
 
+import com.app.src.controllers.ViewNavigator;
 import com.app.src.models.Project;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -77,5 +78,9 @@ public class ProjectDetailController {
         if (!selectedTab.getStyleClass().contains(TAB_ACTIVE_CLASS)) {
             selectedTab.getStyleClass().add(TAB_ACTIVE_CLASS);
         }
+    }
+
+    public void handleBackClick(MouseEvent mouseEvent) {
+        ViewNavigator.getInstance().loadSubScene("/scenes/ProjectList.fxml");
     }
 }

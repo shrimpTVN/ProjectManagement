@@ -1,4 +1,4 @@
-package com.app.src.controllers;
+package com.app.src.controllers.task;
 
 import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.services.TasklistService;
@@ -12,11 +12,9 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.HBox;
 import javafx.scene.control.TableRow;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
@@ -39,9 +37,6 @@ public class TasklistController {
     // ==========================================
     // KHAI BÁO CÁC THÀNH PHẦN GIAO DIỆN (@FXML)
     // ==========================================
-    @FXML private HBox breadcrumbBox;
-    @FXML private Hyperlink hlHome;
-    @FXML private Label lblCurrentPage;
     @FXML private Label lblTitle;
 
     @FXML private Button btnAll;
@@ -111,7 +106,7 @@ public class TasklistController {
                     // 1. Lấy dữ liệu của dòng được click
                     PersonalTaskDTO clickedTask = row.getItem();
 
-                    System.out.println("Bạn vừa double-click vào Task: " + clickedTask.getTaskName());
+//                    System.out.println("Bạn vừa double-click vào Task: " + clickedTask.getTaskName());
 
                     // 2. Chuyển sang Scene khác (Sử dụng ViewNavigator của bạn)
                     // Chú ý: Bạn cần truyền dữ liệu của clickedTask sang màn hình mới để hiển thị
@@ -122,16 +117,14 @@ public class TasklistController {
         });
         loadDataFromDatabase(currentUserId);
         setupFilterButtons();
-        setupNavigation();
     }
     private void openTaskDetailScene(PersonalTaskDTO clickedTask) {
 //        ViewNavigator.getInstance().loadSubScene("/scenes/detailinfotask.fxml");
 
         try {
-
             TaskDetailController detailController = ViewNavigator.getInstance().loadSubScene("/scenes/detailinfotask.fxml");
-
             detailController.setTaskData(clickedTask);
+            detailController.setProjectId(0);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,20 +1,5 @@
-﻿/*Font.loadFont(*/
-/*getClass().getResource("").toExternalForm(),*/
-/*14*/
 * {
-    -fx-font-family: "Urbanist Regular";
-}
-
-.font-title {
-    -fx-font-family: "Urbanist Medium";
-}
-
-.font-body {
-    -fx-font-family: "Urbanist Regular";
-}
-
-.font-note {
-    -fx-font-family: "Urbanist Light";
+    -fx-font-family: "Urbanist";
 }
 
 .urbanist-regular {
@@ -59,7 +44,6 @@
     -fx-cursor: hand;
 }
 
-/*địt cụ nó sao không sài css được z ???*/
 .flat-btn:hover {
     -fx-background-color: #e0e0e0;
     -fx-background-radius: 5;
@@ -85,7 +69,6 @@
 
 /*chỉnh css breadcrumblink*/
 .breadcrumb-item {
-    -fx-padding: 0;
     -fx-border-width: 0;
     -fx-background-insets: 0;
     -fx-text-fill: black;
@@ -278,6 +261,15 @@
     -fx-background-color: #f4f4f4;
 }
 
+.subview-button {
+    -fx-font-weight: 400;
+    /* other base styles here */
+}
+
+/* Active state is controlled by adding/removing the 'active-tab' style class in controller */
+.subview-button.active-tab {
+    -fx-font-weight: 700;
+}
 /* Sidebar project scrollbar */
 .project-scroll-pane {
     -fx-background-color: transparent;
