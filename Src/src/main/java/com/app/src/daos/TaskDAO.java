@@ -1,12 +1,14 @@
 package com.app.src.daos;
 
 import com.app.src.dtos.PersonalTaskDTO; // Đã sửa import
+import com.app.src.models.StatusUpdating;
 import com.app.src.models.Task;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic type
@@ -208,4 +210,44 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
         }
         return tasks;
     }
+
+    /**
+     * Lấy lịch sử thay đổi trạng thái của một công việc.
+     * Sử dụng Window Function LAG() để xác định trạng thái trước đó mà không cần truy vấn nhiều lần.
+     * * @param taskId ID của công việc cần lấy lịch sử.
+     * @return Danh sách các bản ghi thay đổi trạng thái kèm chuỗi định dạng (Cũ ➜ Mới).
+     */
+   public List<StatusUpdating> getStatusHistory(int taskId) {
+       List<StatusUpdating> list = new ArrayList<>();
+       // SQL sử dụng Window Function LAG để lấy trạng thái trước đó của cùng một Task
+       String sql = "SELECT h.StU_date, s_curr.Sta_name AS new_status, " +
+               "LAG(s_curr.Sta_name) OVER (PARTITION BY h.Task_id ORDER BY h.StU_date ASC) AS old_status " +
+               "FROM status_updating h " +
+               "JOIN task_status s_curr ON h.Sta_id = s_curr.Sta_id " +
+               "WHERE h.Task_id = ? " +
+               "ORDER BY h.StU_date DESC";
+
+       try (Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+           ps.setInt(1, taskId);
+           ResultSet rs = ps.executeQuery();
+
+           while (rs.next()) {
+               String newSta = rs.getString("new_status");
+               String oldSta = rs.getString("old_status");
+
+               // Nếu là dòng đầu tiên (không có trạng thái cũ), ta để là "None" hoặc tên trạng thái mới luôn
+               String displayOld = (oldSta == null) ? "None" : oldSta;
+               String formattedContent = displayOld + " \u279F " + newSta; // Tạo chuỗi: To Do ➔ In Progressing
+
+               StatusUpdating item = new StatusUpdating();
+               item.setDate(rs.getTimestamp("StU_date"));
+               item.setContent(formattedContent); // Ghi đè chuỗi đẹp vào biến content của Model
+               list.add(item);
+           }
+       } catch (SQLException e) {
+           e.printStackTrace();
+       }
+       return list;
+   }
 }
