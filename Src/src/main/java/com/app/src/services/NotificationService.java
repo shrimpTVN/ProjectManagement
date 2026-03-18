@@ -12,13 +12,13 @@ public class NotificationService {
     public NotificationService() {
         this.notificationDAO = new NotificationDAO();
     }
-//Hàm lấy thông báo theo user
     public List<Notification> getNotificationsByUserId(int userId) {
         // Bạn có thể thêm các logic kiểm tra (validation) ở đây nếu cần
         if (userId <= 0) {
             System.out.println("[DEBUG - NotificationService] Lỗi: userId không hợp lệ!");
             return null;
         }
+        System.out.println("Goi NotificationService thanh cong");
         return notificationDAO.findByUserId(userId);
     }
 //Hàm đánh dấu đã đọc

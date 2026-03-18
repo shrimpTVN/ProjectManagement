@@ -8,148 +8,222 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotificationDAO implements BaseDAO<Notification> {
+public class NotificationDAO extends AbstractDAO<Notification> {
 
-    // Giả định bạn có một class tiện ích để lấy kết nối Database
-    // Hãy thay thế bằng cách lấy Connection thực tế của project bạn
-    private Connection getConnection() throws SQLException {
-        // return DBUtils.getConnection();
-        return null;
+    // 1. Áp dụng Singleton Pattern giống TaskDAO
+    private static NotificationDAO instance;
+
+    public static NotificationDAO getInstance() {
+        if (instance == null) {
+            instance = new NotificationDAO();
+        }
+        return instance;
     }
 
     @Override
     public Notification findById(int id) {
+        String sql = "SELECT * FROM NOTIFICATION WHERE Not_id = ?";
         Notification notification = null;
-        String sql = "SELECT * FROM notifications WHERE noti_id = ?";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try {
+            connection = getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
 
-            stmt.setInt(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    notification = new Notification();
-                    notification.setNotiId(rs.getInt("noti_id"));
-                    notification.setNotiDescription(rs.getString("noti_description"));
-                    notification.setNotiIsRead(rs.getBoolean("noti_is_read"));
+            if (rs.next()) {
+                notification = new Notification();
+                notification.setNotiId(rs.getInt("Not_id"));
+                notification.setNotiTitle(rs.getString("Not_title"));
+                notification.setNotiDescription(rs.getString("Not_description"));
+                notification.setNotiIsRead(rs.getBoolean("Not_isRead"));
+
+                if (rs.getTimestamp("Not_date") != null) {
+                    notification.setNotiTime(String.valueOf(rs.getTimestamp("Not_date")));
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            this.closeResource(ps, connection, rs);
+        } catch (SQLException ex) {
+            throw new RuntimeException("Lỗi khi tìm Notification theo ID: " + ex.getMessage(), ex);
         }
         return notification;
     }
+
+    // Lấy danh sách thông báo theo UserID
     public List<Notification> findByUserId(int userId) {
         List<Notification> notifications = new ArrayList<>();
+        String sql = "SELECT * FROM NOTIFICATION WHERE User_id = ? ORDER BY Not_date DESC"; // Thêm ORDER BY để thông báo mới nhất hiện lên trên
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        // Cập nhật câu SQL để lọc theo user_id
-        // (Lưu ý: Giả định cột khóa ngoại trong DB của bạn tên là 'user_id', hãy sửa lại nếu tên cột khác nhé)
-        String sql = "SELECT * FROM notifications WHERE user_id = ?";
+        try {
+            connection = getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, userId);
+            rs = ps.executeQuery();
 
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            while (rs.next()) {
+                Notification noti = new Notification();
+                noti.setNotiId(rs.getInt("Not_id"));
+                noti.setNotiTitle(rs.getString("Not_title"));
+                noti.setNotiDescription(rs.getString("Not_description"));
+                noti.setNotiIsRead(rs.getBoolean("Not_isRead"));
 
-            // 1. Truyền tham số userId vào dấu '?'
-            stmt.setInt(1, userId);
-
-            // 2. Thực thi và duyệt qua kết quả trả về
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    // Dùng constructor giống như cách bạn đã viết trong hàm findAll()
-                    Notification noti = new Notification(
-                            rs.getInt("noti_id"),
-                            rs.getString("noti_description"),
-                            rs.getBoolean("noti_is_read")
-                    );
-                    notifications.add(noti);
+                if (rs.getTimestamp("Not_date") != null) {
+                    noti.setNotiTime(String.valueOf(rs.getTimestamp("Not_date")));
                 }
+
+                notifications.add(noti);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            this.closeResource(ps, connection, rs);
+        } catch (SQLException ex) {
+            throw new RuntimeException("Lỗi khi lấy danh sách Notification theo User ID: " + ex.getMessage(), ex);
         }
 
         return notifications;
     }
+
     @Override
     public List<Notification> findAll() {
         List<Notification> notifications = new ArrayList<>();
-        String sql = "SELECT * FROM notifications";
+        String sql = "SELECT * FROM NOTIFICATION ORDER BY Not_date DESC";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try {
+            connection = getConnection();
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
 
             while (rs.next()) {
-                Notification noti = new Notification(
-                        rs.getInt("noti_id"),
-                        rs.getString("noti_description"),
-                        rs.getBoolean("noti_is_read")
-                );
+                Notification noti = new Notification();
+                noti.setNotiId(rs.getInt("Not_id"));
+                noti.setNotiTitle(rs.getString("Not_title"));
+                noti.setNotiDescription(rs.getString("Not_description"));
+                noti.setNotiIsRead(rs.getBoolean("Not_isRead"));
+
+                if (rs.getTimestamp("Not_date") != null) {
+                    noti.setNotiTime(String.valueOf(rs.getTimestamp("Not_date")));
+                }
+
                 notifications.add(noti);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            this.closeResource(ps, connection, rs);
+        } catch (SQLException ex) {
+            throw new RuntimeException("Lỗi khi lấy danh sách Notification: " + ex.getMessage(), ex);
         }
         return notifications;
     }
 
     @Override
     public boolean create(Notification entity) {
-        // Thường thì ID sẽ tự tăng trong DB (Auto Increment) nên không cần INSERT ID
-        String sql = "INSERT INTO notifications (noti_description, noti_is_read) VALUES (?, ?)";
-        boolean isSuccess = false;
+        // Cập nhật SQL khớp với các trường mới
+        String sql = "INSERT INTO NOTIFICATION (Not_title, Not_description, Not_isRead, Not_date) VALUES (?, ?, ?, CURRENT_TIMESTAMP)";
+        Connection connection = null;
+        PreparedStatement ps = null;
 
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try {
+            connection = getConnection();
+            ps = connection.prepareStatement(sql);
 
-            stmt.setString(1, entity.getNotiDescription());
-            stmt.setBoolean(2, entity.isNotiIsRead());
+            ps.setString(1, entity.getNotiTitle()); // Cần đảm bảo Model có getNotiTitle()
+            ps.setString(2, entity.getNotiDescription());
+            ps.setBoolean(3, entity.isNotiIsRead());
 
-            int rowsAffected = stmt.executeUpdate();
-            isSuccess = rowsAffected > 0;
+            // Nếu bạn có trường User_id trong Notification Model, có thể thêm vào đây:
+            // ps.setInt(4, entity.getUserId());
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException ex) {
+            throw new RuntimeException("Lỗi khi tạo mới Notification: " + ex.getMessage(), ex);
+        } finally {
+            try {
+                this.closeResource(ps, connection, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return isSuccess;
     }
 
     @Override
     public boolean update(int id, Notification entity) {
-        String sql = "UPDATE notifications SET noti_description = ?, noti_is_read = ? WHERE noti_id = ?";
-        boolean isSuccess = false;
+        String sql = "UPDATE NOTIFICATION SET Not_title = ?, Not_description = ?, Not_isRead = ? WHERE Not_id = ?";
+        Connection connection = null;
+        PreparedStatement ps = null;
 
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try {
+            connection = getConnection();
+            ps = connection.prepareStatement(sql);
 
-            stmt.setString(1, entity.getNotiDescription());
-            stmt.setBoolean(2, entity.isNotiIsRead());
-            stmt.setInt(3, id);
+            ps.setString(1, entity.getNotiTitle());
+            ps.setString(2, entity.getNotiDescription());
+            ps.setBoolean(3, entity.isNotiIsRead());
+            ps.setInt(4, id);
 
-            int rowsAffected = stmt.executeUpdate();
-            isSuccess = rowsAffected > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException ex) {
+            throw new RuntimeException("Lỗi khi cập nhật Notification: " + ex.getMessage(), ex);
+        } finally {
+            try {
+                this.closeResource(ps, connection, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return isSuccess;
     }
 
     @Override
     public boolean delete(int id) {
-        String sql = "DELETE FROM notifications WHERE noti_id = ?";
-        boolean isSuccess = false;
+        String sql = "DELETE FROM NOTIFICATION WHERE Not_id = ?";
+        Connection connection = null;
+        PreparedStatement ps = null;
 
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try {
+            connection = getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
 
-            stmt.setInt(1, id);
-            int rowsAffected = stmt.executeUpdate();
-            isSuccess = rowsAffected > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException ex) {
+            throw new RuntimeException("Lỗi khi xóa Notification: " + ex.getMessage(), ex);
+        } finally {
+            try {
+                this.closeResource(ps, connection, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return isSuccess;
+    }
+
+    // Phương thức bổ sung: Đánh dấu tất cả thông báo của 1 user là đã đọc
+    public boolean markAllAsRead(int userId) {
+        String sql = "UPDATE NOTIFICATION SET Not_isRead = true WHERE User_id = ?";
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            connection = getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, userId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException ex) {
+            throw new RuntimeException("Lỗi khi đánh dấu đã đọc Notification: " + ex.getMessage(), ex);
+        } finally {
+            try {
+                this.closeResource(ps, connection, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
