@@ -29,4 +29,5 @@ module com.app.src {
     exports com.app.src.controllers.task;
     opens com.app.src.controllers.task to javafx.fxml;
     exports com.app.src.models;
+    opens com.app.src.controllers.notification to javafx.fxml;
 }
