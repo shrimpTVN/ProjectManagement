@@ -118,9 +118,18 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
     // --- Bổ sung thêm hàm lấy task theo User (Vì bài toán ban đầu là Bảng Task Cá Nhân) ---
     public List<PersonalTaskDTO> findAllByUserId(int userId) {
         List<PersonalTaskDTO> tasks = new ArrayList<>();
-        String sql = "SELECT t.*, p.Pro_name FROM TASK t " +
-                "    LEFT JOIN PROJECT p ON t.Pro_id = p.Pro_id " +
-                "   WHERE t.USER_id = ?;";
+        String sql = "SELECT t.*, p.Pro_name, " +
+                "COALESCE((" +
+                "   SELECT ts.Sta_name " +
+                "   FROM STATUS_UPDATING su " +
+                "   JOIN TASK_STATUS ts ON su.Sta_id = ts.Sta_id " +
+                "   WHERE su.Task_id = t.Task_id " +
+                "   ORDER BY su.StU_id DESC " +
+                "   LIMIT 1" +
+                "), 'To Do') AS Sta_name " +
+                "FROM TASK t " +
+                "LEFT JOIN PROJECT p ON t.Pro_id = p.Pro_id " +
+                "WHERE t.USER_id = ?;";
         Connection connection = null;
         try {
             connection = getConnection();
@@ -142,8 +151,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
 
                 task.setTaskDescription(rs.getString("Task_description"));
                 task.setProjectName(rs.getString("Pro_name"));
-//                task.setStatusName(rs.getString("Sta_name"));
-                System.out.println(task.getTaskName());
+                task.setStatusName(rs.getString("Sta_name"));
                 tasks.add(task);
             }
             this.closeResource(ps, connection, rs);
@@ -425,6 +433,8 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
 //    public List<StatusUpdating> getStatusHistory(int taskId) {
 //    }
 }
+
+
 
 
 
