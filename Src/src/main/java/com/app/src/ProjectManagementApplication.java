@@ -51,13 +51,13 @@ public class ProjectManagementApplication extends Application {
 
 
         // Load AuthWrapper làm màn hình gốc
-//        sceneManager.switchScene("/scenes/AuthWrapper.fxml");
+        sceneManager.switchScene("/scenes/AuthWrapper.fxml");
 
-        try {
-            loadExampleData();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            loadExampleData();
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
 
         loadSessionData();
     }
