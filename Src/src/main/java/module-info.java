@@ -30,4 +30,6 @@ module com.app.src {
     opens com.app.src.controllers.task to javafx.fxml;
     exports com.app.src.models;
     opens com.app.src.controllers.notification to javafx.fxml;
+    exports com.app.src.authentication;
+    opens com.app.src.authentication to javafx.fxml;
 }
