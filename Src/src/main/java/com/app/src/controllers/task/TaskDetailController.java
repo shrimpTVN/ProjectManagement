@@ -31,6 +31,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
@@ -67,7 +68,7 @@ public class TaskDetailController {
     @FXML
     private Button btnHistory;
     @FXML
-    private StackPane taskDetailSubViewContainer;
+    private ScrollPane taskDetailSubViewContainer;
     // Biến lưu trữ Task hiện tại đang xem
     private PersonalTaskDTO currentTask;
     private int fromProject = 0;
@@ -149,13 +150,12 @@ public class TaskDetailController {
                 throw new IllegalStateException("Task data is not initialized before loading subview");
             }
             Node taskDetailSubView = loader.load();
-            taskDetailSubViewContainer.getChildren().setAll(taskDetailSubView);
+            taskDetailSubViewContainer.setContent(taskDetailSubView);
 
             Object childController = loader.getController();
             if (childController instanceof CommentBoxController commentController) {
                 commentController.renderData(currentTask.getTaskId());
-            } else if (childController instanceof StatusNotiController statusNotiController) {
-                //gọi renderData từ container chứa status
+            } else if (childController instanceof StatusNotiController statusNotiController) {                //gọi renderData từ container chứa status
                 statusNotiController.renderData(currentTask.getTaskId());
             }
 
@@ -176,10 +176,11 @@ public class TaskDetailController {
                 currentSubView = "CommentBox";
                 loadTaskDetailSubView(currentSubView);
                 applySubViewButtonStyle();
-            } else if (!currentSubView.equals("StatusChangeNoti") & buttonText.equals("Status")) {
+            } else if (!currentSubView.equals("StatusNotiContainer") & buttonText.equals("Status")) {
                 //StatusNotiContainer là Vbox bao các status -> load vbox lên
-                loadTaskDetailSubView("StatusNotiContainer");
-                currentSubView = "StatusChangeNoti";
+                currentSubView = "StatusNotiContainer";
+                loadTaskDetailSubView(currentSubView);
+
                 applySubViewButtonStyle();
             }
         }
@@ -187,7 +188,7 @@ public class TaskDetailController {
 
     private void applySubViewButtonStyle() {
         boolean isCommentActive = "CommentBox".equals(currentSubView);
-        boolean isStatusActive = "StatusChangeNoti".equals(currentSubView);
+        boolean isStatusActive = "StatusNotiContainer".equals(currentSubView);
 
         toggleActiveTabStyle(btnCmt, isCommentActive);
         toggleActiveTabStyle(btnHistory, isStatusActive);
