@@ -1,5 +1,7 @@
 package com.app.src.models;
 
+import com.app.src.services.TasklistService;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -78,6 +80,7 @@ public class Task {
     }
 
     public String getTaskStatus() {
-        return "Task_status";
+
+        return TasklistService.getCurrentStatusById(taskId);
     }
 }

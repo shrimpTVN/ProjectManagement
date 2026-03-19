@@ -11,7 +11,7 @@ import com.app.src.models.Task;
 
 public class TasklistService {
 
-    private TaskDAO taskDAO;
+    private static TaskDAO taskDAO;
 
     public TasklistService() {
         // CẬP NHẬT: Sử dụng Singleton pattern chuẩn xác thay vì dùng toán tử new
@@ -134,5 +134,11 @@ public class TasklistService {
         newTask.setTaskName(newTask.getTaskName().trim());
 
         return taskDAO.createTask(newTask);
+    }
+
+    public static String getCurrentStatusById(int taskId)
+    {
+
+        return taskDAO.getStatusNameById(taskId) ;
     }
 }

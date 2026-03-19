@@ -1,5 +1,7 @@
 package com.app.src.controllers.project;
 
+import com.app.src.authentication.RoleValidator;
+import com.app.src.authentication.VisibleManer;
 import com.app.src.models.Project;
 import com.app.src.models.ProjectJoining;
 import com.app.src.models.ProjectRole;
@@ -10,6 +12,7 @@ import com.app.src.models.User;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -36,6 +39,8 @@ public class MemberController implements IProjectDetailSubView {
     private Button btnCancel;
 
     @FXML
+    HBox headerHBox;
+    @FXML
     private TableView<ProjectJoining> memberTable;
 
     @FXML
@@ -58,11 +63,7 @@ public class MemberController implements IProjectDetailSubView {
     @FXML
     public void initialize() {
         setupTableColumns();
-        btnAddUser.setOnAction(event -> handleAddMemberAction());
-        btnEditUser.setOnAction(event -> handleEditAction());
-        btnCancel.setOnAction(event -> handleCancelAction());
-        btnDeleteUser.disableProperty().bind(memberTable.getSelectionModel().selectedItemProperty().isNull());
-        btnDeleteUser.setOnAction(event -> handleDeleteAction());
+
     }
 
     public void setupTableColumns() {
@@ -82,6 +83,21 @@ public class MemberController implements IProjectDetailSubView {
             System.out.println("Failed to load members");
         }
         loadRoleNames();
+        if (!RoleValidator.isManagerOrAdmin(project.getUserRoleName()))
+        {
+            VisibleManer.hideNode(headerHBox);
+            VisibleManer.hideNode(btnDeleteUser);
+        } else {
+            loadAction();
+        }
+    }
+
+    private void loadAction(){
+        btnAddUser.setOnAction(event -> handleAddMemberAction());
+        btnEditUser.setOnAction(event -> handleEditAction());
+        btnCancel.setOnAction(event -> handleCancelAction());
+        btnDeleteUser.disableProperty().bind(memberTable.getSelectionModel().selectedItemProperty().isNull());
+        btnDeleteUser.setOnAction(event -> handleDeleteAction());
     }
 
     private void loadRoleNames() {
