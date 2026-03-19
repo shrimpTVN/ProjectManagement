@@ -4,9 +4,8 @@ import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.services.TasklistService;
 import com.app.src.core.AppContext;
 import com.app.src.models.User;
-//import com.app.src.controllers.SceneManager;
 import com.app.src.controllers.ViewNavigator;
-import javafx.beans.property.SimpleStringProperty; // Import thêm cái này cho Lambda
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -16,21 +15,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableRow;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.stage.Popup;
-import javafx.stage.Window;
-import javafx.animation.PauseTransition;
-import javafx.util.Duration;
 
 import java.util.List;
 import java.util.Locale;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-//import java.io.IOException;
 
 public class TasklistController {
 
@@ -81,10 +68,6 @@ public class TasklistController {
             "-fx-border-color: transparent transparent #111111 transparent;" +
             "-fx-border-width: 0 0 2 0;";
 
-    private static final ObservableList<String> STATUS_OPTIONS = FXCollections.observableArrayList(
-            "To Do", "In Progress", "In Preview"
-    );
-
     public TasklistController() {
         this.taskListService = new TasklistService();
     }
@@ -96,7 +79,7 @@ public class TasklistController {
         currentUserId = currentUser.getUserId();
 
         setupTableColumns();
-        taskTable.setEditable(true);
+        taskTable.setEditable(false);
         taskTable.setRowFactory(tv -> {
             TableRow<PersonalTaskDTO> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -146,138 +129,6 @@ public class TasklistController {
 
         colStatus.setCellValueFactory(cellData -> new SimpleStringProperty(toDisplayStatus(cellData.getValue().getStatusName())));
         colDescription.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTaskDescription()));
-
-        colStatus.setCellFactory(column -> new TableCell<>() {
-            private final ComboBox<String> statusBox = new ComboBox<>(STATUS_OPTIONS);
-            private boolean suppressAction;
-
-            {
-                statusBox.setMaxWidth(Double.MAX_VALUE);
-                statusBox.setOnAction(event -> {
-                    if (suppressAction || getIndex() < 0 || getIndex() >= getTableView().getItems().size()) {
-                        return;
-                    }
-
-                    PersonalTaskDTO task = getTableView().getItems().get(getIndex());
-                    if (task == null) {
-                        return;
-                    }
-
-                    String newStatus = statusBox.getValue();
-                    String oldStatus = toDisplayStatus(task.getStatusName());
-                    if (newStatus == null || oldStatus.equalsIgnoreCase(newStatus)) {
-                        return;
-                    }
-
-                    // Xác nhận nhỏ trước khi đổi trạng thái.
-                    if (!confirmStatusChange(task.getTaskName(), oldStatus, newStatus)) {
-                        suppressAction = true;
-                        statusBox.setValue(oldStatus);
-                        applyStatusColor(statusBox, oldStatus);
-                        suppressAction = false;
-                        return;
-                    }
-
-                    try {
-                        String content = "Cap nhat trang thai tu TaskList: " + oldStatus + " -> " + newStatus;
-                        boolean updated = taskListService.updateTaskStatus(task.getTaskId(), oldStatus, newStatus, content, currentUserId);
-                        if (updated) {
-                            task.setStatusName(newStatus);
-                            applyStatusColor(statusBox, newStatus);
-                            taskTable.refresh();
-                            // Hiển thị toast thành công sau khi cập nhật.
-                            showToast("Updated successfully");
-                        } else {
-                            suppressAction = true;
-                            statusBox.setValue(oldStatus);
-                            applyStatusColor(statusBox, oldStatus);
-                            suppressAction = false;
-                        }
-                    } catch (Exception ex) {
-                        suppressAction = true;
-                        statusBox.setValue(oldStatus);
-                        applyStatusColor(statusBox, oldStatus);
-                        suppressAction = false;
-
-                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                        errorAlert.setTitle("Thong bao");
-                        errorAlert.setHeaderText(null);
-                        errorAlert.setContentText(ex.getMessage());
-                        errorAlert.showAndWait();
-                    }
-                });
-            }
-
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-                    setGraphic(null);
-                    return;
-                }
-
-                String statusText = toDisplayStatus(item);
-                suppressAction = true;
-                statusBox.setValue(statusText);
-                applyStatusColor(statusBox, statusText);
-                suppressAction = false;
-                setGraphic(statusBox);
-            }
-        });
-    }
-
-    // Hỏi xác nhận trước khi đổi trạng thái task.
-    private boolean confirmStatusChange(String taskName, String oldStatus, String newStatus) {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Xac nhan");
-        confirm.setHeaderText("Cap nhat trang thai task");
-        confirm.setContentText("Task: " + taskName + "\n" + oldStatus + " -> " + newStatus + "\nBan co chac chan khong?");
-        return confirm.showAndWait().filter(ButtonType.OK::equals).isPresent();
-    }
-
-    // Tô màu theo trạng thái ngay trong ô status.
-    private void applyStatusColor(ComboBox<String> statusBox, String status) {
-        String normalized = normalizeStatus(status);
-        String style = "-fx-font-family: 'Urbanist Medium'; -fx-font-size: 12px; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 0 4 0 4;";
-
-        if ("to do".equals(normalized)) {
-            style += "-fx-background-color: #FFF3CD; -fx-border-color: #E6C65C; -fx-text-fill: #8A6D00;";
-        } else if ("in progress".equals(normalized)) {
-            style += "-fx-background-color: #DCEBFF; -fx-border-color: #8BB6F2; -fx-text-fill: #1F5FAF;";
-        } else if ("in preview".equals(normalized)) {
-            style += "-fx-background-color: #EBDDFF; -fx-border-color: #C8A3F0; -fx-text-fill: #6B2AA6;";
-        } else if ("done".equals(normalized)) {
-            style += "-fx-background-color: #DDF5E3; -fx-border-color: #8EC89F; -fx-text-fill: #1F7A36;";
-        }
-
-        statusBox.setStyle(style);
-    }
-
-    // Toast đơn giản để báo cập nhật thành công.
-    private void showToast(String message) {
-        if (taskTable.getScene() == null || taskTable.getScene().getWindow() == null) {
-            return;
-        }
-
-        Label toastLabel = new Label(message);
-        toastLabel.setStyle("-fx-background-color: rgba(30,30,30,0.92); -fx-text-fill: white; -fx-padding: 8 14 8 14; -fx-background-radius: 12; -fx-font-family: 'Urbanist Medium';");
-
-        Popup popup = new Popup();
-        popup.getContent().add(toastLabel);
-        popup.setAutoHide(true);
-
-        Window window = taskTable.getScene().getWindow();
-        popup.show(window);
-
-        // Đặt toast ở gần góc dưới bên phải vùng cửa sổ.
-        double x = window.getX() + window.getWidth() - toastLabel.getWidth() - 40;
-        double y = window.getY() + window.getHeight() - 90;
-        popup.setX(x);
-        popup.setY(y);
-
-        PauseTransition delay = new PauseTransition(Duration.seconds(1.4));
-        delay.setOnFinished(event -> popup.hide());
-        delay.play();
     }
 
     // ==========================================
@@ -375,18 +226,3 @@ public class TasklistController {
         activeBtn.setStyle(FILTER_BTN_ACTIVE_STYLE);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
