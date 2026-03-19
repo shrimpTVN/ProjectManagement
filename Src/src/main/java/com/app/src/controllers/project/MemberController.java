@@ -61,6 +61,7 @@ public class MemberController implements IProjectDetailSubView {
         btnAddUser.setOnAction(event -> handleAddMemberAction());
         btnEditUser.setOnAction(event -> handleEditAction());
         btnCancel.setOnAction(event -> handleCancelAction());
+        btnDeleteUser.disableProperty().bind(memberTable.getSelectionModel().selectedItemProperty().isNull());
         btnDeleteUser.setOnAction(event -> handleDeleteAction());
     }
 
@@ -95,7 +96,6 @@ public class MemberController implements IProjectDetailSubView {
     }
 
     private boolean loadMembers() {
-        // Đổi sang dùng ProjectJoiningService
         ProjectJoiningService joiningService = new ProjectJoiningService();
         if (currentProject != null) {
             try {
@@ -137,7 +137,8 @@ public class MemberController implements IProjectDetailSubView {
                     loadMembers(); // Tải lại bảng để hiện dữ liệu mới
                     clearForm();   // Dọn dẹp form
                 } else {
-                    System.out.println("Lỗi cập nhật CSDL.");
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to update database.");
+                    System.out.println("Error updating database.");
                 }
             }
             return;
@@ -146,9 +147,10 @@ public class MemberController implements IProjectDetailSubView {
         // 2. Lấy dòng dữ liệu đang được chọn dưới bảng
         selectedJoining = memberTable.getSelectionModel().getSelectedItem();
 
-        // Nếu chưa chọn dòng nào thì không làm gì cả
+        // Nếu chưa chọn dòng nào thì hiện thông báo
         if (selectedJoining == null) {
-            System.out.println("Vui lòng chọn một thành viên từ bảng.");
+            showAlert(Alert.AlertType.WARNING, "Warning", "Please select a member from the table to edit.");
+            System.out.println("Please select a member from the table.");
             return;
         }
 
@@ -170,7 +172,8 @@ public class MemberController implements IProjectDetailSubView {
 
         // 1. Kiểm tra đầu vào (Validation)
         if (inputUserName.isEmpty() || selectedRoleName == null) {
-            System.out.println("[DEBUG - Add Member] Thất bại: Thiếu thông tin UserName hoặc Role.");
+            showAlert(Alert.AlertType.WARNING, "Warning", "Username and Role cannot be empty.");
+            System.out.println("[DEBUG - Add Member] Failed: Missing UserName or Role information.");
             return;
         }
 
@@ -184,7 +187,8 @@ public class MemberController implements IProjectDetailSubView {
         }
 
         if (selectedRole == null) {
-            System.out.println("[DEBUG - Add Member] Thất bại: Không tìm thấy Role hợp lệ.");
+            showAlert(Alert.AlertType.ERROR, "Error", "Invalid role selected.");
+            System.out.println("[DEBUG - Add Member] Failed: Valid Role not found.");
             return;
         }
 
@@ -193,7 +197,8 @@ public class MemberController implements IProjectDetailSubView {
         User foundUser = userService.getUserByName(inputUserName);
 
         if (foundUser == null) {
-            System.out.println("[DEBUG - Add Member] Thất bại: User '" + inputUserName + "' không tồn tại trong DB.");
+            showAlert(Alert.AlertType.ERROR, "Error", "User '" + inputUserName + "' does not exist.");
+            System.out.println("[DEBUG - Add Member] Failed: User '" + inputUserName + "' does not exist in DB.");
             return;
         }
 
@@ -204,13 +209,15 @@ public class MemberController implements IProjectDetailSubView {
         boolean isSuccess = joiningService.createNewJoining(currentProject.getProjectId(), userId, selectRoleId);
 
         if (isSuccess) {
-            System.out.println("[DEBUG - Add Member] Thành công: Đã thêm user '" + inputUserName + "' vào dự án.");
+            System.out.println("[DEBUG - Add Member] Success: Added user '" + inputUserName + "' to the project.");
             loadMembers(); // Load lại bảng dữ liệu để hiển thị dòng mới
             clearForm();   // Reset lại form nhập liệu
         } else {
-            System.out.println("[DEBUG - Add Member] Thất bại: Không thể insert vào DB. (Có thể do trùng lặp hoặc lỗi SQL)");
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to add member. They might already be in the project.");
+            System.out.println("[DEBUG - Add Member] Failed: Cannot insert into DB. (Possibly due to duplication or SQL error)");
         }
     }
+
     private void handleCancelAction() {
         clearForm();
     }
@@ -234,15 +241,16 @@ public class MemberController implements IProjectDetailSubView {
         ProjectJoining selected = memberTable.getSelectionModel().getSelectedItem();
 
         if (selected == null) {
-            System.out.println("Vui lòng chọn một thành viên để xóa.");
+            showAlert(Alert.AlertType.WARNING, "Warning", "Please select a member to delete.");
+            System.out.println("Please select a member to delete.");
             return;
         }
 
         // Hiển thị hộp thoại xác nhận
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Xác nhận xóa");
-        alert.setHeaderText("Bạn sắp xóa thành viên khỏi dự án");
-        alert.setContentText("Xóa " + selected.getUser().getUserName() + " khỏi danh sách?");
+        alert.setTitle("Confirm Deletion");
+        alert.setHeaderText("Remove Member from Project");
+        alert.setContentText("Are you sure you want to remove " + selected.getUser().getUserName() + " from the project?");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -257,8 +265,18 @@ public class MemberController implements IProjectDetailSubView {
                 loadMembers(); // Làm mới bảng
                 clearForm();   // Dọn dẹp form phía trên (nếu đang bấm vào dòng đó)
             } else {
-                System.out.println("Lỗi khi xóa thành viên.");
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to remove member.");
+                System.out.println("Error removing member.");
             }
         }
+    }
+
+    // Helper method to show alerts
+    private void showAlert(Alert.AlertType alertType, String title, String content) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

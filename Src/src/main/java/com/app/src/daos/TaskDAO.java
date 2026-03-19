@@ -1,8 +1,9 @@
 package com.app.src.daos;
 
-import com.app.src.dtos.PersonalTaskDTO; // Đã sửa import
+import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.models.StatusUpdating;
 import com.app.src.models.Task;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,8 +15,8 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
 
     private static TaskDAO instance;
 
-    public static TaskDAO getInstance(){
-        if(instance == null){
+    public static TaskDAO getInstance() {
+        if (instance == null) {
             instance = new TaskDAO();
         }
         return instance;
@@ -40,7 +41,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 task = new PersonalTaskDTO();
                 task.setTaskId(id);
                 task.setTaskName(rs.getString("Task_name"));
@@ -86,7 +87,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             ResultSet rs = ps.executeQuery();
             System.out.println("Thực thi SQL thành công, đang đọc kết quả...");
 
-            while(rs.next()) {
+            while (rs.next()) {
                 PersonalTaskDTO task = new PersonalTaskDTO();
                 task.setTaskId(rs.getInt("Task_id"));
                 task.setTaskName(rs.getString("Task_name"));
@@ -117,8 +118,8 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
     // --- Bổ sung thêm hàm lấy task theo User (Vì bài toán ban đầu là Bảng Task Cá Nhân) ---
     public List<PersonalTaskDTO> findAllByUserId(int userId) {
         List<PersonalTaskDTO> tasks = new ArrayList<>();
-        String sql = "SELECT t.*, p.Pro_name FROM TASK t "+
-                "    LEFT JOIN PROJECT p ON t.Pro_id = p.Pro_id "+
+        String sql = "SELECT t.*, p.Pro_name FROM TASK t " +
+                "    LEFT JOIN PROJECT p ON t.Pro_id = p.Pro_id " +
                 "   WHERE t.USER_id = ?;";
         Connection connection = null;
         try {
@@ -127,7 +128,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
 
-            while(rs.next()) {
+            while (rs.next()) {
                 PersonalTaskDTO task = new PersonalTaskDTO();
                 task.setTaskId(rs.getInt("Task_id"));
                 task.setTaskName(rs.getString("Task_name"));
@@ -165,13 +166,35 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
 
     @Override
     public boolean delete(int id) {
-        return false;
+        String sql = "DELETE FROM TASK WHERE Task_id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                closeResource(ps, conn, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
     /**
      * Lấy danh sách công việc thuộc về một dự án cụ thể.
      * Sử dụng LEFT JOIN để lấy kèm tên người thực hiện (Assignee).
+     *
      * @param projectId ID của dự án cần lọc.
      */
     public List<Task> findByProjectId(int projectId) {
@@ -214,41 +237,43 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
      * Lấy lịch sử thay đổi trạng thái của một công việc.
      * Sử dụng Window Function LAG() để xác định trạng thái trước đó mà không cần truy vấn nhiều lần.
      * * @param taskId ID của công việc cần lấy lịch sử.
+     *
      * @return Danh sách các bản ghi thay đổi trạng thái kèm chuỗi định dạng (Cũ ➜ Mới).
-//     */
-   public List<StatusUpdating> getStatusHistory(int taskId) {
-       List<StatusUpdating> list = new ArrayList<>();
-       // SQL sử dụng Window Function LAG để lấy trạng thái trước đó của cùng một Task
-       String sql = "SELECT h.StU_date, s_curr.Sta_name AS new_status, " +
-               "LAG(s_curr.Sta_name) OVER (PARTITION BY h.Task_id ORDER BY h.StU_date ASC) AS old_status " +
-               "FROM status_updating h " +
-               "JOIN task_status s_curr ON h.Sta_id = s_curr.Sta_id " +
-               "WHERE h.Task_id = ? " +
-               "ORDER BY h.StU_date DESC";
+     * //
+     */
+    public List<StatusUpdating> getStatusHistory(int taskId) {
+        List<StatusUpdating> list = new ArrayList<>();
+        // SQL sử dụng Window Function LAG để lấy trạng thái trước đó của cùng một Task
+        String sql = "SELECT h.StU_date, s_curr.Sta_name AS new_status, " +
+                "LAG(s_curr.Sta_name) OVER (PARTITION BY h.Task_id ORDER BY h.StU_date ASC) AS old_status " +
+                "FROM status_updating h " +
+                "JOIN task_status s_curr ON h.Sta_id = s_curr.Sta_id " +
+                "WHERE h.Task_id = ? " +
+                "ORDER BY h.StU_date DESC";
 
-       try (Connection conn = getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)) {
-           ps.setInt(1, taskId);
-           ResultSet rs = ps.executeQuery();
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, taskId);
+            ResultSet rs = ps.executeQuery();
 
-           while (rs.next()) {
-               String newSta = rs.getString("new_status");
-               String oldSta = rs.getString("old_status");
+            while (rs.next()) {
+                String newSta = rs.getString("new_status");
+                String oldSta = rs.getString("old_status");
 
-               // Nếu là dòng đầu tiên (không có trạng thái cũ), ta để là "None" hoặc tên trạng thái mới luôn
-               String displayOld = (oldSta == null) ? "None" : oldSta;
-               String formattedContent = displayOld + " \u279F " + newSta; // Tạo chuỗi: To Do ➔ In Progressing
+                // Nếu là dòng đầu tiên (không có trạng thái cũ), ta để là "None" hoặc tên trạng thái mới luôn
+                String displayOld = (oldSta == null) ? "None" : oldSta;
+                String formattedContent = displayOld + " \u279F " + newSta; // Tạo chuỗi: To Do ➔ In Progressing
 
-               StatusUpdating item = new StatusUpdating();
-               item.setDate(rs.getTimestamp("StU_date"));
-               item.setContent(formattedContent); // Ghi đè chuỗi đẹp vào biến content của Model
-               list.add(item);
-           }
-       } catch (SQLException e) {
-           e.printStackTrace();
-       }
-       return list;
-   }
+                StatusUpdating item = new StatusUpdating();
+                item.setDate(rs.getTimestamp("StU_date"));
+                item.setContent(formattedContent); // Ghi đè chuỗi đẹp vào biến content của Model
+                list.add(item);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
     // Cập nhật trạng thái task và chặn chuyển In Preview -> Done nếu user chỉ là Member.
     public boolean appendStatusUpdating(int taskId, String oldStatus, String newStatus, String content, int userId) {
@@ -345,6 +370,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
         }
         return -1;
     }
+
     public boolean createTask(Task task) {
         final String sql = "INSERT INTO TASK (Task_name, Task_description, Task_startDate, Task_endDate, Pro_id, User_id) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
