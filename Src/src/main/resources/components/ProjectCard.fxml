@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <?import javafx.scene.Cursor?>
 <VBox prefHeight="120.0" prefWidth="272.8"
@@ -25,6 +26,7 @@
             </children>
         </HBox>
     </children>
+
     <cursor>
         <Cursor fx:constant="HAND"/>
     </cursor>
