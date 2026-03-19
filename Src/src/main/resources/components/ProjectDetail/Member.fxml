@@ -14,7 +14,7 @@
     <children>
         <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
             <children>
-                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <HBox fx:id="headerHBox" alignment="CENTER_LEFT" spacing="10.0">
                     <children>
                         <TextField fx:id="txtUserName" prefHeight="30.0" prefWidth="200.0" promptText="Enter user name..." styleClass="input-field" />
                         <ComboBox fx:id="cbRole" prefHeight="30.0" prefWidth="150.0" promptText="Select Role" styleClass="input-field" />

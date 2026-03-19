@@ -1,6 +1,7 @@
 package com.app.src.daos;
 
 import com.app.src.dtos.PersonalTaskDTO;
+import com.app.src.exceptions.DataAccessException;
 import com.app.src.models.StatusUpdating;
 import com.app.src.models.Task;
 
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic type
-
+    private static Connection connection;
     private static TaskDAO instance;
 
     public static TaskDAO getInstance() {
@@ -230,6 +231,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
                 // Map dữ liệu User (Assignee)
                 com.app.src.models.User user = new com.app.src.models.User();
                 user.setUserName(rs.getString("User_name"));
+                user.setUserId(rs.getInt("User_id"));
                 task.setUser(user);
 
                 tasks.add(task);
@@ -346,8 +348,8 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
     }
 
     // Lấy trạng thái mới nhất của task theo STATUS_UPDATING.
-    private int getCurrentStatusId(Connection connection, int taskId) throws SQLException {
-        final String sql = "SELECT su.Sta_id FROM STATUS_UPDATING su WHERE su.Task_id = ? ORDER BY su.StU_id DESC LIMIT 1";
+    public int getCurrentStatusId(Connection connection, int taskId) throws SQLException {
+        final String sql = "SELECT su.Sta_id FROM STATUS_UPDATING su WHERE su.Task_id = ? ORDER BY su.Sta_id DESC LIMIT 1";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, taskId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -356,7 +358,30 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
                 }
             }
         }
+
         return 1;
+    }
+
+    public  String  getStatusNameById(int taskId)
+    {
+        String statusName="";
+        final String sql ="select sta_name from task_status where sta_id=?;";
+        try{
+            connection = getConnection();
+            getCurrentStatusId(connection, taskId);
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, taskId);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                statusName = rs.getString("sta_name");
+            }
+
+        }catch(Exception e){
+            throw new DataAccessException("Khong the truy cap data base", e);
+        }
+
+        return statusName;
     }
 
     // Lấy role hiện tại của user trong project chứa task.

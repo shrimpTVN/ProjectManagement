@@ -1,9 +1,13 @@
 package com.app.src.services;
 
 import com.app.src.daos.ProjectJoiningDAO;
+import com.app.src.daos.RoleDAO;
+import com.app.src.exceptions.ServiceException;
 import com.app.src.models.ProjectJoining;
 
 import java.util.ArrayList;
+
+import static com.app.src.exceptions.ErrorCode.UNKNOWN_ERROR;
 
 public class ProjectJoiningService {
     private static ProjectJoiningDAO projectJoiningDao;
@@ -14,6 +18,15 @@ public class ProjectJoiningService {
 
     public String getAdmin(int projectId) {
         return projectJoiningDao.getAdmin(projectId);
+    }
+
+    public static String getRoleInProject(int userId, int projectId) {
+        int roleId = ProjectJoiningDAO.getInstance().getRoleId(userId, projectId);
+        if (roleId == 0) {
+            throw new ServiceException( UNKNOWN_ERROR, "Khong the tim thay role cua user trong du an");
+        }
+
+        return RoleDAO.getInstance().findById(roleId).getRoleName();
     }
 
     public ArrayList<ProjectJoining> findAllJoiningsByProjectId(int projectId) {

@@ -27,6 +27,32 @@ public class ProjectJoiningDAO extends AbstractDAO {
         return instance;
     }
 
+    public int getRoleId(int userID, int projectID) {
+        int roleId = 0;
+        final String sql ="select role_id\n" +
+                "from project_joining\n" +
+                "where user_id=? and pro_id=?;";
+        try{
+            connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, userID);
+            preparedStatement.setInt(2, projectID);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                roleId = resultSet.getInt("role_id");
+            }
+        } catch (Exception e) {
+        e.printStackTrace();
+        } finally {
+            try {
+                closeConnection(connection);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return roleId;
+    }
+
     public String getAdmin(int projectId) {
         String adminName = "";
         final String sql = "select  user.user_name from project_joining PJ join user on PJ.user_id = user.user_id " +

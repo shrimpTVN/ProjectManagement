@@ -1,5 +1,7 @@
 package com.app.src.controllers.project;
 
+import com.app.src.authentication.RoleValidator;
+import com.app.src.authentication.VisibleManer;
 import com.app.src.controllers.ViewNavigator;
 import com.app.src.controllers.task.CreateTaskController;
 import com.app.src.controllers.task.TaskDetailController;
@@ -32,8 +34,8 @@ public class ListController implements IProjectDetailSubView, Initializable {
     // ==========================================
     // KHAI BÁO DỮ LIỆU & SERVICE
     // ==========================================
-    private TasklistService service = new TasklistService();
-    private ObservableList<Task> masterData = FXCollections.observableArrayList();
+    private final TasklistService service = new TasklistService();
+    private final ObservableList<Task> masterData = FXCollections.observableArrayList();
     private Project project;
 
     @FXML
@@ -46,14 +48,7 @@ public class ListController implements IProjectDetailSubView, Initializable {
         setupTableColumns();
         setupLinkActions();
 
-        btnCreate.setOnAction(event -> {
-            CreateTaskController controller = ViewNavigator.getInstance().loadSubScene("/scenes/CreateTask.fxml");
-            if (controller != null) {
-                controller.setProject(this.project);
-            }
-        });
-        btnDelete.disableProperty().bind(taskTable.getSelectionModel().selectedItemProperty().isNull());
-        btnDelete.setOnAction(event -> handleDeleteTask());
+
     }
 
     @Override
@@ -62,6 +57,21 @@ public class ListController implements IProjectDetailSubView, Initializable {
         if (project != null) {
             loadData(project.getProjectId());
         }
+
+        if (!RoleValidator.isManagerOrAdmin(project.getUserRoleName())) {
+            VisibleManer.hideNode(btnCreate);
+            VisibleManer.hideNode(btnDelete);
+        } else {
+            btnCreate.setOnAction(event -> {
+                CreateTaskController controller = ViewNavigator.getInstance().loadSubScene("/scenes/CreateTask.fxml");
+                if (controller != null) {
+                    controller.setProject(this.project);
+                }
+            });
+            btnDelete.disableProperty().bind(taskTable.getSelectionModel().selectedItemProperty().isNull());
+            btnDelete.setOnAction(event -> handleDeleteTask());
+        }
+
     }
 
     private void setupTableColumns() {
@@ -122,7 +132,7 @@ public class ListController implements IProjectDetailSubView, Initializable {
     }
 
     public void loadData(int projectId) {
-        masterData.setAll(service.getTasksByProject(projectId));
+        masterData.setAll(service.getTasksByProject(projectId, project.getUserRoleName()));
         taskTable.setItems(masterData);
     }
 
@@ -130,8 +140,7 @@ public class ListController implements IProjectDetailSubView, Initializable {
         try {
             Object controller = ViewNavigator.getInstance().loadSubScene("/scenes/detailinfotask.fxml");
 
-            if (controller instanceof TaskDetailController) {
-                TaskDetailController detailController = (TaskDetailController) controller;
+            if (controller instanceof TaskDetailController detailController) {
                 detailController.setProjectId(project.getProjectId());
 
                 PersonalTaskDTO dto = new PersonalTaskDTO();

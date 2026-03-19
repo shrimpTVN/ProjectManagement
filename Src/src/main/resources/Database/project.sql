@@ -24,36 +24,42 @@ VALUES
 (18, 'Ung dung Quan ly Chi tieu',     '2026-05-10 08:00:00', '2026-09-10 17:00:00', 'Theo doi thu chi ca nhan va gia dinh'),
 (19, 'He thong Quan ly Khach san',    '2026-06-10 08:00:00', '2026-10-10 17:00:00', 'Quan ly phong, dat phong va dich vu khach san'),
 (20, 'Website Khoa hoc truc tuyen',   '2026-07-10 08:00:00', '2026-11-10 17:00:00', 'Nen tang hoc va day truc tuyen'),
+
 -- User 5 (Nguyen Ngoc Duc Phat) - Admin of Pro 21-25
 (21, 'He thong Quan ly Xe',           '2026-03-20 08:00:00', '2026-07-20 17:00:00', 'Quan ly dich vu sua chua va bao duong xe'),
 (22, 'Ung dung Mua sam Online',       '2026-04-20 08:00:00', '2026-08-20 17:00:00', 'Nen tang mua sam va thanh toan truc tuyen'),
 (23, 'Website Bao cao Tai chinh',     '2026-05-20 08:00:00', '2026-09-20 17:00:00', 'He thong bao cao va phan tich tai chinh'),
 (24, 'He thong Quan ly Truong hoc',   '2026-06-20 08:00:00', '2026-10-20 17:00:00', 'Quan ly lop hoc, giao vien va hoc sinh'),
 (25, 'Ung dung Xem phim truc tuyen',  '2026-07-20 08:00:00', '2026-11-20 17:00:00', 'Nen tang xem phim va truyen hinh truc tuyen'),
+
 -- User 6 (Le Minh Khoa) - Admin of Pro 26-30
 (26, 'He thong Quan ly Toa nha',      '2026-03-01 08:00:00', '2026-07-01 17:00:00', 'Quan ly can ho, thue va dich vu toa nha'),
 (27, 'Ung dung Giao thong Thong minh','2026-04-01 08:00:00', '2026-08-01 17:00:00', 'He thong giam sat va dieu phoi giao thong'),
 (28, 'Website Thuong mai Quoc te',    '2026-05-01 08:00:00', '2026-09-01 17:00:00', 'Nen tang thuong mai dien tu quoc te'),
 (29, 'He thong CRM Khach hang',       '2026-06-01 08:00:00', '2026-10-01 17:00:00', 'Quan ly quan he va cham soc khach hang'),
 (30, 'Ung dung Suc khoe ca nhan',     '2026-07-01 08:00:00', '2026-11-01 17:00:00', 'Theo doi suc khoe, the duc va dinh duong'),
+
 -- User 7 (Pham Thi Hoa) - Admin of Pro 31-35
 (31, 'He thong Quan ly Su kien',      '2026-03-05 08:00:00', '2026-07-05 17:00:00', 'Quan ly to chuc su kien va hoi nghi'),
 (32, 'Website Thiet ke Noi that',     '2026-04-05 08:00:00', '2026-08-05 17:00:00', 'Nen tang thiet ke noi that truc tuyen'),
 (33, 'Ung dung Dich vu Giat ui',      '2026-05-05 08:00:00', '2026-09-05 17:00:00', 'Dat lich va quan ly dich vu giat la'),
 (34, 'He thong Quan ly Phong kham',   '2026-06-05 08:00:00', '2026-10-05 17:00:00', 'Quan ly benh nhan va lich kham bac si'),
 (35, 'Website Rao vat Online',        '2026-07-05 08:00:00', '2026-11-05 17:00:00', 'Nen tang mua ban do cu va rao vat'),
+
 -- User 8 (Nguyen Van Hung) - Admin of Pro 36-40
 (36, 'He thong Quan ly Nong trai',    '2026-03-10 08:00:00', '2026-07-10 17:00:00', 'Quan ly san xuat va tieu thu nong san'),
 (37, 'Ung dung Dat tour Du lich',     '2026-04-10 08:00:00', '2026-08-10 17:00:00', 'Dat tour du lich va khach san truc tuyen'),
 (38, 'Website Ban le Thoi trang',     '2026-05-10 08:00:00', '2026-09-10 17:00:00', 'Cua hang thoi trang truc tuyen'),
 (39, 'He thong Quan ly Nha may',      '2026-06-10 08:00:00', '2026-10-10 17:00:00', 'Giam sat san xuat va kiem soat chat luong'),
 (40, 'Ung dung Hoc ngoai ngu',        '2026-07-10 08:00:00', '2026-11-10 17:00:00', 'Hoc ngoai ngu qua video va bai tap tuong tac'),
+
 -- User 9 (Tran Thi Mai) - Admin of Pro 41-45
 (41, 'He thong Quan ly Chuoi cung ung','2026-03-15 08:00:00','2026-07-15 17:00:00', 'Quan ly nha cung cap, kho va van chuyen'),
 (42, 'Ung dung Quan ly Den dien',     '2026-04-15 08:00:00', '2026-08-15 17:00:00', 'Giam sat tieu thu dien va tiet kiem nang luong'),
 (43, 'Website Dat ban Nha hang',      '2026-05-15 08:00:00', '2026-09-15 17:00:00', 'Dat ban an va dat do an truc tiep tu nha hang'),
 (44, 'He thong Quan ly Buu dien',     '2026-06-15 08:00:00', '2026-10-15 17:00:00', 'Quan ly gui nhan buu pham va theo doi van chuyen'),
 (45, 'Ung dung Thue xe tu lai',       '2026-07-15 08:00:00', '2026-11-15 17:00:00', 'Dat va quan ly dich vu thue xe tu lai'),
+
 -- User 10 (Bui Quang Huy) - Admin of Pro 46-50
 (46, 'He thong Quan ly Bao hiem',     '2026-03-20 08:00:00', '2026-07-20 17:00:00', 'Quan ly hop dong va yeu cau boi thuong bao hiem'),
 (47, 'Ung dung Quan ly Tap gym',      '2026-04-20 08:00:00', '2026-08-20 17:00:00', 'Quan ly hoi vien, giao an tap luyen va diem danh'),

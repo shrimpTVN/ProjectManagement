@@ -1,5 +1,7 @@
 package com.app.src.controllers.project;
 
+import com.app.src.authentication.RoleValidator;
+import com.app.src.authentication.VisibleManer;
 import com.app.src.controllers.CreateProjectController;
 import com.app.src.controllers.SideBarController;
 import com.app.src.controllers.ViewNavigator;
@@ -45,8 +47,7 @@ public class InforController implements IProjectDetailSubView, Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        btnEdit.setOnAction(e -> handleEdit());
-        btnDelete.setOnAction(e -> handleDelete());
+
     }
 
     private void handleEdit() {
@@ -117,5 +118,17 @@ public class InforController implements IProjectDetailSubView, Initializable {
         }
         lblMemberCount.setText(String.valueOf(memberCount));
         lblManagerName.setText(countManager > 0 ? managerName : adminName);
+
+        validateUserRole();
+    }
+
+    private void validateUserRole() {
+        if (!RoleValidator.isAdmin(currentProject.getUserRoleName())) {
+            VisibleManer.hideNode(btnDelete);
+            VisibleManer.hideNode(btnEdit);
+        } else{
+            btnEdit.setOnAction(e -> handleEdit());
+            btnDelete.setOnAction(e -> handleDelete());
+        }
     }
 }

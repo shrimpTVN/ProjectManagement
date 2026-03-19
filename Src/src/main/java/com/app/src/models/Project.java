@@ -12,6 +12,7 @@ public class Project {
     private ArrayList<Task> tasks;
     private ArrayList<ProjectJoining> joinings;
     private int userRoleId; // role of the currently logged-in user in this project
+    private String userRoleName;
 
     public Project() {
     }
@@ -22,6 +23,14 @@ public class Project {
         this.projectDescription = projectDescription;
         this.projectStartDate = projectStartDate;
         this.projectEndDate = projectEndDate;
+    }
+
+    public String getUserRoleName() {
+        return userRoleName;
+    }
+
+    public void setUserRoleName(String userRoleName) {
+        this.userRoleName = userRoleName;
     }
 
     public ArrayList<Task> getTasks() {

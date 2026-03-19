@@ -1,5 +1,9 @@
 package com.app.src.controllers.project;
 
+import com.app.src.authentication.RoleValidator;
+import com.app.src.authentication.VisibleManer;
+import com.app.src.controllers.ViewNavigator;
+import com.app.src.core.AppContext;
 import com.app.src.models.Project;
 import com.app.src.models.ProjectJoining;
 import com.app.src.models.ProjectRole;
@@ -10,6 +14,7 @@ import com.app.src.models.User;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,23 +23,19 @@ import java.util.Optional;
 
 public class MemberController implements IProjectDetailSubView {
     @FXML
+    HBox headerHBox;
+    @FXML
     private TextField txtUserName;
-
     @FXML
     private ComboBox<String> cbRole;
-
     @FXML
     private Button btnAddUser;
-
     @FXML
     private Button btnEditUser;
-
     @FXML
     private Button btnDeleteUser;
-
     @FXML
     private Button btnCancel;
-
     @FXML
     private TableView<ProjectJoining> memberTable;
 
@@ -58,11 +59,7 @@ public class MemberController implements IProjectDetailSubView {
     @FXML
     public void initialize() {
         setupTableColumns();
-        btnAddUser.setOnAction(event -> handleAddMemberAction());
-        btnEditUser.setOnAction(event -> handleEditAction());
-        btnCancel.setOnAction(event -> handleCancelAction());
-        btnDeleteUser.disableProperty().bind(memberTable.getSelectionModel().selectedItemProperty().isNull());
-        btnDeleteUser.setOnAction(event -> handleDeleteAction());
+
     }
 
     public void setupTableColumns() {
@@ -82,16 +79,41 @@ public class MemberController implements IProjectDetailSubView {
             System.out.println("Failed to load members");
         }
         loadRoleNames();
+
+        if (!RoleValidator.isManagerOrAdmin(project.getUserRoleName())) {
+            VisibleManer.hideNode(headerHBox);
+            VisibleManer.hideNode(btnDeleteUser);
+        } else {
+            if (RoleValidator.isManager(project.getUserRoleName())) {
+                VisibleManer.hideNode(btnEditUser);
+                VisibleManer.hideNode(btnCancel);
+            }
+            loadAction();
+        }
+    }
+
+    private void loadAction() {
+        btnAddUser.setOnAction(event -> handleAddMemberAction());
+        btnEditUser.setOnAction(event -> handleEditAction());
+        btnCancel.setOnAction(event -> handleCancelAction());
+        btnDeleteUser.disableProperty().bind(memberTable.getSelectionModel().selectedItemProperty().isNull());
+        btnDeleteUser.setOnAction(event -> handleDeleteAction());
     }
 
     private void loadRoleNames() {
         ProjectRoleService roleService = new ProjectRoleService();
-        allRoles = roleService.getAllRoles(); // Gán dữ liệu vào biến toàn cục
-
+        allRoles = ProjectRoleService.getAllRoles(); // Gán dữ liệu vào biến toàn cục
         List<String> roleNames = new ArrayList<>();
-        for (ProjectRole item : allRoles) {
-            roleNames.add(item.getRoleName());
+        if (RoleValidator.isAdmin(currentProject.getUserRoleName())) {
+
+            for (ProjectRole item : allRoles) {
+                roleNames.add(item.getRoleName());
+            }
+        } else {
+            roleNames.add("Member");
         }
+
+
         cbRole.getItems().setAll(roleNames);
     }
 
@@ -110,36 +132,84 @@ public class MemberController implements IProjectDetailSubView {
         return false;
     }
 
+    private void refreshTable(boolean success){
+
+    }
+    private boolean updateRole(int newRoleId, int userId) {
+        ProjectJoiningService service = new ProjectJoiningService();
+        boolean success = service.updateRole(
+                currentProject.getProjectId(),
+                userId,
+                newRoleId
+        );
+
+      return success;
+    }
+
+    private boolean isAcceptedUpdate() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Changing Admin role");
+        alert.setHeaderText("Only one Admin in project. You'll become a Member");
+        alert.setContentText("Are you sure you want to change your role? ");
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
+
+    }
+
+    private int getRoleId(String roleName){
+        // Tìm ID Role tương ứng với tên được chọn trong ComboBox
+        for (ProjectRole role : allRoles) {
+            if (role.getRoleName().equals(roleName)) {
+                return role.getRoleId();
+
+            }
+        }
+        return -1;
+    }
+
+    private void reloadProjectDetailView(){
+
+        ProjectDetailController controller = ViewNavigator.getInstance().loadSubScene("/scenes/ProjectDetail.fxml");
+
+        ProjectJoiningService joiningService = new ProjectJoiningService();
+        String adminName = joiningService.getAdmin(currentProject.getProjectId());
+        System.out.println(currentProject.getUserRoleName());
+        controller.renderData(AppContext.getProjectById(currentProject.getProjectId()), adminName);
+    }
     private void handleEditAction() {
+
         // 1. Kiểm tra nếu nút đang ở trạng thái "Save" thì thực hiện lưu
         if (btnEditUser.getText().equals("Save")) {
             String selectedRoleName = cbRole.getValue();
-            int newRoleId = -1;
-
-            // Tìm ID Role tương ứng với tên được chọn trong ComboBox
-            for (ProjectRole role : allRoles) {
-                if (role.getRoleName().equals(selectedRoleName)) {
-                    newRoleId = role.getRoleId();
-                    break;
-                }
-            }
+            int newRoleId = getRoleId(selectedRoleName);
 
             // Gọi service để cập nhật cơ sở dữ liệu
             if (newRoleId != -1) {
-                ProjectJoiningService service = new ProjectJoiningService();
-                boolean success = service.updateRole(
-                        currentProject.getProjectId(),
-                        selectedJoining.getUser().getUserId(),
-                        newRoleId
-                );
+                String roleName = ProjectRoleService.getRoleNameById(newRoleId);
+                boolean success = true;
+                if (RoleValidator.isAdmin(roleName) ) {
+                    if (isAcceptedUpdate())
+                    {
+                        success =   updateRole(getRoleId("Member"), AppContext.getUserData().getUserId()) && updateRole(newRoleId, selectedJoining.getUser().getUserId());
+
+                       if (success) {
+                           AppContext.refreshProjects();
+                           reloadProjectDetailView();
+                       }
+                    }
+                } else  {
+                    success = updateRole(newRoleId, selectedJoining.getUser().getUserId());
+                }
 
                 if (success) {
-                    loadMembers(); // Tải lại bảng để hiện dữ liệu mới
-                    clearForm();   // Dọn dẹp form
+
+                    loadMembers(); // Làm mới bảng
+                    clearForm();   // Dọn dẹp form phía trên (nếu đang bấm vào dòng đó)
                 } else {
-                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to update database.");
-                    System.out.println("Error updating database.");
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to remove member.");
+                    System.out.println("Error removing member.");
                 }
+
             }
             return;
         }
@@ -167,6 +237,7 @@ public class MemberController implements IProjectDetailSubView {
 
     @FXML
     private void handleAddMemberAction() {
+        System.out.println("Adding member");
         String inputUserName = txtUserName.getText().trim();
         String selectedRoleName = cbRole.getValue();
 
@@ -237,6 +308,7 @@ public class MemberController implements IProjectDetailSubView {
     }
 
     private void handleDeleteAction() {
+        System.out.println("handle DeleteAction");
         // Lấy dòng đang chọn
         ProjectJoining selected = memberTable.getSelectionModel().getSelectedItem();
 
@@ -254,12 +326,17 @@ public class MemberController implements IProjectDetailSubView {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Gọi service thực hiện xóa
-            ProjectJoiningService service = new ProjectJoiningService();
-            boolean success = service.removeMember(
-                    currentProject.getProjectId(),
-                    selected.getUser().getUserId()
-            );
+            boolean success = true;
+            if (RoleValidator.isManager(currentProject.getUserRoleName()) & RoleValidator.isManagerOrAdmin(selected.getRole().getRoleName())) {
+                success = false;
+            } else {
+                // Gọi service thực hiện xóa
+                ProjectJoiningService service = new ProjectJoiningService();
+                success = service.removeMember(
+                        currentProject.getProjectId(),
+                        selected.getUser().getUserId()
+                );
+            }
 
             if (success) {
                 loadMembers(); // Làm mới bảng

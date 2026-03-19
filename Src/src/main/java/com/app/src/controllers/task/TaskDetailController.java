@@ -20,6 +20,7 @@ package com.app.src.controllers.task;
 
 import com.app.src.controllers.ViewNavigator;
 import com.app.src.controllers.project.ProjectDetailController;
+import com.app.src.core.AppContext;
 import com.app.src.daos.ProjectDAO;
 import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.models.Project;
@@ -126,7 +127,11 @@ public class TaskDetailController {
             ProjectDetailController controller = ViewNavigator.getInstance().loadSubScene("/scenes/ProjectDetail.fxml");
 
             // Lấy Project đầy đủ với PROJECT_JOINING data
-            Project fullProject = ProjectDAO.getInstance().getProjectWithJoinings(fromProject);
+            Project fullProject = new Project();
+            for (Project project: AppContext.getProjects())
+                if (project.getProjectId() == this.fromProject)
+                    fullProject = project;
+
             ProjectJoiningService projectJoiningService = new ProjectJoiningService();
             String adminName = projectJoiningService.getAdmin(fromProject);
             controller.renderData(fullProject, adminName);
