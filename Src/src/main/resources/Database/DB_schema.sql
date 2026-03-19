@@ -93,7 +93,9 @@ CREATE TABLE STATUS_UPDATING
     StU_content TEXT,
     Task_id     INT,
     Sta_id      INT,
+    User_id     INT,
     FOREIGN KEY (Task_id) REFERENCES TASK (Task_id) ON DELETE CASCADE,
-    FOREIGN KEY (Sta_id) REFERENCES TASK_STATUS (Sta_id)
+    FOREIGN KEY (Sta_id) REFERENCES TASK_STATUS (Sta_id),
+    FOREIGN KEY (User_id) REFERENCES USER (User_id)
 );
 
