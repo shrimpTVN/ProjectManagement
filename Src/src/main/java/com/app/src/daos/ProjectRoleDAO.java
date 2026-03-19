@@ -55,7 +55,30 @@ public class ProjectRoleDAO extends AbstractDAO<ProjectRole> {
 
     @Override
     public ProjectRole findById(int id) {
-        return null; // Có thể triển khai sau nếu cần
+        ProjectRole role = null;
+        final String sql = "SELECT * FROM project_role WHERE role_id = ?";
+        try{
+            connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                role = new ProjectRole();
+                role.setRoleId(resultSet.getInt("role_id"));
+                role.setRoleName(resultSet.getString("role_name"));
+            }
+            closeResource(statement, connection, resultSet);
+        } catch(Exception e){
+            e.printStackTrace();
+        } finally{
+            try {
+                closeConnection(connection);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return role;
     }
 
     @Override

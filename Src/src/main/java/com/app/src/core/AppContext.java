@@ -49,4 +49,13 @@ public class AppContext {
         return userSession.getUser();
     }
 
+    public static Project getProjectById(int projectId){
+        for(Project project : projects){
+            if(project.getProjectId() == projectId){
+                return project;
+            }
+        }
+
+        return new Project();
+    }
 }

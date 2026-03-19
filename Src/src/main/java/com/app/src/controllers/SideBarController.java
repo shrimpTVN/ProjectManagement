@@ -160,10 +160,8 @@ public class SideBarController implements Initializable {
         if (controller == null) {
             return;
         }
-
-        Project fullProject = ProjectDAO.getInstance().getProjectWithJoinings(project.getProjectId());
         String adminName = projectJoiningService.getAdmin(project.getProjectId());
-        controller.renderData(fullProject == null ? project : fullProject, adminName);
+        controller.renderData(AppContext.getProjectById(project.getProjectId()), adminName);
     }
 
     private void openCreateProject() {

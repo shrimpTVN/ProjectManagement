@@ -20,7 +20,7 @@ public class ProjectJoiningService {
         return projectJoiningDao.getAdmin(projectId);
     }
 
-    public String getRoleInProject(int userId, int projectId) {
+    public static String getRoleInProject(int userId, int projectId) {
         int roleId = ProjectJoiningDAO.getInstance().getRoleId(userId, projectId);
         if (roleId == 0) {
             throw new ServiceException( UNKNOWN_ERROR, "Khong the tim thay role cua user trong du an");
