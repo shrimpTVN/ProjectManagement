@@ -2,15 +2,19 @@ package com.app.src.models;
 
 public class Notification {
     private int notiId;
+    private  String notiTitle;
     private String notiDescription;
     private boolean notiIsRead;
+    private String notiTime;
 
     public Notification(){}
 
-    public Notification(int notiId, String notiDescription, boolean notiIsRead) {
+    public Notification(int notiId, String notiTitle, String notiDescription, boolean notiIsRead, String notiTime) {
         this.notiId = notiId;
+        this.notiTitle = notiTitle;
         this.notiDescription = notiDescription;
         this.notiIsRead = notiIsRead;
+        this.notiTime = notiTime;
     }
 
     public int getNotiId() {
@@ -19,6 +23,14 @@ public class Notification {
 
     public void setNotiId(int notiId) {
         this.notiId = notiId;
+    }
+
+    public String getNotiTitle () {
+        return notiTitle;
+    }
+
+    public void setNotiTitle( String notiTitle) {
+        this.notiTitle = notiTitle;
     }
 
     public String getNotiDescription() {
@@ -35,5 +47,10 @@ public class Notification {
 
     public void setNotiIsRead(boolean notiIsRead) {
         this.notiIsRead = notiIsRead;
+    }
+
+    public String getNotiTime() { return notiTime;}
+    public void  setNotiTime ( String Time ) {
+        this.notiTime = Time;
     }
 }

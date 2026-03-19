@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox fx:id="itemContainer" alignment="CENTER_LEFT" spacing="15.0" styleClass="notification-item" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.notification.NotificationItemController">
+    <children>
+        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+            <children>
+                <Label fx:id="titleLabel" styleClass="notification-title" text="Title" wrapText="true" />
+                <Label fx:id="descLabel" styleClass="notification-desc" text="Description" wrapText="true" />
+                <Label fx:id="timeLabel" styleClass="notification-time" text="Time" />
+            </children>
+        </VBox>
+        <Label fx:id="statusIcon" styleClass="notification-status" text="✓✓" />
+    </children>
+    <padding>
+        <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+    </padding>
+</HBox>

@@ -17,6 +17,7 @@
             <HBox alignment="TOP_RIGHT" prefHeight="24.0" prefWidth="200.0" spacing="20.0">
                <children>
                   <Button id="+ Create" fx:id="btnCreate" mnemonicParsing="false" prefWidth="87.0" styleClass="btn-create" text="+ Create" />
+                  <Button id="+ Create" fx:id="btnDelete" mnemonicParsing="false" prefWidth="87.0" styleClass="btn-create" text="- Delete" />
                   <HBox prefHeight="100.0" prefWidth="178.0" spacing="6.0" style="-fx-border-color: #888888; -fx-border-radius: 5; -fx-background-radius: 5;">
                      <HBox.margin>
                         <Insets />

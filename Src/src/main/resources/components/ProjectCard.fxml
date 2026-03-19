@@ -1,33 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.Cursor?>
-<VBox prefHeight="120.0" prefWidth="272.8"
-      style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: black; -fx-border-radius: 10; -fx-padding: 15;"
-      fx:controller="com.app.src.controllers.project.ProjectCardController"
-      stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="132.0" prefWidth="276.0" spacing="12.0" styleClass="project-card" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.ProjectCardController">
+    <padding>
+        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+    </padding>
+
     <children>
-        <Label fx:id="projectNameLabel" maxWidth="1.7976931348623157E308" styleClass="font-20" text="NAME Project"/>
-        <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
+        <Label fx:id="projectNameLabel" maxWidth="1.7976931348623157E308" styleClass="project-card-title" text="NAME Project" wrapText="true" />
+
+        <Region VBox.vgrow="ALWAYS" />
+
+        <HBox alignment="BOTTOM_LEFT" spacing="8.0">
             <children>
-                <Label style="-fx-font-weight: bold;" styleClass="font-14" text="admin: "/>
-
-                <Label fx:id="authorLabel" styleClass="font-14" text="Author">
-                    <HBox.margin>
-                        <Insets left="10.0"/>
-                    </HBox.margin>
-                </Label>
-
+                <Label styleClass="project-card-badge" text="ADMIN" />
+                <Label styleClass="project-card-meta-label" text="by">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <padding>
+                  <Insets bottom="2.0" />
+               </padding></Label>
+                <Label fx:id="authorLabel" styleClass="project-card-meta-value" text="Author">
+               <HBox.margin>
+                  <Insets bottom="2.0" />
+               </HBox.margin></Label>
             </children>
         </HBox>
     </children>
 
     <cursor>
-        <Cursor fx:constant="HAND"/>
+        <Cursor fx:constant="HAND" />
     </cursor>
 </VBox>

@@ -1,7 +1,9 @@
 package com.app.src.daos;
 
-import com.app.src.dtos.PersonalTaskDTO; // Đã sửa import
+import com.app.src.dtos.PersonalTaskDTO;
+import com.app.src.models.StatusUpdating;
 import com.app.src.models.Task;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,8 +15,8 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
 
     private static TaskDAO instance;
 
-    public static TaskDAO getInstance(){
-        if(instance == null){
+    public static TaskDAO getInstance() {
+        if (instance == null) {
             instance = new TaskDAO();
         }
         return instance;
@@ -39,7 +41,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 task = new PersonalTaskDTO();
                 task.setTaskId(id);
                 task.setTaskName(rs.getString("Task_name"));
@@ -85,7 +87,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             ResultSet rs = ps.executeQuery();
             System.out.println("Thực thi SQL thành công, đang đọc kết quả...");
 
-            while(rs.next()) {
+            while (rs.next()) {
                 PersonalTaskDTO task = new PersonalTaskDTO();
                 task.setTaskId(rs.getInt("Task_id"));
                 task.setTaskName(rs.getString("Task_name"));
@@ -116,8 +118,8 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
     // --- Bổ sung thêm hàm lấy task theo User (Vì bài toán ban đầu là Bảng Task Cá Nhân) ---
     public List<PersonalTaskDTO> findAllByUserId(int userId) {
         List<PersonalTaskDTO> tasks = new ArrayList<>();
-        String sql = "SELECT t.*, p.Pro_name FROM TASK t "+
-                "    LEFT JOIN PROJECT p ON t.Pro_id = p.Pro_id "+
+        String sql = "SELECT t.*, p.Pro_name FROM TASK t " +
+                "    LEFT JOIN PROJECT p ON t.Pro_id = p.Pro_id " +
                 "   WHERE t.USER_id = ?;";
         Connection connection = null;
         try {
@@ -126,7 +128,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
 
-            while(rs.next()) {
+            while (rs.next()) {
                 PersonalTaskDTO task = new PersonalTaskDTO();
                 task.setTaskId(rs.getInt("Task_id"));
                 task.setTaskName(rs.getString("Task_name"));
@@ -164,13 +166,35 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
 
     @Override
     public boolean delete(int id) {
-        return false;
+        String sql = "DELETE FROM TASK WHERE Task_id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                closeResource(ps, conn, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
     /**
      * Lấy danh sách công việc thuộc về một dự án cụ thể.
      * Sử dụng LEFT JOIN để lấy kèm tên người thực hiện (Assignee).
+     *
      * @param projectId ID của dự án cần lọc.
      */
     public List<Task> findByProjectId(int projectId) {
@@ -208,4 +232,200 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
         }
         return tasks;
     }
+
+    /**
+     * Lấy lịch sử thay đổi trạng thái của một công việc.
+     * Sử dụng Window Function LAG() để xác định trạng thái trước đó mà không cần truy vấn nhiều lần.
+     * * @param taskId ID của công việc cần lấy lịch sử.
+     *
+     * @return Danh sách các bản ghi thay đổi trạng thái kèm chuỗi định dạng (Cũ ➜ Mới).
+     * //
+     */
+    public List<StatusUpdating> getStatusHistory(int taskId) {
+        List<StatusUpdating> list = new ArrayList<>();
+        // SQL sử dụng Window Function LAG để lấy trạng thái trước đó của cùng một Task
+        String sql = "SELECT h.StU_date, s_curr.Sta_name AS new_status, " +
+                "LAG(s_curr.Sta_name) OVER (PARTITION BY h.Task_id ORDER BY h.StU_date ASC) AS old_status " +
+                "FROM status_updating h " +
+                "JOIN task_status s_curr ON h.Sta_id = s_curr.Sta_id " +
+                "WHERE h.Task_id = ? " +
+                "ORDER BY h.StU_date DESC";
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, taskId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String newSta = rs.getString("new_status");
+                String oldSta = rs.getString("old_status");
+
+                // Nếu là dòng đầu tiên (không có trạng thái cũ), ta để là "None" hoặc tên trạng thái mới luôn
+                String displayOld = (oldSta == null) ? "None" : oldSta;
+                String formattedContent = displayOld + " \u279F " + newSta; // Tạo chuỗi: To Do ➔ In Progressing
+
+                StatusUpdating item = new StatusUpdating();
+                item.setDate(rs.getTimestamp("StU_date"));
+                item.setContent(formattedContent); // Ghi đè chuỗi đẹp vào biến content của Model
+                list.add(item);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // Cập nhật trạng thái task và chặn chuyển In Preview -> Done nếu user chỉ là Member.
+    public boolean appendStatusUpdating(int taskId, String oldStatus, String newStatus, String content, int userId) {
+        String normalizedNew = newStatus == null ? "" : newStatus.trim().toLowerCase();
+        int statusId = mapStatusId(normalizedNew);
+        if (statusId == -1) {
+            return false;
+        }
+
+        String sqlInsert = "INSERT INTO STATUS_UPDATING (StU_date, StU_content, Task_id, Sta_id) VALUES (CURRENT_TIMESTAMP, ?, ?, ?)";
+
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = getConnection();
+
+            // Kiểm tra rule bằng cả trạng thái cũ trên UI và trạng thái mới nhất trong DB để tránh lọt logic.
+            int currentStatusId = getCurrentStatusId(connection, taskId);
+            String normalizedOld = oldStatus == null ? "" : oldStatus.trim().toLowerCase();
+            boolean fromPreviewToDoneByUi = (normalizedOld.equals("in preview") && statusId == 4);
+            boolean fromPreviewToDoneByDb = (currentStatusId == 3 && statusId == 4);
+
+            if (fromPreviewToDoneByUi || fromPreviewToDoneByDb) {
+                // Chỉ Admin(2) hoặc Manager(1) mới được duyệt In Preview -> Done.
+                int roleId = getRoleIdByTaskAndUser(connection, taskId, userId);
+                if (roleId != 1 && roleId != 2) {
+                    throw new RuntimeException("Chi Admin/Manager moi duoc chuyen In Preview sang Done");
+                }
+            }
+
+            ps = connection.prepareStatement(sqlInsert);
+            ps.setString(1, content);
+            ps.setInt(2, taskId);
+            ps.setInt(3, statusId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            throw new RuntimeException("Lỗi khi cập nhật trạng thái task: " + ex.getMessage(), ex);
+        } finally {
+            try {
+                closeResource(ps, connection, null);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    // Map tên trạng thái về ID trong bảng TASK_STATUS.
+    private int mapStatusId(String normalizedStatus) {
+        if (normalizedStatus.equals("to do") || normalizedStatus.equals("todo")) {
+            return 1;
+        }
+        if (normalizedStatus.equals("in progress") || normalizedStatus.equals("in processing") || normalizedStatus.equals("in progressing")) {
+            return 2;
+        }
+        if (normalizedStatus.equals("in preview")) {
+            return 3;
+        }
+        if (normalizedStatus.equals("done")) {
+            return 4;
+        }
+        return -1;
+    }
+
+    // Lấy trạng thái mới nhất của task theo STATUS_UPDATING.
+    private int getCurrentStatusId(Connection connection, int taskId) throws SQLException {
+        final String sql = "SELECT su.Sta_id FROM STATUS_UPDATING su WHERE su.Task_id = ? ORDER BY su.StU_id DESC LIMIT 1";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, taskId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("Sta_id");
+                }
+            }
+        }
+        return 1;
+    }
+
+    // Lấy role hiện tại của user trong project chứa task.
+    private int getRoleIdByTaskAndUser(Connection connection, int taskId, int userId) throws SQLException {
+        final String sql = "SELECT pj.Role_id " +
+                "FROM TASK t " +
+                "LEFT JOIN PROJECT_JOINING pj ON t.Pro_id = pj.Pro_id AND pj.User_id = ? " +
+                "WHERE t.Task_id = ? " +
+                "ORDER BY pj.PJo_dateJoin DESC LIMIT 1";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, taskId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("Role_id");
+                }
+            }
+        }
+        return -1;
+    }
+
+    public boolean createTask(Task task) {
+        final String sql = "INSERT INTO TASK (Task_name, Task_description, Task_startDate, Task_endDate, Pro_id, User_id) VALUES (?, ?, ?, ?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+
+            ps.setString(1, task.getTaskName());
+            ps.setString(2, task.getTaskDescription());
+
+            if (task.getTaskStartTime() != null && !task.getTaskStartTime().isEmpty()) {
+                ps.setDate(3, java.sql.Date.valueOf(task.getTaskStartTime()));
+            } else {
+                ps.setNull(3, java.sql.Types.DATE);
+            }
+
+            if (task.getTaskEndTime() != null && !task.getTaskEndTime().isEmpty()) {
+                ps.setDate(4, java.sql.Date.valueOf(task.getTaskEndTime()));
+            } else {
+                ps.setNull(4, java.sql.Types.DATE);
+            }
+
+            if (task.getProjectId() > 0) {
+                ps.setInt(5, task.getProjectId());
+            } else {
+                ps.setNull(5, java.sql.Types.INTEGER);
+            }
+
+            if (task.getUser() != null && task.getUser().getUserId() > 0) {
+                ps.setInt(6, task.getUser().getUserId());
+            } else {
+                ps.setNull(6, java.sql.Types.INTEGER);
+            }
+
+            int rows = ps.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                closeResource(ps, conn, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+//    public List<StatusUpdating> getStatusHistory(int taskId) {
+//    }
 }
+
+
+
+

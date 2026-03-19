@@ -17,36 +17,36 @@
     <VBox spacing="10" HBox.hgrow="ALWAYS" maxWidth="500">
 
         <VBox spacing="5" VBox.vgrow="NEVER">
-            <Label text="Name Project" styleClass="font-14" style="-fx-font-weight: bold;"/>
+            <Label text="Name Project" styleClass="font-14" style="-fx-font-family: 'Urbanist Medium';"/>
             <TextField fx:id="txtProjectName" style="-fx-pref-height: 35;"/>
             <Label fx:id="lblErrorName" text="" style="-fx-text-fill: red; -fx-font-size: 12px;"/>
         </VBox>
 
         <VBox spacing="5" VBox.vgrow="NEVER">
-            <Label text="Start Date" styleClass="font-14" style="-fx-font-weight: bold;"/>
+            <Label text="Start Date" styleClass="font-14" style="-fx-font-family: 'Urbanist Medium';"/>
             <DatePicker fx:id="dpStartDate" style="-fx-pref-height: 35; -fx-pref-width: 500;"/>
             <Label fx:id="lblErrorStartDate" text="" style="-fx-text-fill: red; -fx-font-size: 12px;"/>
         </VBox>
 
         <VBox spacing="5" VBox.vgrow="NEVER">
-            <Label text="End Date" styleClass="font-14" style="-fx-font-weight: bold;"/>
+            <Label text="End Date" styleClass="font-14" style="-fx-font-family: 'Urbanist Medium';"/>
             <DatePicker fx:id="dpEndDate" style="-fx-pref-height: 35; -fx-pref-width: 500;"/>
             <Label fx:id="lblErrorEndDate" text="" style="-fx-text-fill: red; -fx-font-size: 12px;"/>
         </VBox>
 
         <VBox spacing="5" VBox.vgrow="NEVER">
-            <Label text="Description" styleClass="font-14" style="-fx-font-weight: bold;"/>
+            <Label text="Description" styleClass="font-14" style="-fx-font-family: 'Urbanist Medium';"/>
             <TextArea fx:id="txtDescription" prefRowCount="4" wrapText="true"/>
         </VBox>
 
         <VBox spacing="5" VBox.vgrow="NEVER">
-            <Label text="Assign Manager" styleClass="font-14" style="-fx-font-weight: bold;"/>
+            <Label text="Assign Manager" styleClass="font-14" style="-fx-font-family: 'Urbanist Medium';"/>
             <ComboBox fx:id="cbManager" promptText="Select Manager..." style="-fx-pref-height: 35; -fx-pref-width: 500;"/>
         </VBox>
 
         <HBox spacing="15" style="-fx-padding: 10 0 0 0;">
-            <Button fx:id="btnCancel" text="× CANCEL" style="-fx-background-color: #666666; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-height: 35; -fx-pref-width: 100; -fx-cursor: hand;"/>
-            <Button fx:id="btnCreate" text="+ Create" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-text-fill: black; -fx-font-weight: bold; -fx-pref-height: 35; -fx-pref-width: 100; -fx-cursor: hand;"/>
+            <Button fx:id="btnCancel" text="× CANCEL" style="-fx-background-color: #666666; -fx-text-fill: white; -fx-font-family: 'Urbanist Medium'; -fx-pref-height: 35; -fx-pref-width: 100; -fx-cursor: hand;"/>
+            <Button fx:id="btnCreate" text="+ Create" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-text-fill: black; -fx-font-family: 'Urbanist Medium'; -fx-pref-height: 35; -fx-pref-width: 100; -fx-cursor: hand;"/>
         </HBox>
 
     </VBox>

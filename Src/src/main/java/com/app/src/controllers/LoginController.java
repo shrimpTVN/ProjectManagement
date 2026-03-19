@@ -5,27 +5,28 @@ import com.app.src.exceptions.AppException;
 import com.app.src.models.User;
 import com.app.src.services.LoginService;
 import com.app.src.services.UserService;
-import com.app.src.utils.MySQLDatabaseConnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-
-import java.sql.Connection;
-import java.sql.ResultSet;
+import java.net.URL;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ResourceBundle;
 
 import static com.app.src.exceptions.ErrorCode.DATABASE_ERROR;
 
-public class LoginController {
+public class LoginController implements Initializable {
+
     @FXML
     private TextField userNameInput;
     @FXML
-    private TextField passwordInput;
+    private PasswordField passwordInput; // Cập nhật thành PasswordField
     @FXML
     private Label labelLoginMess;
     @FXML
@@ -34,9 +35,20 @@ public class LoginController {
     private Button cancelBtn;
     @FXML
     private Label welcomeText;
+    @FXML
+    private BorderPane authContainer;
 
-    //    we need to declare a variable has the same name with the fx:id in the FXML file, and annotate it with @FXML
-//    we need add @FXML annotation to the event handler method, so that the FXML loader can access it, and add onMouseClicked="#btnLoginHandle" in the button element
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // Gán nút Login làm nút mặc định kích hoạt khi nhấn Enter
+        loginBtn.setDefaultButton(true);
+    }
+
+    @FXML
+    public void goToSignUp(javafx.scene.input.MouseEvent event) {
+        ViewNavigator.getInstance().loadSubScene("/scenes/signup.fxml");
+    }
+
     @FXML
     public void handleCancelBtnClick(ActionEvent event) {
         Stage stage = (Stage) cancelBtn.getScene().getWindow();
@@ -45,6 +57,9 @@ public class LoginController {
 
     @FXML
     public void handleLoginBtnClick(ActionEvent event) throws SQLException {
+        // Xóa thông báo lỗi cũ mỗi lần bấm đăng nhập
+        labelLoginMess.setText("");
+
         if (userNameInput.getText().isBlank() || passwordInput.getText().isBlank()) {
             labelLoginMess.setText("Type your user name and password!");
         } else {

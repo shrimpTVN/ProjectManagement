@@ -26,4 +26,8 @@ module com.app.src {
     opens com.app.src.models to javafx.base, javafx.fxml;
     exports com.app.src.controllers.project;
     opens com.app.src.controllers.project to javafx.fxml;
+    exports com.app.src.controllers.task;
+    opens com.app.src.controllers.task to javafx.fxml;
+    exports com.app.src.models;
+    opens com.app.src.controllers.notification to javafx.fxml;
 }

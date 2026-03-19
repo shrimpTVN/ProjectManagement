@@ -11,6 +11,7 @@ public class Project {
     private Date projectEndDate;
     private ArrayList<Task> tasks;
     private ArrayList<ProjectJoining> joinings;
+    private int userRoleId; // role of the currently logged-in user in this project
 
     public Project() {
     }
@@ -77,5 +78,13 @@ public class Project {
 
     public void setProjectEndDate(Date projectEndDate) {
         this.projectEndDate = projectEndDate;
+    }
+
+    public int getUserRoleId() {
+        return userRoleId;
+    }
+
+    public void setUserRoleId(int userRoleId) {
+        this.userRoleId = userRoleId;
     }
 }

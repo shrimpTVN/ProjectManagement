@@ -6,9 +6,63 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.app.src.controllers.project.BoardController"
-            prefHeight="400.0" prefWidth="600.0">
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-</AnchorPane>
+<HBox spacing="20.0" styleClass="board-container" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.BoardController">
+    <children>
+        <VBox spacing="10.0" prefWidth="280.0" styleClass="board-column">
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                    <children>
+                        <Label styleClass="column-header" text="To do" />
+                        <Label fx:id="toDoCount" styleClass="column-count" text="0" />
+                    </children>
+                </HBox>
+                <ScrollPane fitToWidth="true" styleClass="task-list-scroll-pane" vbarPolicy="AS_NEEDED">
+                    <content>
+                        <VBox fx:id="toDoList" spacing="10.0" styleClass="task-list-container" minHeight="100.0" />
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+
+        <VBox spacing="10.0" prefWidth="280.0" styleClass="board-column">
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                    <children>
+                        <Label styleClass="column-header" text="In progress" />
+                        <Label fx:id="inProgressCount" styleClass="column-count" text="0" />
+                    </children>
+                </HBox>
+                <ScrollPane fitToWidth="true" styleClass="task-list-scroll-pane" vbarPolicy="AS_NEEDED">
+                    <content>
+                        <VBox fx:id="inProgressList" spacing="10.0" styleClass="task-list-container" minHeight="100.0" />
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+
+        <VBox spacing="10.0" prefWidth="280.0" styleClass="board-column">
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                    <children>
+                        <Label styleClass="column-header" text="Done" />
+                        <Label fx:id="doneCount" styleClass="column-count" text="0" />
+                    </children>
+                </HBox>
+                <ScrollPane fitToWidth="true" styleClass="task-list-scroll-pane" vbarPolicy="AS_NEEDED">
+                    <content>
+                        <VBox fx:id="doneList" spacing="10.0" styleClass="task-list-container" minHeight="100.0" />
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+    </children>
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+</HBox>

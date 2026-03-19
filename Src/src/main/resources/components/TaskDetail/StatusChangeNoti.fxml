@@ -8,27 +8,36 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane fx:id="statusChangeItemRoot" prefHeight="61.0" prefWidth="325.6" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER_NAME">
+<AnchorPane fx:id="statusChangeItemRoot" prefHeight="65.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.task.StatusHistoryController">
    <children>
-      <VBox fx:id="mainLayout" prefHeight="200.0" prefWidth="92.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox fx:id="mainLayout" spacing="8.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox fx:id="headerBox" alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="326.0" spacing="5.0">
+            <HBox fx:id="headerBox" alignment="CENTER_LEFT" spacing="5.0">
                <children>
-                  <Label fx:id="lblUser" style="-fx-font-weight: 700;" text="Oitloc96" />
-                  <Label fx:id="lblAction" text="changed the status" />
-                  <Region prefHeight="20.0" prefWidth="87.0" HBox.hgrow="ALWAYS" />
-                  <Label fx:id="lblTime" text="8 phút trước" textFill="#888888">
+                  <Label fx:id="lblUser" style="-fx-font-weight: 700;" text="Oitloc96">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblAction" text="changed the status" textFill="#555555">
                      <font>
                         <Font size="8.0" />
                      </font>
                   </Label>
+                  <Region HBox.hgrow="ALWAYS" /> <Label fx:id="lblTime" alignment="CENTER_RIGHT" minWidth="100.0" text="8 phút trước" textFill="#888888">
+                  <font>
+                     <Font size="11.0" /> </font>
+               </Label>
                </children>
             </HBox>
-            <Label fx:id="lblStatusChange" text="In preview → Done" />
+            <Label fx:id="lblStatusChange" text="In preview → Done">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
          </children>
          <padding>
-            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+            <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
          </padding>
       </VBox>
    </children>

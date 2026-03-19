@@ -17,6 +17,10 @@ public class ProjectService {
         return ProjectDAO.getInstance().findByUserId(userId);
     }
 
+    public static ArrayList<Project> getAdminProjects(int userId) {
+        return ProjectDAO.getInstance().findAdminProjectsByUserId(userId);
+    }
+
     public boolean createProjectWithManager(Project project, int adminId, int managerId) {
         return projectDAO.createProjectWithManagersTransaction(project, adminId, managerId);
     }

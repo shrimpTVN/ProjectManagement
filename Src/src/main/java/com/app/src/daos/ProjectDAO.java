@@ -60,6 +60,45 @@ public class ProjectDAO extends AbstractDAO {
         return projects;
     }
 
+    public ArrayList<Project> findAdminProjectsByUserId(int userId) {
+        ArrayList<Project> projects = new ArrayList<>();
+        final String sql = "select pr.Pro_id, pr.Pro_name, pr.Pro_startDate, pr.Pro_endDate, pr.Pro_description, pj.role_id " +
+                "from project_joining pj " +
+                "join project pr on pj.pro_id = pr.pro_id " +
+                "where pj.user_id = ? and pj.role_id in (1, 2) " +
+                "order by pr.Pro_id";
+
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, userId);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Project project = new Project();
+                project.setProjectId(resultSet.getInt("Pro_id"));
+                project.setProjectName(resultSet.getString("Pro_name"));
+                project.setProjectStartDate(resultSet.getDate("Pro_startDate"));
+                project.setProjectEndDate(resultSet.getDate("Pro_endDate"));
+                project.setProjectDescription(resultSet.getString("Pro_description"));
+                project.setUserRoleId(resultSet.getInt("role_id"));
+                projects.add(project);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                closeResource(statement, connection, resultSet);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return projects;
+    }
+
     @Override
     public Object findById(int id) {
         Project p = null;
