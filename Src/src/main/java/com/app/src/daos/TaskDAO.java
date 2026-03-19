@@ -174,12 +174,19 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
      * Sử dụng LEFT JOIN để lấy kèm tên người thực hiện (Assignee).
      * @param projectId ID của dự án cần lọc.
      */
-    public List<Task> findByProjectId(int projectId) {
-        List<Task> tasks = new ArrayList<>();
-        // JOIN với bảng user để lấy tên người thực hiện
-        String sql = "SELECT t.*, u.User_name FROM task t " +
-                "LEFT JOIN user u ON t.User_id = u.User_id " +
+    public List<PersonalTaskDTO> findByProjectId(int projectId) {
+        List<PersonalTaskDTO> tasks = new ArrayList<>();
+
+        // Cập nhật câu SQL để lấy thêm Sta_name
+        String sql = "SELECT t.Task_id, t.Task_name, t.Task_description, t.Task_startDate, t.Task_endDate, " +
+                "u.User_name, ts.Sta_name " +
+                "FROM TASK t " +
+                "LEFT JOIN USER u ON t.User_id = u.User_id " +
+                "LEFT JOIN STATUS_UPDATING su ON t.Task_id = su.Task_id " +
+                "    AND su.StU_date = (SELECT MAX(StU_date) FROM STATUS_UPDATING WHERE Task_id = t.Task_id) " +
+                "LEFT JOIN TASK_STATUS ts ON su.Sta_id = ts.Sta_id " +
                 "WHERE t.Pro_id = ?";
+
         Connection connection = null;
 
         try {
@@ -189,14 +196,15 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                Task task = new Task();
+                PersonalTaskDTO task = new PersonalTaskDTO();
                 task.setTaskId(rs.getInt("Task_id"));
                 task.setTaskName(rs.getString("Task_name"));
                 task.setTaskStartTime(String.valueOf(rs.getTimestamp("Task_startDate")));
                 task.setTaskEndTime(String.valueOf(rs.getTimestamp("Task_endDate")));
                 task.setTaskDescription(rs.getString("Task_description"));
+                task.setStatusName(rs.getString("Sta_name"));
 
-                // Map dữ liệu User (Assignee)
+                // Map dữ liệu User (Assignee trên giao diện)
                 com.app.src.models.User user = new com.app.src.models.User();
                 user.setUserName(rs.getString("User_name"));
                 task.setUser(user);

@@ -8,7 +8,7 @@ import com.app.src.models.Project;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import com.app.src.models.Task;
+//import com.app.src.models.Task;
 import com.app.src.services.TasklistService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,9 +24,9 @@ public class ListController implements IProjectDetailSubView, Initializable {
     // KHAI BÁO THÀNH PHẦN GIAO DIỆN (UI)
     // ==========================================
     @FXML
-    private TableView<Task> taskTable;
+    private TableView<PersonalTaskDTO> taskTable;
     @FXML
-    private TableColumn<Task, String> colName, colAssignee, colStart, colDeadline, colStatus, colDescription;
+    private TableColumn<PersonalTaskDTO, String> colName, colAssignee, colStart, colDeadline, colStatus, colDescription;
     @FXML
     private Hyperlink hlAll, hlInPreview;
 
@@ -34,7 +34,7 @@ public class ListController implements IProjectDetailSubView, Initializable {
     // KHAI BÁO DỮ LIỆU & SERVICE
     // ==========================================
     private TasklistService service = new TasklistService();
-    private ObservableList<Task> masterData = FXCollections.observableArrayList();
+    private ObservableList<PersonalTaskDTO> masterData = FXCollections.observableArrayList();
     private Project project;
 
     /**
@@ -75,7 +75,7 @@ public class ListController implements IProjectDetailSubView, Initializable {
         colName.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getTaskName()));
 
         colName.setCellFactory(column -> {
-            return new TableCell<Task, String>() {
+            return new TableCell<PersonalTaskDTO, String>() {
                 @Override
                 protected void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
@@ -90,7 +90,7 @@ public class ListController implements IProjectDetailSubView, Initializable {
                         // Sự kiện Double-click để xem chi tiết
                         setOnMouseClicked(event -> {
                             if (event.getClickCount() == 2) {
-                                Task clickedTask = getTableView().getItems().get(getIndex());
+                                PersonalTaskDTO clickedTask = getTableView().getItems().get(getIndex());
                                 handleOpenTaskDetail(clickedTask);
                             }
                         });
@@ -106,7 +106,7 @@ public class ListController implements IProjectDetailSubView, Initializable {
         });
         colStart.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getTaskStartTime()));
         colDeadline.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getTaskEndTime()));
-        colStatus.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getTaskStatus()));
+        colStatus.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getStatusName()));
         colDescription.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getTaskDescription()));
     }
 
@@ -154,7 +154,7 @@ public class ListController implements IProjectDetailSubView, Initializable {
      * Điều hướng người dùng sang trang chi tiết công việc.
      * Kết hợp logic ViewNavigator có sẵn của bạn.
      */
-    private void handleOpenTaskDetail(Task task) {
+    private void handleOpenTaskDetail(PersonalTaskDTO task) {
         try {
             Object controller = ViewNavigator.getInstance().loadSubScene("/scenes/detailinfotask.fxml");
 
@@ -162,21 +162,26 @@ public class ListController implements IProjectDetailSubView, Initializable {
                 TaskDetailController detailController = (TaskDetailController) controller;
                 detailController.setProjectId(project.getProjectId());
 
-                PersonalTaskDTO dto = new PersonalTaskDTO();
-                dto.setTaskId(task.getTaskId());
-                dto.setTaskName(task.getTaskName());
-                dto.setTaskDescription(task.getTaskDescription());
-                dto.setTaskStartTime(task.getTaskStartTime());
-                dto.setTaskEndTime(task.getTaskEndTime());
-                dto.setStatusName(task.getTaskStatus());
-                if (project != null) {
-                    dto.setProjectName(project.getProjectName());
-                }
+                PersonalTaskDTO dto = getPersonalTaskDTO(task);
 
                 detailController.setTaskData(dto);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private PersonalTaskDTO getPersonalTaskDTO(PersonalTaskDTO task) {
+        PersonalTaskDTO dto = new PersonalTaskDTO();
+        dto.setTaskId(task.getTaskId());
+        dto.setTaskName(task.getTaskName());
+        dto.setTaskDescription(task.getTaskDescription());
+        dto.setTaskStartTime(task.getTaskStartTime());
+        dto.setTaskEndTime(task.getTaskEndTime());
+        dto.setStatusName(task.getStatusName());
+        if (project != null) {
+            dto.setProjectName(project.getProjectName());
+        }
+        return dto;
     }
 }

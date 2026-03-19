@@ -100,7 +100,7 @@ public class TasklistService {
      * Hàm này được gọi bởi ListController để hiển thị dữ liệu theo Tab.
      * @param projectId ID của dự án cần lấy task.
      */
-    public List<Task> getTasksByProject(int projectId) {
+    public List<PersonalTaskDTO> getTasksByProject(int projectId) {
         return taskDAO.findByProjectId(projectId);
     }
 
