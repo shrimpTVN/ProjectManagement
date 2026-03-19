@@ -13,7 +13,7 @@ public class VisibleManer {
         return instance;
     }
 
-    public void hideNode(Node node)
+    public static void hideNode(Node node)
     {
         node.setVisible(false);
         node.setManaged(false);

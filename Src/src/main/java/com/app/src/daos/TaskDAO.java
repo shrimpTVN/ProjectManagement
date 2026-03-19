@@ -222,6 +222,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
                 // Map dữ liệu User (Assignee)
                 com.app.src.models.User user = new com.app.src.models.User();
                 user.setUserName(rs.getString("User_name"));
+                user.setUserId(rs.getInt("User_id"));
                 task.setUser(user);
 
                 tasks.add(task);

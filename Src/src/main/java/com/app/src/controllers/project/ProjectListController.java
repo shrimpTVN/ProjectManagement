@@ -94,9 +94,9 @@ public class ProjectListController {
 
                 ProjectDetailController controller = ViewNavigator.getInstance().loadSubScene("/scenes/ProjectDetail.fxml");
 
-                Project fullProject = ProjectDAO.getInstance().getProjectWithJoinings(projectId);
                 String adminName = projectJoiningService.getAdmin(projectId);
-                controller.renderData(fullProject, adminName);
+                System.out.println(project.getUserRoleName());
+                controller.renderData(project, adminName);
             }
         });
     }

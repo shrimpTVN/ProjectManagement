@@ -2,8 +2,8 @@ package com.app.src.authentication;
 
 public class RoleValidator {
     private static RoleValidator instance;
-    private final String admin = "Admin";
-    private final String manager = "Project Manager";
+    private final static String admin = "Admin";
+    private final static String manager = "Project Manager";
     private RoleValidator() {}
 
     public static RoleValidator getInstance() {
@@ -13,24 +13,24 @@ public class RoleValidator {
         return instance;
     }
 
-    public boolean isManager(String roleName)
+    public static boolean isManager(String roleName)
     {
         return roleName.equals(manager);
     }
 
-    public boolean isAdmin(String roleName){
+    public static boolean isAdmin(String roleName){
         return roleName.equals(admin);
     }
 
-    public boolean isManagerOrAdmin(String roleName){
+    public static boolean isManagerOrAdmin(String roleName){
        return roleName.equals(manager) || roleName.equals(admin);
     }
 
-    public boolean canCreatTask(String roleName){
+    public static boolean canCreatTask(String roleName){
         return isManagerOrAdmin(roleName);
     }
 
-    public boolean canEditProject(String roleName){
+    public static boolean canEditProject(String roleName){
         return isAdmin(roleName);
     }
 
