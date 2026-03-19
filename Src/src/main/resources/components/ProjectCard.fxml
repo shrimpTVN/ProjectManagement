@@ -4,8 +4,8 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <VBox prefHeight="132.0" prefWidth="276.0" spacing="12.0" styleClass="project-card" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.ProjectCardController">
     <padding>
@@ -14,8 +14,11 @@
 
     <children>
         <Label fx:id="projectNameLabel" maxWidth="1.7976931348623157E308" styleClass="project-card-title" text="NAME Project" wrapText="true" />
-
-        <Region VBox.vgrow="ALWAYS" />
+      <Label fx:id="roleNameLabel" lineSpacing="2.0" prefHeight="33.0" prefWidth="163.0" text="You're member">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
 
         <HBox alignment="BOTTOM_LEFT" spacing="8.0">
             <children>

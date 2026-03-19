@@ -11,7 +11,7 @@ public class AppContext {
 
     private static AppContext instance;
     private static ArrayList<Project> projects;
-    private final UserSession userSession;
+    private static UserSession userSession;
 
 
     private AppContext() {
@@ -39,7 +39,7 @@ public class AppContext {
         projects = ProjectService.getAllProjects(userSession.getUser().getUserId());
     }
 
-    public User getUserData() {
+    public static User getUserData() {
         return userSession.getUser();
     }
 

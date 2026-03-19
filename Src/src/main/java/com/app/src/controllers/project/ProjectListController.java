@@ -46,13 +46,13 @@ public class ProjectListController {
 
         for (Project project : projects) {
             String adminName = projectJoiningService.getAdmin(project.getProjectId());
-
+            String roleName = projectJoiningService.getRoleInProject(AppContext.getUserData().getUserId(), project.getProjectId());
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/components/ProjectCard.fxml"));
                 VBox card = loader.load();
 
                 ProjectCardController projectCardController = loader.getController();
-                projectCardController.setData(project.getProjectName(), adminName);
+                projectCardController.setData(project.getProjectName(), roleName, adminName);
 
                 // Gắn thẳng object Project để click vẫn đúng ngay cả khi danh sách đã lọc.
                 card.setUserData(project);
