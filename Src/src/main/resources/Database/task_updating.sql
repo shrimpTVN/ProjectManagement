@@ -1,4 +1,4 @@
-﻿INSERT INTO STATUS_UPDATING (StU_id, StU_date, StU_content, Task_id, Sta_id)
+INSERT INTO STATUS_UPDATING (StU_id, StU_date, StU_content, Task_id, Sta_id)
 VALUES
 (1, '2026-03-02 08:00:00', 'Task duoc tao va o trang thai To Do', 1, 1),
 (2, '2026-03-07 08:00:00', 'Task duoc tao va o trang thai To Do', 2, 1),
