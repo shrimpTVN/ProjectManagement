@@ -1,4 +1,4 @@
-﻿INSERT INTO TASK (Task_id, Task_name, Task_description, Task_startDate, Task_endDate, Pro_id, User_id)
+INSERT INTO TASK (Task_id, Task_name, Task_description, Task_startDate, Task_endDate, Pro_id, User_id)
 VALUES
 (1, 'Khao sat yeu cau', 'Thu thap va tong hop yeu cau nghiep vu cho Website Quan Ly Gym', '2026-03-02 08:00:00', '2026-03-05 08:00:00', 1, 3),
 (2, 'Phan tich quy trinh nghiep vu', 'Phan tich cac quy trinh xu ly chinh cua Website Quan Ly Gym', '2026-03-07 08:00:00', '2026-03-10 08:00:00', 1, 4),
