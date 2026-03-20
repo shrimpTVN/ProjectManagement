@@ -15,7 +15,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableRow;
+import javafx.scene.control.TableCell;
+import javafx.geometry.Insets;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Locale;
 
@@ -128,7 +132,86 @@ public class TasklistController {
         colDeadline.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getTaskEndTime())));
 
         colStatus.setCellValueFactory(cellData -> new SimpleStringProperty(toDisplayStatus(cellData.getValue().getStatusName())));
+        colStatus.setCellFactory(col -> new StatusColorCell());
         colDescription.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTaskDescription()));
+    }
+
+    // Custom TableCell để hiển thị màu status
+    private class StatusColorCell extends TableCell<PersonalTaskDTO, String> {
+        @Override
+        protected void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if (empty || item == null) {
+                setText(null);
+                setGraphic(null);
+                return;
+            }
+
+            PersonalTaskDTO task = getTableView().getItems().get(getIndex());
+
+            // Kiểm tra quá deadline
+            String bgColor;
+            String textColor;
+            if (isTaskOverdue(task)) {
+                bgColor = "#FECACA";
+                textColor = "#991B1B";
+            } else {
+                String normalizedStatus = normalizeStatus(task.getStatusName());
+                switch (normalizedStatus) {
+                    case "to do":
+                        bgColor = "#FEF08A";
+                        textColor = "#854D0E";
+                        break;
+                    case "in progress":
+                        bgColor = "#DBEAFE";
+                        textColor = "#1D4ED8";
+                        break;
+                    case "in preview":
+                        bgColor = "#E9D5FF";
+                        textColor = "#6B21A8";
+                        break;
+                    case "done":
+                        bgColor = "#BBF7D0";
+                        textColor = "#166534";
+                        break;
+                    default:
+                        bgColor = "transparent";
+                        textColor = "#000000";
+                }
+            }
+
+            // Tạo label nhỏ để background chỉ bao quanh text
+            Label badge = new Label(item);
+            badge.setStyle(String.format(
+                    "-fx-padding: 4 10 4 10; -fx-background-color: %s; -fx-text-fill: %s; -fx-background-radius: 6; -fx-border-radius: 6; -fx-font-size: 13px; -fx-font-weight: 600;",
+                    bgColor, textColor));
+
+            setGraphic(badge);
+            setText(null);
+            setAlignment(javafx.geometry.Pos.CENTER);
+        }
+    }
+
+    private boolean isTaskOverdue(PersonalTaskDTO task) {
+        if (task == null || task.getTaskEndTime() == null) {
+            return false;
+        }
+
+        String deadlineStr = task.getTaskEndTime().trim();
+        if (deadlineStr.length() >= 10) {
+            deadlineStr = deadlineStr.substring(0, 10);
+        }
+
+        try {
+            LocalDate deadline = LocalDate.parse(deadlineStr);
+            String normalizedStatus = normalizeStatus(task.getStatusName());
+
+            // Chỉ xem là quá deadline nếu status không phải "done" và deadline < today
+            return !normalizedStatus.equals("done") && deadline.isBefore(LocalDate.now());
+        } catch (DateTimeParseException e) {
+            return false;
+        }
     }
 
     // ==========================================

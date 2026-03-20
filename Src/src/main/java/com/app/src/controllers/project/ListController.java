@@ -15,8 +15,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.geometry.Pos;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 
 public class ListController implements IProjectDetailSubView, Initializable {
@@ -107,7 +110,107 @@ public class ListController implements IProjectDetailSubView, Initializable {
         colStart.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getTaskStartTime()));
         colDeadline.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getTaskEndTime()));
         colStatus.setCellValueFactory(cd -> new SimpleStringProperty(formatStatusForDisplay(cd.getValue().getTaskStatus())));
+        colStatus.setCellFactory(col -> new StatusColorCell());
         colDescription.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getTaskDescription()));
+    }
+
+    // Custom TableCell để hiển thị status với badge colors
+    private class StatusColorCell extends TableCell<Task, String> {
+        @Override
+        protected void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if (empty || item == null) {
+                setText(null);
+                setGraphic(null);
+                return;
+            }
+
+            Task task = getTableView().getItems().get(getIndex());
+
+            // Kiểm tra quá deadline
+            String bgColor;
+            String textColor;
+            if (isTaskOverdue(task)) {
+                bgColor = "#FECACA";
+                textColor = "#991B1B";
+            } else {
+                String normalizedStatus = normalizeStatus(task.getTaskStatus());
+                switch (normalizedStatus) {
+                    case "to do":
+                        bgColor = "#FEF08A";
+                        textColor = "#854D0E";
+                        break;
+                    case "in progress":
+                        bgColor = "#DBEAFE";
+                        textColor = "#1D4ED8";
+                        break;
+                    case "in preview":
+                        bgColor = "#E9D5FF";
+                        textColor = "#6B21A8";
+                        break;
+                    case "done":
+                        bgColor = "#BBF7D0";
+                        textColor = "#166534";
+                        break;
+                    default:
+                        bgColor = "transparent";
+                        textColor = "#000000";
+                }
+            }
+
+            // Tạo label badge để background chỉ bao quanh text
+            Label badge = new Label(item);
+            badge.setStyle(String.format(
+                    "-fx-padding: 4 10 4 10; -fx-background-color: %s; -fx-text-fill: %s; -fx-background-radius: 6; -fx-border-radius: 6; -fx-font-size: 13px; -fx-font-weight: 600;",
+                    bgColor, textColor));
+
+            setGraphic(badge);
+            setText(null);
+            setAlignment(Pos.CENTER);
+        }
+    }
+
+    private boolean isTaskOverdue(Task task) {
+        if (task == null || task.getTaskEndTime() == null) {
+            return false;
+        }
+
+        String deadlineStr = task.getTaskEndTime().trim();
+        if (deadlineStr.length() >= 10) {
+            deadlineStr = deadlineStr.substring(0, 10);
+        }
+
+        try {
+            LocalDate deadline = LocalDate.parse(deadlineStr);
+            String normalizedStatus = normalizeStatus(task.getTaskStatus());
+
+            // Chỉ xem là quá deadline nếu status không phải "done" và deadline < today
+            return !normalizedStatus.equals("done") && deadline.isBefore(LocalDate.now());
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+
+    private String normalizeStatus(String rawStatus) {
+        if (rawStatus == null) {
+            return "";
+        }
+
+        String normalized = rawStatus.trim().toLowerCase();
+        if (normalized.equals("todo") || normalized.equals("to do")) {
+            return "to do";
+        }
+        if (normalized.equals("in processing") || normalized.equals("in progressing") || normalized.equals("in progress")) {
+            return "in progress";
+        }
+        if (normalized.equals("in preview")) {
+            return "in preview";
+        }
+        if (normalized.equals("done")) {
+            return "done";
+        }
+        return normalized;
     }
 
     // Chuẩn hoá text status để UI hiển thị nhất quán.
