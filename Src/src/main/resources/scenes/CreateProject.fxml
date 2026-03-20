@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox spacing="50" style="-fx-background-color: white; -fx-padding: 40;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.CreateProjectController">
+<HBox spacing="50" style="-fx-background-color: #fafafa; -fx-padding: 40;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.CreateProjectController">
 
     <VBox spacing="10" HBox.hgrow="ALWAYS" maxWidth="500">
 
@@ -45,7 +45,7 @@
         </VBox>
 
         <HBox spacing="15" style="-fx-padding: 10 0 0 0;">
-            <Button fx:id="btnCancel" text="× CANCEL" style="-fx-background-color: #666666; -fx-text-fill: white; -fx-font-family: 'Urbanist Medium'; -fx-pref-height: 35; -fx-pref-width: 100; -fx-cursor: hand;"/>
+            <Button fx:id="btnCancel" text="Ã— CANCEL" style="-fx-background-color: #666666; -fx-text-fill: white; -fx-font-family: 'Urbanist Medium'; -fx-pref-height: 35; -fx-pref-width: 100; -fx-cursor: hand;"/>
             <Button fx:id="btnCreate" text="+ Create" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-text-fill: black; -fx-font-family: 'Urbanist Medium'; -fx-pref-height: 35; -fx-pref-width: 100; -fx-cursor: hand;"/>
         </HBox>
 
@@ -62,3 +62,4 @@
     </VBox>
 
 </HBox>
+
