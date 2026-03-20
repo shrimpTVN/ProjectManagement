@@ -541,6 +541,16 @@
     -fx-font-size: 13px;
     -fx-font-weight: 700;
     -fx-text-fill: #475569;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 10 0 10;
+}
+
+.member-table .table-cell {
+    -fx-font-size: 14px;
+    -fx-text-fill: #334155;
+    -fx-padding: 0 10 0 10;
+    -fx-border-color: transparent;
+    -fx-alignment: CENTER_LEFT;
 }
 
 .member-table .table-row-cell {
@@ -560,13 +570,6 @@
 
 .member-table .table-row-cell:filled:selected .table-cell {
     -fx-text-fill: #1E3A8A;
-}
-
-.member-table .table-cell {
-    -fx-font-size: 14px;
-    -fx-text-fill: #334155;
-    -fx-padding: 0 10 0 10;
-    -fx-border-color: transparent;
 }
 
 .member-table .scroll-bar:vertical {
