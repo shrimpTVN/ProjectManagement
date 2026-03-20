@@ -79,10 +79,8 @@ CREATE TABLE COMMENT
     Com_date        DATETIME DEFAULT CURRENT_TIMESTAMP,
     User_id         INT,
     Task_id         INT,
-    Previous_Com_id INT, -- For 'phan_hoi' (replies)
     FOREIGN KEY (User_id) REFERENCES USER (User_id),
-    FOREIGN KEY (Task_id) REFERENCES TASK (Task_id) ON DELETE CASCADE,
-    FOREIGN KEY (Previous_Com_id) REFERENCES COMMENT (Com_id)
+    FOREIGN KEY (Task_id) REFERENCES TASK (Task_id) ON DELETE CASCADE
 );
 
 -- 9. STATUS_UPDATING

@@ -1,3 +1,21 @@
+//package com.app.src.controllers;
+//
+
+//public class TaskDetailController {
+//    private PersonalTaskDTO currentTask;
+//
+//    // Viết 1 hàm public để nhận dữ liệu truyền tới
+//    public void setTaskData(PersonalTaskDTO task) {
+//        this.currentTask = task;
+//
+//        // Nhận được data xong thì cập nhật lên giao diện luôn
+//        System.out.println("Đã nhận được task: " + task.getTaskName());
+//        // txtName.setText(task.getTaskName());
+//    }
+//
+//}
+//
+
 package com.app.src.controllers.task;
 
 import com.app.src.authentication.RoleValidator;
@@ -12,13 +30,18 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 
 public class TaskDetailController {
 
+    private static final String ACTIVE_TAB_STYLE_CLASS = "active-tab";
     // --- Các thành phần giao diện đã được khai báo trong file FXML ---
     @FXML
     private Label lblProjectName;
@@ -50,13 +73,12 @@ public class TaskDetailController {
     @FXML
     private Button btnEdit; // Nút chỉnh sửa
     @FXML
-    ScrollPane taskDetailSubViewContainer;
-
+    private ScrollPane taskDetailSubViewContainer;
     // Biến lưu trữ Task hiện tại đang xem
     private PersonalTaskDTO currentTask;
     private int fromProject = 0;
     private String currentSubView;
-    private static final String ACTIVE_TAB_STYLE_CLASS = "active-tab";
+
 
     /**
      * Hàm này được gọi từ TasklistController để truyền dữ liệu Task vào
@@ -153,9 +175,9 @@ public class TaskDetailController {
         }
     }
 
-    public void loadTaskDetailSubView(String componentName){
+    public void loadTaskDetailSubView(String componentName) {
         System.out.println("Loading task detail subview for: " + componentName);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/components/TaskDetail/"+ componentName+ ".fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/components/TaskDetail/" + componentName + ".fxml"));
         try {
             if (currentTask == null) {
                 throw new IllegalStateException("Task data is not initialized before loading subview");
@@ -166,8 +188,7 @@ public class TaskDetailController {
             Object childController = loader.getController();
             if (childController instanceof CommentBoxController commentController) {
                 commentController.renderData(currentTask.getTaskId());
-            } else if (childController instanceof StatusNotiController statusNotiController) {
-                //gọi renderData từ container chứa status
+            } else if (childController instanceof StatusNotiController statusNotiController) {                //gọi renderData từ container chứa status
                 statusNotiController.renderData(currentTask.getTaskId());
             }
 
@@ -176,6 +197,7 @@ public class TaskDetailController {
             throw new RuntimeException(e);
         }
     }
+
     public void handleSwitchSubViewClick(MouseEvent mouseEvent) {
         Object target = mouseEvent.getSource();
 
@@ -187,10 +209,11 @@ public class TaskDetailController {
                 currentSubView = "CommentBox";
                 loadTaskDetailSubView(currentSubView);
                 applySubViewButtonStyle();
-            } else if (!currentSubView.equals("StatusChangeNoti") & buttonText.equals("Status")) {
+            } else if (!currentSubView.equals("StatusNotiContainer") & buttonText.equals("Status")) {
                 //StatusNotiContainer là Vbox bao các status -> load vbox lên
-                loadTaskDetailSubView("StatusNotiContainer");
-                currentSubView = "StatusChangeNoti";
+                currentSubView = "StatusNotiContainer";
+                loadTaskDetailSubView(currentSubView);
+
                 applySubViewButtonStyle();
             }
         }
@@ -198,7 +221,7 @@ public class TaskDetailController {
 
     private void applySubViewButtonStyle() {
         boolean isCommentActive = "CommentBox".equals(currentSubView);
-        boolean isStatusActive = "StatusChangeNoti".equals(currentSubView);
+        boolean isStatusActive = "StatusNotiContainer".equals(currentSubView);
 
         toggleActiveTabStyle(btnCmt, isCommentActive);
         toggleActiveTabStyle(btnHistory, isStatusActive);
