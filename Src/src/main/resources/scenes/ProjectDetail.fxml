@@ -8,11 +8,11 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox style="-fx-background-color: white;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.ProjectDetailController">
+<VBox style="-fx-background-color: #fafafa;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.ProjectDetailController">
 
     <VBox spacing="5" style="-fx-padding: 20 20 0 20;" styleClass="font-36">
       <HBox alignment="CENTER_LEFT" prefHeight="42.0" spacing="14.0" styleClass="project-detail-header">
-            <Button mnemonicParsing="false" onMouseClicked="#handleBackClick" prefHeight="36.0" prefWidth="98.0" styleClass="project-detail-back-button" text="← Back" />
+            <Button mnemonicParsing="false" onMouseClicked="#handleBackClick" prefHeight="36.0" prefWidth="98.0" styleClass="project-detail-back-button" text="Back" />
       </HBox>
 
         <Label fx:id="lblProjectName" styleClass="project-main-title" text="Project A">

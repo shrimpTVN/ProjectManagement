@@ -13,7 +13,7 @@
 <?import javafx.scene.text.Font?>
 
 <?import javafx.scene.Cursor?>
-<AnchorPane prefHeight="652.0" prefWidth="983.0" style="-fx-background-color: white;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.task.TaskDetailController">
+<AnchorPane prefHeight="652.0" prefWidth="983.0" style="-fx-background-color: #fafafa;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.task.TaskDetailController">
    <children>
       <VBox prefHeight="651.2" prefWidth="983.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <padding>
@@ -174,7 +174,7 @@
                               </Button>
                            </children>
                         </HBox>
-<!--                        Sẽ load component của comment và status vào đây-->
+<!--                        Sáº½ load component cá»§a comment vÃ  status vÃ o Ä‘Ã¢y-->
                         <ScrollPane fx:id="taskDetailSubViewContainer" fitToWidth="true" prefHeight="410.0" prefWidth="438.0" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS" />
 
                      </children>
@@ -184,3 +184,4 @@
          </children></VBox>
    </children>
 </AnchorPane>
+

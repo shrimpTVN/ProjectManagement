@@ -106,8 +106,31 @@ public class ListController implements IProjectDetailSubView, Initializable {
         });
         colStart.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getTaskStartTime()));
         colDeadline.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getTaskEndTime()));
-        colStatus.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getTaskStatus()));
+        colStatus.setCellValueFactory(cd -> new SimpleStringProperty(formatStatusForDisplay(cd.getValue().getTaskStatus())));
         colDescription.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getTaskDescription()));
+    }
+
+    // Chuẩn hoá text status để UI hiển thị nhất quán.
+    private String formatStatusForDisplay(String rawStatus) {
+        if (rawStatus == null || rawStatus.isBlank()) {
+            return "To Do";
+        }
+
+        String normalized = rawStatus.trim().toLowerCase();
+        if (normalized.equals("in progressing") || normalized.equals("progressing")) {
+            return "In Progress";
+        }
+        if (normalized.equals("in preview")) {
+            return "In Preview";
+        }
+        if (normalized.equals("done")) {
+            return "Done";
+        }
+        if (normalized.equals("to do") || normalized.equals("todo")) {
+            return "To Do";
+        }
+
+        return rawStatus;
     }
 
     private void setupLinkActions() {
@@ -120,7 +143,7 @@ public class ListController implements IProjectDetailSubView, Initializable {
 
         hlInPreview.setOnAction(e -> {
             setActiveLink(hlInPreview);
-            taskTable.setItems(masterData);
+            taskTable.setItems(masterData.filtered(task -> "In Preview".equals(formatStatusForDisplay(task.getTaskStatus()))));
         });
     }
 
@@ -133,7 +156,15 @@ public class ListController implements IProjectDetailSubView, Initializable {
 
     public void loadData(int projectId) {
         masterData.setAll(service.getTasksByProject(projectId, project.getUserRoleName()));
-        taskTable.setItems(masterData);
+        applyCurrentFilter();
+    }
+
+    private void applyCurrentFilter() {
+        if (hlInPreview.getStyleClass().contains("filter-item-active")) {
+            taskTable.setItems(masterData.filtered(task -> "In Preview".equals(formatStatusForDisplay(task.getTaskStatus()))));
+        } else {
+            taskTable.setItems(masterData);
+        }
     }
 
     private void handleOpenTaskDetail(Task task) {
@@ -149,7 +180,7 @@ public class ListController implements IProjectDetailSubView, Initializable {
                 dto.setTaskDescription(task.getTaskDescription());
                 dto.setTaskStartTime(task.getTaskStartTime());
                 dto.setTaskEndTime(task.getTaskEndTime());
-                dto.setStatusName(task.getTaskStatus());
+                dto.setStatusName(formatStatusForDisplay(task.getTaskStatus()));
                 if (project != null) {
                     dto.setProjectName(project.getProjectName());
                 }

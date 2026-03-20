@@ -208,9 +208,17 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
      */
     public List<Task> findByProjectId(int projectId) {
         List<Task> tasks = new ArrayList<>();
-        // JOIN với bảng user để lấy tên người thực hiện
-        String sql = "SELECT t.*, u.User_name FROM task t " +
-                "LEFT JOIN user u ON t.User_id = u.User_id " +
+        String sql = "SELECT t.*, u.User_name, " +
+                "COALESCE((" +
+                "   SELECT ts.Sta_name " +
+                "   FROM STATUS_UPDATING su " +
+                "   JOIN TASK_STATUS ts ON su.Sta_id = ts.Sta_id " +
+                "   WHERE su.Task_id = t.Task_id " +
+                "   ORDER BY su.StU_id DESC " +
+                "   LIMIT 1" +
+                "), 'To Do') AS Sta_name " +
+                "FROM TASK t " +
+                "LEFT JOIN USER u ON t.User_id = u.User_id " +
                 "WHERE t.Pro_id = ?";
         Connection connection = null;
 
@@ -227,8 +235,8 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
                 task.setTaskStartTime(String.valueOf(rs.getTimestamp("Task_startDate")));
                 task.setTaskEndTime(String.valueOf(rs.getTimestamp("Task_endDate")));
                 task.setTaskDescription(rs.getString("Task_description"));
+                task.setTaskStatus(rs.getString("Sta_name"));
 
-                // Map dữ liệu User (Assignee)
                 com.app.src.models.User user = new com.app.src.models.User();
                 user.setUserName(rs.getString("User_name"));
                 user.setUserId(rs.getInt("User_id"));
@@ -365,22 +373,28 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
         return 1;
     }
 
-    public  String  getStatusNameById(int taskId)
+    public String getStatusNameById(int taskId)
     {
-        String statusName="";
-        final String sql ="select sta_name from task_status where sta_id=?;";
-        try{
+        String statusName = "";
+        final String sql = "SELECT ts.Sta_name " +
+                "FROM STATUS_UPDATING su " +
+                "JOIN TASK_STATUS ts ON su.Sta_id = ts.Sta_id " +
+                "WHERE su.Task_id = ? " +
+                "ORDER BY su.StU_id DESC LIMIT 1";
+        try {
             connection = getConnection();
-            getCurrentStatusId(connection, taskId);
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, taskId);
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                statusName = rs.getString("sta_name");
+                statusName = rs.getString("Sta_name");
+            } else {
+                statusName = "To Do";
             }
 
-        }catch(Exception e){
+            closeResource(ps, connection, rs);
+        } catch (Exception e) {
             throw new DataAccessException("Khong the truy cap data base", e);
         }
 
