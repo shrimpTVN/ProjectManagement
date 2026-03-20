@@ -67,6 +67,15 @@
     -fx-table-cell-border-color: transparent;
 }
 
+#taskTable .table-cell {
+    -fx-font-weight: 400;
+    -fx-text-fill: #333333;
+}
+
+#taskTable .table-row-cell .table-cell {
+    -fx-font-size: 17px;
+}
+
 /*chá»‰nh css breadcrumblink*/
 .breadcrumb-item {
     -fx-border-width: 0;
@@ -352,20 +361,45 @@
 }
 
 #taskTable .column-header-background {
-    -fx-background-color: #F5F5F5;
+    -fx-background-color: transparent;
     -fx-border-color: transparent transparent #000000 transparent;
     -fx-border-width: 0 0 0.2px 0;
+    -fx-padding: 7 0 7 0;
 }
 
 #taskTable .column-header,
 #taskTable .filler {
-    -fx-background-color: #F5F5F5;
+    -fx-background-color: transparent;
     -fx-border-width: 0 0 0.2px 0;
+    -fx-padding: 0;
+    -fx-cell-size: 44px;
 }
 
 #taskTable .column-header .label {
     -fx-font-size: 15px;
-    -fx-text-fill: #111111;
+    -fx-text-fill: #555555;
+    -fx-font-weight: 200;
+}
+
+#taskTable .column-header {
+    -fx-padding: 0;
+}
+
+#taskTable .table-cell {
+    -fx-font-weight: 400;
+    -fx-text-fill: #333333;
+}
+
+#taskTable .table-row-cell .table-cell {
+    -fx-font-size: 17px;
+}
+
+#taskTable .table-row-cell:filled:selected {
+    -fx-background-color: #E8F4FF;
+}
+
+#taskTable .table-row-cell:filled:selected .table-cell {
+    -fx-text-fill: #555555;
 }
 
 #taskTable .scroll-bar:vertical {
@@ -655,3 +689,187 @@
     -fx-background-color: #FF5252;
 }
 
+/* --- ProjectDetail Info: refreshed card UI --- */
+.project-info-root {
+    -fx-background-color: #F8F8F8;
+}
+
+.project-info-scroll {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.project-info-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.project-info-content {
+    -fx-background-color: transparent;
+}
+
+.project-info-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-border-color: #E6E6E6;
+    -fx-border-radius: 12px;
+    -fx-padding: 14 16 14 16;
+}
+
+.project-info-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1F2937;
+}
+
+.project-info-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B7280;
+}
+
+.project-info-card-title {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B7280;
+}
+
+.project-info-card-value {
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #111827;
+}
+
+.project-info-desc {
+    -fx-font-size: 14px;
+    -fx-text-fill: #374151;
+    -fx-line-spacing: 2px;
+}
+
+.project-info-btn-edit {
+    -fx-background-color: white;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #1F2937;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.project-info-btn-edit:hover {
+    -fx-background-color: #F3F4F6;
+}
+
+.project-info-btn-delete {
+    -fx-background-color: #EF4444;
+    -fx-background-radius: 8px;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.project-info-btn-delete:hover {
+    -fx-background-color: #DC2626;
+}
+
+/* Information scene refresh */
+.info-page-root {
+    -fx-background-color: #F8F8F8;
+    -fx-padding: 22;
+}
+
+.info-main-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 16px;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(17, 24, 39, 0.10), 24, 0.22, 0, 8);
+}
+
+.info-header-card {
+    -fx-background-color: transparent;
+}
+
+.info-header-bg {
+    -fx-arc-width: 18px;
+    -fx-arc-height: 18px;
+}
+
+.info-avatar {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.16), 14, 0.25, 0, 2);
+}
+
+.info-name {
+    -fx-font-size: 30px;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+}
+
+.info-email {
+    -fx-font-size: 14px;
+    -fx-text-fill: rgba(255, 255, 255, 0.95);
+}
+
+.info-detail-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12px;
+    -fx-border-color: #E6E9EF;
+    -fx-border-radius: 12px;
+}
+
+.info-detail-title {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6B7280;
+}
+
+.info-detail-value {
+    -fx-font-size: 21px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #111827;
+}
+
+.info-update-message {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B7280;
+}
+
+.info-action-btn {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #1F2937;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 8 14 8 14;
+    -fx-cursor: hand;
+}
+
+.info-action-btn:hover {
+    -fx-background-color: #F3F4F6;
+}
+
+.info-action-save {
+    -fx-background-color: #4896FE;
+    -fx-border-color: #4896FE;
+    -fx-text-fill: #FFFFFF;
+}
+
+.info-action-save:hover {
+    -fx-background-color: #2F80ED;
+}
+
+.info-action-cancel {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D5DB;
+    -fx-text-fill: #374151;
+}
+
+.info-edit-input {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 8 10 8 10;
+    -fx-font-size: 14px;
+    -fx-text-fill: #111827;
+}

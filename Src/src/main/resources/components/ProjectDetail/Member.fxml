@@ -5,10 +5,13 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="500.0" prefWidth="850.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.MemberController">
     <children>
@@ -18,10 +21,20 @@
                     <children>
                         <TextField fx:id="txtUserName" prefHeight="30.0" prefWidth="200.0" promptText="Enter user name..." styleClass="input-field" />
                         <ComboBox fx:id="cbRole" prefHeight="30.0" prefWidth="150.0" promptText="Select Role" styleClass="input-field" />
-                        <Button fx:id="btnAddUser" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" styleClass="btn-action" text="Add" />
+                        <Button fx:id="btnAddUser" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" style="-fx-border-width: 0.5;" styleClass="btn-action" text=" Add" textFill="#4896fe">
+                     <graphic>
+                        <ImageView fitHeight="15.0" fitWidth="13.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../image/plus.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Button>
                         <Region prefHeight="27.0" prefWidth="182.0" HBox.hgrow="ALWAYS" />
                         <Button fx:id="btnEditUser" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" styleClass="btn-action" text="Edit" />
-                        <Button fx:id="btnCancel" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" styleClass="btn-action" text="Cancel" />
+                        <Button fx:id="btnCancel" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: grey; -fx-border-color: grey; -fx-border-radius: 5; -fx-background-radius: 5;" styleClass="btn-action" text="Cancel" textFill="WHITE" />
                     </children>
                 </HBox>
 

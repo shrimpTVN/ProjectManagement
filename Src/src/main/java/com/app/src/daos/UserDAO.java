@@ -177,7 +177,38 @@ public class UserDAO extends AbstractDAO<User>{
 
     @Override
     public boolean update(int id, User entity) {
-        return false;
+        String sql = "UPDATE user SET User_name = ?, User_dateOfBirth = ?, User_gender = ?, User_phoneNumber = ? WHERE User_id = ?";
+
+        PreparedStatement ps = null;
+        try {
+            connection = getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, entity.getUserName());
+            ps.setString(2, entity.getUserDoB());
+            ps.setBoolean(3, entity.isUserGender());
+            ps.setString(4, entity.getUserPhoneNumber());
+            ps.setInt(5, id);
+
+            int affectedRows = ps.executeUpdate();
+            closeResource(ps, connection);
+            return affectedRows > 0;
+        } catch (SQLException ex) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException ignored) {
+                // Ignore rollback failure and return false.
+            }
+            System.err.println("Error updating user profile: " + ex.getMessage());
+            return false;
+        } finally {
+            try {
+                closeConnection(connection);
+            } catch (SQLException e) {
+                System.err.println("Error closing connection: " + e.getMessage());
+            }
+        }
     }
 
     @Override

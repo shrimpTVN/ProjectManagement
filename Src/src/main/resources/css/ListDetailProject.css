@@ -1,16 +1,19 @@
-/*------CSS CHUNG CHO LIST TRONG ProjectDetail------*/
+﻿/*------CSS CHUNG CHO LIST TRONG ProjectDetail------*/
 /*--CSS cho tab All/In preview--*/
 .filter-item {
     -fx-text-fill: black;
     -fx-cursor: hand;
+    -fx-background-color: transparent;
     -fx-background-radius: 10px; /* Bo tròn để tạo hiệu ứng viên thuốc */
     -fx-underline: false;
 
 }
 
 .filter-item-active {
-    -fx-background-color: #E0E0E0; /* Màu xám nhạt như trong hình */
-    -fx-font-weight: bold;         /* Làm đậm chữ để nổi bật */
+    -fx-background-color: #4896FE;
+    -fx-text-fill: white;
+    -fx-font-weight: 600;
+    -fx-background-radius: 10px;
 }
 
 .filter-link:focused {
@@ -29,46 +32,115 @@
     -fx-border-width: 0px;
 }
 
+.filter-item-active,
+.filter-item-active:visited,
+.filter-item-active:hover,
+.filter-item-active:armed {
+    -fx-background-color: #4896FE;
+    -fx-text-fill: white;
+    -fx-underline: false;
+}
+
 /*--CSS cho tableview List--*/
 #taskListProject {
     -fx-background-color: white;
-    -fx-border-color: black;
-    -fx-border-width: 1px;
-    -fx-border-radius: 10px;    /* Bo tròn góc */
-    -fx-background-radius: 10px;
+    -fx-border-color: #000000;
+    -fx-border-width: 0.2px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
     -fx-padding: 0;
 }
 
 #taskListProject .column-header-background {
-    -fx-background-color: white; /* Màu nền xám nhạt */
-    -fx-border-color: white white black white; /* Chỉ giữ đường kẻ dưới */
-    -fx-border-width: 0 0 1px 0;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #000000 transparent;
+    -fx-border-width: 0 0 0.2px 0;
+    -fx-padding: 7 0 7 0;
 }
 
-#taskListProject .column-header {
+#taskListProject .column-header,
+#taskListProject .filler {
     -fx-background-color: transparent;
-    -fx-size: 40px; /* Độ cao của header */
-    -fx-border-color: transparent;
+    -fx-border-width: 0 0 0.2px 0;
+    -fx-padding: 0;
+    -fx-cell-size: 44px;
+}
+
+#taskListProject .column-header .label {
+    -fx-font-size: 15px;
+    -fx-text-fill: #555555;
+    -fx-font-weight: 200;
 }
 
 #taskListProject .table-cell {
-    -fx-border-color: white;
-    -fx-padding: 10px;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0 12 0 12;
     -fx-alignment: CENTER_LEFT;
+    -fx-font-weight: 400;
+    -fx-text-fill: #333333;
+}
+
+#taskListProject .table-row-cell .table-cell {
+    -fx-font-size: 17px;
 }
 
 #taskListProject .table-row-cell {
+    -fx-cell-size: 44px;
     -fx-background-color: white;
-    -fx-border-color: transparent transparent #E0E0E0 transparent; /* Đường kẻ ngang giữa các dòng */
+    -fx-border-color: transparent transparent #E0E0E0 transparent;
     -fx-border-width: 0 0 1px 0;
+    -fx-table-cell-border-color: transparent;
 }
 
-/*click vào task*/
 #taskListProject .table-row-cell:filled:selected {
-    -fx-background-color: #555555;
-    -fx-text-fill: #000000;
-    -fx-font-weight: 700;
+    -fx-background-color: #E8F4FF;
     -fx-background-insets: 0;
+}
+
+#taskListProject .table-row-cell:filled:selected .table-cell {
+    -fx-text-fill: #555555;
+}
+
+/* Đồng bộ thanh scroll với bảng TaskList */
+#taskListProject .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 11px;
+    -fx-padding: 0;
+}
+
+#taskListProject .scroll-bar:vertical .track {
+    -fx-background-color: #EEF2F6;
+    -fx-background-radius: 999px;
+    -fx-border-radius: 999px;
+    -fx-background-insets: 0 2 0 2;
+}
+
+#taskListProject .scroll-bar:vertical .thumb {
+    -fx-background-color: #C9CED6;
+    -fx-background-radius: 999px;
+    -fx-border-radius: 999px;
+    -fx-background-insets: 0 2 0 2;
+}
+
+#taskListProject .scroll-bar:vertical .thumb:hover,
+#taskListProject .scroll-bar:vertical .thumb:pressed {
+    -fx-background-color: #B8BEC7;
+}
+
+#taskListProject .scroll-bar:vertical .increment-button,
+#taskListProject .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-pref-height: 0;
+    -fx-opacity: 0;
+}
+
+#taskListProject .scroll-bar:vertical .increment-arrow,
+#taskListProject .scroll-bar:vertical .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+    -fx-opacity: 0;
 }
 
 /*--CSS cho Btn Create--*/

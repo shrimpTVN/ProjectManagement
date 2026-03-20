@@ -6,9 +6,12 @@
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="400.0" prefWidth="549.6" stylesheets="@../../css/ListDetailProject.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.ListController">
    <children>
@@ -16,8 +19,27 @@
          <children>
             <HBox alignment="TOP_RIGHT" prefHeight="24.0" prefWidth="200.0" spacing="20.0">
                <children>
-                  <Button id="+ Create" fx:id="btnCreate" mnemonicParsing="false" prefWidth="87.0" styleClass="btn-create" text="+ Create" />
-                  <Button id="+ Create" fx:id="btnDelete" mnemonicParsing="false" prefWidth="87.0" styleClass="btn-create" text="- Delete" />
+                  <Button id="+ Create" fx:id="btnCreate" mnemonicParsing="false" prefHeight="33.0" prefWidth="87.0" style="-fx-border-width: 0.5; -fx-border-color: #4896FE; -fx-background-color: #4896FE;" styleClass="btn-create" text="  Create" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="13.0" fitWidth="14.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../image/plus_white.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin></Button>
+                  <Button id="+ Create" fx:id="btnDelete" mnemonicParsing="false" prefHeight="22.0" prefWidth="87.0" style="-fx-background-color: #FF3232; -fx-border-color: #FF3232;" styleClass="btn-create" text="Delete" textFill="WHITE">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <padding>
+                        <Insets bottom="5.0" top="5.0" />
+                     </padding></Button>
                   <HBox prefHeight="100.0" prefWidth="178.0" spacing="6.0" style="-fx-border-color: #888888; -fx-border-radius: 5; -fx-background-radius: 5;">
                      <HBox.margin>
                         <Insets />
@@ -31,8 +53,15 @@
                               <String fx:value="filter-item-active" />
                               <String fx:value="filter-item" />
                            </styleClass>
+                           <HBox.margin>
+                              <Insets bottom="2.0" top="2.0" />
+                           </HBox.margin>
                         </Hyperlink>
-                        <Hyperlink fx:id="hlInPreview" alignment="CENTER" prefWidth="91.0" styleClass="filter-item" text="In preview" />
+                        <Hyperlink fx:id="hlInPreview" alignment="CENTER" prefWidth="91.0" styleClass="filter-item" text="In preview">
+                           <HBox.margin>
+                              <Insets top="2.0" />
+                           </HBox.margin>
+                        </Hyperlink>
                      </children>
                   </HBox>
                </children>
@@ -49,6 +78,9 @@
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
             </TableView>
          </children>
       </VBox>
