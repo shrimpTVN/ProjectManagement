@@ -13,19 +13,28 @@ public class StatusHistoryController {
     @FXML private Label lblUser,lblAction, lblTime, lblStatusChange;
 
     public void setData(StatusUpdating data) {
-        lblUser.setText("Oitloc96");
-        lblAction.setText("changed the status");
-        lblUser.setStyle("--fx-font-size: 12px;-fx-font-weight: bold; -fx-text-fill: black");
-        lblAction.setStyle("-fx-text-fill: black;-fx-font-size: 12px;");
-        // Sử dụng Helper để hiển thị "8 phút trước"
-        // Hiển thị thời gian
+        if (data == null || data.getContent() == null) return;
+
+        // 1. TÁCH CHUỖI: parts[0] là tên, parts[1] là nội dung thay đổi
+        String[] parts = data.getContent().split("\\|");
+
+        if (parts.length >= 2) {
+            // Gán tên người dùng vào lblUser
+            lblUser.setText(parts[0]);
+
+            // Gán phần "Cũ -> Mới" vào lblStatusChange
+            lblStatusChange.setText(parts[1]);
+        }
+
+        // Các phần còn lại giữ nguyên
+        lblAction.setText(" changed the status");
+        lblUser.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: black;");
+        lblAction.setStyle("-fx-text-fill: black; -fx-font-size: 12px;");
+
         String timeAgo = TimeAgoHelper.toTimeAgo(data.getDate());
         lblTime.setText(timeAgo);
-        // Quan trọng: Ép màu và font size lớn hơn một chút để dễ nhìn
         lblTime.setStyle("-fx-font-size: 11px; -fx-text-fill: #888888;");
-        // Hiển thị chuỗi "None ➔ To Do" hoặc "To Do ➔ In Progressing"
-        lblStatusChange.setText(data.getContent());
-        lblStatusChange.setStyle(" -fx-font-size: 12px; -fx-text-fill: black;");
+        lblStatusChange.setStyle("-fx-font-size: 12px; -fx-text-fill: black;");
 
     }
     public void renderData(int taskId){
