@@ -2,8 +2,10 @@ package com.app.src.controllers.task;
 
 import com.app.src.controllers.ViewNavigator;
 import com.app.src.controllers.project.ProjectDetailController;
+import com.app.src.core.AppContext;
 import com.app.src.daos.ProjectDAO;
 import com.app.src.daos.UserDAO;
+import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.models.Project;
 import com.app.src.models.ProjectJoining;
 import com.app.src.models.Task;
@@ -42,7 +44,16 @@ public class CreateTaskController {
     private ComboBox<String> cbAssignee;
     @FXML
     private Label lblErrorAssignee;
+    @FXML
+    private Button btnCancel;
+    @FXML
+    private Button btnSave;
+    @FXML
+    private Label lblFormTitle;
     private Project currentProject;
+    private boolean editDeadlineMode = false;
+    private PersonalTaskDTO editingTask;
+    private int backProjectId = 0;
 
     @FXML
     public void initialize() {
@@ -139,10 +150,70 @@ public class CreateTaskController {
         });
     }
 
+    public void setEditDeadlineContext(PersonalTaskDTO task, int projectId) {
+        if (task == null) {
+            return;
+        }
+
+        this.editDeadlineMode = true;
+        this.editingTask = task;
+        this.backProjectId = projectId;
+
+        if (projectId > 0) {
+            for (Project project : AppContext.getProjects()) {
+                if (project.getProjectId() == projectId) {
+                    this.currentProject = project;
+                    break;
+                }
+            }
+        }
+
+        txtName.setText(task.getTaskName() != null ? task.getTaskName() : "");
+        txtDescription.setText(task.getTaskDescription() != null ? task.getTaskDescription() : "");
+        dpStart.setValue(parseDate(task.getTaskStartTime()));
+        dpEnd.setValue(parseDate(task.getTaskEndTime()));
+        cbAssignee.getItems().setAll("Locked in edit mode");
+        cbAssignee.getSelectionModel().selectFirst();
+
+        lockFieldsExceptDeadline();
+        lblFormTitle.setText("Edit Task Deadline");
+        btnSave.setText("Save Deadline");
+    }
+
+    private LocalDate parseDate(String raw) {
+        if (raw == null || raw.trim().isEmpty()) {
+            return null;
+        }
+
+        String text = raw.trim();
+        if (text.length() >= 10) {
+            text = text.substring(0, 10);
+        }
+
+        try {
+            return LocalDate.parse(text);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
+
+    private void lockFieldsExceptDeadline() {
+        txtName.setDisable(true);
+        txtDescription.setDisable(true);
+        dpStart.setDisable(true);
+        cbAssignee.setEditable(false);
+        cbAssignee.setDisable(true);
+    }
+
     @FXML
     private void handleSaveTask() {
         lblErrorName.setText("");
         lblErrorAssignee.setText("");
+
+        if (editDeadlineMode) {
+            handleSaveDeadlineOnly();
+            return;
+        }
 
         Task newTask = new Task();
         newTask.setTaskName(txtName.getText().trim());
@@ -185,9 +256,47 @@ public class CreateTaskController {
         }
     }
 
+    private void handleSaveDeadlineOnly() {
+        if (editingTask == null || editingTask.getTaskId() <= 0) {
+            lblErrorName.setText("Task data is invalid.");
+            return;
+        }
+
+        if (dpEnd.getValue() == null) {
+            lblErrorName.setText("Deadline is required!");
+            return;
+        }
+
+        TasklistService service = new TasklistService();
+        boolean success = service.updateTaskDeadline(editingTask.getTaskId(), dpEnd.getValue().toString());
+        if (!success) {
+            lblErrorName.setText("System error: Unable to update deadline.");
+            return;
+        }
+
+        editingTask.setTaskEndTime(dpEnd.getValue().toString());
+        backToTaskDetail();
+    }
+
     @FXML
     private void handleCancel() {
+        if (editDeadlineMode) {
+            backToTaskDetail();
+            return;
+        }
         backToProjectDetail();
+    }
+
+    private void backToTaskDetail() {
+        TaskDetailController controller = ViewNavigator.getInstance().loadSubScene("/scenes/detailinfotask.fxml");
+        if (controller == null || editingTask == null) {
+            backToProjectDetail();
+            return;
+        }
+        if (backProjectId > 0) {
+            controller.setProjectId(backProjectId);
+        }
+        controller.setTaskData(editingTask);
     }
 
     private void backToProjectDetail() {

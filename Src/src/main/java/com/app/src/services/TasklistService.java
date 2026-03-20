@@ -88,6 +88,16 @@ public class TasklistService {
         return taskDAO.appendStatusUpdating(taskId, oldStatus, newStatus, content, userId);
     }
 
+    public boolean updateTaskDeadline(int taskId, String deadline) {
+        if (taskId <= 0) {
+            throw new IllegalArgumentException("ID công việc không hợp lệ!");
+        }
+        if (deadline == null || deadline.trim().isEmpty()) {
+            throw new IllegalArgumentException("Deadline không được để trống!");
+        }
+        return taskDAO.updateTaskDeadline(taskId, deadline.trim());
+    }
+
     // ==========================================
     // 4. XÓA CÔNG VIỆC (DELETE)
     // ==========================================

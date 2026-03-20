@@ -18,6 +18,7 @@
 
 package com.app.src.controllers.task;
 
+import com.app.src.authentication.RoleValidator;
 import com.app.src.controllers.ViewNavigator;
 import com.app.src.controllers.project.ProjectDetailController;
 import com.app.src.core.AppContext;
@@ -25,6 +26,7 @@ import com.app.src.daos.ProjectDAO;
 import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.models.Project;
 import com.app.src.services.ProjectJoiningService;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -60,6 +62,7 @@ public class TaskDetailController {
     private Label lblAuthor;   // (Tương tự lblReporter)
     @FXML
     private Label lblDescription;
+
     // Các nút bấm
     @FXML
     private MenuButton menubtnStatus;
@@ -68,11 +71,15 @@ public class TaskDetailController {
     @FXML
     private Button btnHistory;
     @FXML
+
+    private Button btnEdit; // Nút chỉnh sửa
+    @FXML
     private ScrollPane taskDetailSubViewContainer;
     // Biến lưu trữ Task hiện tại đang xem
     private PersonalTaskDTO currentTask;
     private int fromProject = 0;
     private String currentSubView;
+
 
     /**
      * Hàm này được gọi từ TasklistController để truyền dữ liệu Task vào
@@ -101,6 +108,8 @@ public class TaskDetailController {
         // Cập nhật nút Dropdown Trạng thái
         menubtnStatus.setText(task.getStatusName() != null ? task.getStatusName() : "Trạng thái");
 
+        updateEditButtonVisibility();
+
         // --- Phần này bạn cần bổ sung thêm nếu muốn hiển thị ---
         // lblReporter.setText("Người báo cáo...");
         // lblAuthor.setText(task.getUser().getUserName()); // Nếu Model của bạn hỗ trợ lấy người tạo
@@ -122,6 +131,31 @@ public class TaskDetailController {
 
     public void setProjectId(int id) {
         this.fromProject = id;
+        updateEditButtonVisibility();
+    }
+
+    private void updateEditButtonVisibility() {
+        if (btnEdit == null) {
+            return;
+        }
+
+        // Mặc định ẩn nút Edit cho mọi trường hợp không xác định rõ role.
+        btnEdit.setVisible(false);
+        btnEdit.setManaged(false);
+
+        if (fromProject <= 0) {
+            return;
+        }
+
+        for (Project project : AppContext.getProjects()) {
+            if (project.getProjectId() == fromProject) {
+                String roleName = project.getUserRoleName();
+                boolean canEdit = roleName != null && RoleValidator.isManagerOrAdmin(roleName);
+                btnEdit.setVisible(canEdit);
+                btnEdit.setManaged(canEdit);
+                return;
+            }
+        }
     }
 
     public void handleBackClick(MouseEvent mouseEvent) {
@@ -209,5 +243,16 @@ public class TaskDetailController {
         button.getStyleClass().remove(ACTIVE_TAB_STYLE_CLASS);
     }
 
+    @FXML
+    private void handleEditClick(ActionEvent event) {
+        if (currentTask == null) {
+            return;
+        }
+
+        CreateTaskController controller = ViewNavigator.getInstance().loadSubScene("/scenes/CreateTask.fxml");
+        if (controller != null) {
+            controller.setEditDeadlineContext(currentTask, fromProject);
+        }
+    }
 
 }
