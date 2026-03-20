@@ -65,7 +65,12 @@
                         <Insets />
                      </HBox.margin>
                   </Label>
-                  <Region prefHeight="46.0" prefWidth="270.0" />
+                  <Region prefHeight="46.0" prefWidth="220.0" />
+                  <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#handleEditClick" prefHeight="40.0" prefWidth="90.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-radius: 8; -fx-background-radius: 8; -fx-cursor: hand;" text="Edit">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Button>
                   <MenuButton id="statusButton" fx:id="menubtnStatus" alignment="CENTER" maxHeight="58.0" maxWidth="123.0" minHeight="7.0" minWidth="120.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="123.0" style="-fx-padding: 0;" text="Status" wrapText="true">
                     <items>
                       <MenuItem mnemonicParsing="false" text="To do" />

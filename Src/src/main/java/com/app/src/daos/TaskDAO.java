@@ -472,11 +472,32 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
         }
     }
 
+    public boolean updateTaskDeadline(int taskId, String deadline) {
+        final String sql = "UPDATE TASK SET Task_endDate = ? WHERE Task_id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setDate(1, java.sql.Date.valueOf(deadline));
+            ps.setInt(2, taskId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                closeResource(ps, conn, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 //    public List<StatusUpdating> getStatusHistory(int taskId) {
 //    }
 }
-
-
 
 
 
