@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="522.0" prefWidth="468.0" style="-fx-background-color: #fafafa;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.InformationController">
+<AnchorPane prefHeight="522.0" prefWidth="468.0" style="-fx-background-color: #f8f8f8;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.InformationController">
    <children>
       <Rectangle fx:id="Userbackground" arcHeight="5.0" arcWidth="5.0" height="218.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="960.0" />
       <GridPane hgap="20.0" layoutY="288.0" prefHeight="364.0" prefWidth="960.0" vgap="30.0">
@@ -114,4 +114,6 @@
        </ImageView>
    </children>
 </AnchorPane>
+
+
 

@@ -600,3 +600,57 @@
     -fx-font-size: 18px;
     -fx-font-weight: bold;
 }
+
+/* PieChart custom styling for Project Summary */
+.pie-chart {
+    -fx-padding: 0;
+    -fx-legend-visible: true;
+}
+
+.pie-chart-title {
+    -fx-text-fill: #1f1f1f;
+}
+
+.chart-legend {
+    -fx-font-size: 12px;
+}
+
+/* Color styling for PieChart - Done (index 0) */
+#progressPieChart .default-color0.pie-slice {
+    -fx-pie-color: #4CAF50;
+}
+#progressPieChart .default-color0.chart-legend-item-symbol {
+    -fx-background-color: #4CAF50;
+}
+
+/* Color styling for PieChart - To Do (index 1) */
+#progressPieChart .default-color1.pie-slice {
+    -fx-pie-color: #FFC107;
+}
+#progressPieChart .default-color1.chart-legend-item-symbol {
+    -fx-background-color: #FFC107;
+}
+
+/* Color styling for PieChart - In Progress (index 2) */
+#progressPieChart .default-color2.pie-slice {
+    -fx-pie-color: #2196F3;
+}
+#progressPieChart .default-color2.chart-legend-item-symbol {
+    -fx-background-color: #2196F3;
+}
+
+/* Color styling for PieChart - In Preview (index 3) */
+#progressPieChart .default-color3.pie-slice {
+    -fx-pie-color: #9C27B0;
+}
+#progressPieChart .default-color3.chart-legend-item-symbol {
+    -fx-background-color: #9C27B0;
+}
+
+/* Color styling for PieChart - Overdue (index 4) */
+#progressPieChart .default-color4.pie-slice {
+    -fx-pie-color: #FF5252;
+}
+#progressPieChart .default-color4.chart-legend-item-symbol {
+    -fx-background-color: #FF5252;
+}
