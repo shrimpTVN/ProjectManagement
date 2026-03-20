@@ -10,61 +10,78 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<HBox spacing="50" style="-fx-background-color: #f8f8f8; -fx-padding: 40;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.CreateProjectController">
-
-    <VBox maxWidth="500" spacing="10" HBox.hgrow="ALWAYS">
-
-        <VBox spacing="5" VBox.vgrow="NEVER">
-            <Label style="-fx-font-family: 'System';" styleClass="font-14" text="Name Project" />
-            <TextField fx:id="txtProjectName" style="-fx-pref-height: 35;" />
-            <Label fx:id="lblErrorName" style="-fx-text-fill: red; -fx-font-size: 12px;" text="" />
-        </VBox>
-
-        <VBox spacing="5" VBox.vgrow="NEVER">
-            <Label style="-fx-font-family: 'System';" styleClass="font-14" text="Start Date" />
-            <DatePicker fx:id="dpStartDate" style="-fx-pref-height: 35; -fx-pref-width: 500;" />
-            <Label fx:id="lblErrorStartDate" style="-fx-text-fill: red; -fx-font-size: 12px;" text="" />
-        </VBox>
-
-        <VBox spacing="5" VBox.vgrow="NEVER">
-            <Label style="-fx-font-family: 'System';" styleClass="font-14" text="End Date" />
-            <DatePicker fx:id="dpEndDate" style="-fx-pref-height: 35; -fx-pref-width: 500;" />
-            <Label fx:id="lblErrorEndDate" style="-fx-text-fill: red; -fx-font-size: 12px;" text="" />
-        </VBox>
-
-        <VBox spacing="5" VBox.vgrow="NEVER">
-            <Label style="-fx-font-family: 'System';" styleClass="font-14" text="Description" />
-            <TextArea fx:id="txtDescription" prefRowCount="4" wrapText="true" />
-        </VBox>
-
-        <VBox spacing="5" VBox.vgrow="NEVER">
-            <Label style="-fx-font-family: 'System';" styleClass="font-14" text="Assign Manager" />
-            <ComboBox fx:id="cbManager" promptText="Select Manager..." style="-fx-pref-height: 35; -fx-pref-width: 500;" />
-        </VBox>
-
-        <HBox spacing="15" style="-fx-padding: 10 0 0 0;">
-            <Button fx:id="btnCancel" style="-fx-background-color: #666666; -fx-text-fill: white; -fx-font-family: 'System'; -fx-pref-height: 35; -fx-pref-width: 100; -fx-cursor: hand; -fx-border-radius: 5; -fx-background-radius: 5;" text="Cancel" />
-            <Button fx:id="btnCreate" style="-fx-background-color: #4896FE; -fx-border-color: #4896FE; -fx-font-family: 'System'; -fx-pref-height: 35; -fx-pref-width: 100; -fx-cursor: hand; -fx-border-radius: 5;" text=" Create" textFill="WHITE">
-            <graphic>
-               <ImageView fitHeight="13.0" fitWidth="14.0" pickOnBounds="true" preserveRatio="true">
-                  <image>
-                     <Image url="@../image/plus_white.png" />
-                  </image>
-               </ImageView>
-            </graphic>
-            <font>
-               <Font size="15.0" />
-            </font>
+<StackPane styleClass="create-project-root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.CreateProjectController">
+    <children>
+        <VBox maxWidth="700.0" spacing="14.0" styleClass="create-project-card">
             <padding>
-               <Insets bottom="1.0" top="2.0" />
-            </padding></Button>
-        </HBox>
+                <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+            </padding>
 
-    </VBox>
+            <children>
+                <Label styleClass="create-project-title" text="Create Project" />
+                <Label styleClass="create-project-subtitle" text="Set up project info and assign a manager." />
 
-    <VBox alignment="CENTER" HBox.hgrow="ALWAYS" />
+                <VBox spacing="6.0">
+                    <children>
+                        <Label styleClass="create-project-label" text="Name Project" />
+                        <TextField fx:id="txtProjectName" promptText="Enter project name" styleClass="create-project-input" />
+                        <Label fx:id="lblErrorName" styleClass="create-project-error" text="" />
+                    </children>
+                </VBox>
 
-</HBox>
+                <HBox spacing="12.0">
+                    <children>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label styleClass="create-project-label" text="Start Date" />
+                                <DatePicker fx:id="dpStartDate" styleClass="create-project-input" />
+                                <Label fx:id="lblErrorStartDate" styleClass="create-project-error" text="" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label styleClass="create-project-label" text="End Date" />
+                                <DatePicker fx:id="dpEndDate" styleClass="create-project-input" />
+                                <Label fx:id="lblErrorEndDate" styleClass="create-project-error" text="" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <VBox spacing="6.0">
+                    <children>
+                        <Label styleClass="create-project-label" text="Description" />
+                        <TextArea fx:id="txtDescription" prefRowCount="4" promptText="Describe project goals..." styleClass="create-project-textarea" wrapText="true" />
+                    </children>
+                </VBox>
+
+                <VBox spacing="6.0">
+                    <children>
+                        <Label styleClass="create-project-label" text="Assign Manager" />
+                        <ComboBox fx:id="cbManager" promptText="Select Manager..." styleClass="create-project-input" />
+                    </children>
+                </VBox>
+
+                <HBox spacing="12.0">
+                    <children>
+                        <Button fx:id="btnCancel" prefWidth="120.0" styleClass="create-project-secondary-btn" text="Cancel" />
+                        <Button fx:id="btnCreate" prefWidth="150.0" styleClass="create-project-primary-btn" text="Create" textFill="WHITE">
+                            <graphic>
+                                <ImageView fitHeight="13.0" fitWidth="14.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../image/plus_white.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <VBox HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

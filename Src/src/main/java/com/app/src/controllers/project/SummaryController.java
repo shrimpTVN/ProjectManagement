@@ -140,16 +140,16 @@ public class SummaryController implements IProjectDetailSubView {
         colorBox.setFill(Color.web(color));
 
         Label lblStatus = new Label(status);
-        lblStatus.setStyle("-fx-font-size: 13px; -fx-text-fill: #222; -fx-font-family: 'Urbanist Regular';");
+        lblStatus.getStyleClass().add("summary-legend-status");
 
         Label lblCount = new Label(String.valueOf(count));
-        lblCount.setStyle("-fx-font-size: 13px; -fx-text-fill: #333; -fx-font-family: 'Urbanist Medium';");
+        lblCount.getStyleClass().add("summary-legend-count");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         HBox row = new HBox(8, colorBox, lblStatus, spacer, lblCount);
-        row.setStyle("-fx-padding: 4 0;");
+        row.getStyleClass().add("summary-legend-row");
         return row;
     }
 
@@ -158,7 +158,7 @@ public class SummaryController implements IProjectDetailSubView {
 
         if (memberTotal.isEmpty()) {
             Label emptyLabel = new Label("No member task data.");
-            emptyLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #666; -fx-font-family: 'Urbanist Regular';");
+            emptyLabel.getStyleClass().add("summary-member-empty");
             memberProgressBox.getChildren().add(emptyLabel);
             return;
         }
@@ -170,23 +170,49 @@ public class SummaryController implements IProjectDetailSubView {
     }
 
     private VBox createMemberProgressRow(String memberName, int done, int total) {
-        Label nameLabel = new Label(memberName);
-        nameLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #222; -fx-font-family: 'Urbanist Medium';");
+        double ratio = total == 0 ? 0.0 : (done * 1.0 / total);
+        int percent = (int) Math.round(ratio * 100);
 
-        Label valueLabel = new Label(done + "/" + total);
-        valueLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #333; -fx-font-family: 'Urbanist Medium';");
+        String safeName = (memberName == null || memberName.isBlank()) ? "Unassigned" : memberName;
+        String avatarText = safeName.substring(0, 1).toUpperCase();
+
+        Label avatarLabel = new Label(avatarText);
+        avatarLabel.getStyleClass().add("summary-member-avatar");
+
+        Label nameLabel = new Label(safeName);
+        nameLabel.getStyleClass().add("summary-member-name");
+
+        Label subValueLabel = new Label(done + " of " + total + " done");
+        subValueLabel.getStyleClass().add("summary-member-subvalue");
+
+        VBox memberMetaBox = new VBox(1, nameLabel, subValueLabel);
+        memberMetaBox.getStyleClass().add("summary-member-meta");
+
+        Label valueLabel = new Label(done + "/" + total + " tasks");
+        valueLabel.getStyleClass().add("summary-member-value");
+
+        Label percentLabel = new Label(percent + "%");
+        percentLabel.getStyleClass().add("summary-member-percent-chip");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        HBox topLine = new HBox(10, nameLabel, spacer, valueLabel);
+        HBox topLine = new HBox(10, avatarLabel, memberMetaBox, spacer, valueLabel, percentLabel);
+        topLine.getStyleClass().add("summary-member-topline");
 
-        ProgressBar progressBar = new ProgressBar(total == 0 ? 0 : (done * 1.0 / total));
+        ProgressBar progressBar = new ProgressBar(ratio);
         progressBar.setMaxWidth(Double.MAX_VALUE);
-        progressBar.setStyle("-fx-accent: #4896FE;");
+        progressBar.getStyleClass().add("summary-member-progress");
+        if (percent >= 80) {
+            progressBar.getStyleClass().add("summary-member-progress-high");
+        } else if (percent >= 40) {
+            progressBar.getStyleClass().add("summary-member-progress-medium");
+        } else {
+            progressBar.getStyleClass().add("summary-member-progress-low");
+        }
 
-        VBox row = new VBox(6, topLine, progressBar);
-        row.setStyle("-fx-background-color: #ffffff; -fx-padding: 10 12; -fx-background-radius: 8; -fx-border-color: #e5e5e5; -fx-border-radius: 8;");
+        VBox row = new VBox(7, topLine, progressBar);
+        row.getStyleClass().add("summary-member-row");
         return row;
     }
 
