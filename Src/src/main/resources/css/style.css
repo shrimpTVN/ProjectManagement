@@ -1,26 +1,26 @@
 * {
-    -fx-font-family: "Urbanist";
+    -fx-font-family: "System";
 }
 
-.urbanist-regular {
-    -fx-font-family: "Urbanist Regular";
+.System-regular {
+    -fx-font-family: "System";
 }
 
-.urbanist-medium {
-    -fx-font-family: "Urbanist Medium";
+.System-medium {
+    -fx-font-family: "System";
 }
 
-.urbanist-light {
-    -fx-font-family: "Urbanist Light";
+.System-light {
+    -fx-font-family: "System";
 }
 
-.urbanist-bold {
-    -fx-font-family: "Urbanist Bold";
+.System-bold {
+    -fx-font-family: "System";
 }
 
-/* Áp dụng cho toàn bộ ứng dụng */
+/* Ãp dá»¥ng cho toÃ n bá»™ á»©ng dá»¥ng */
 
-/* Các class quy định kích cỡ chữ */
+/* CÃ¡c class quy Ä‘á»‹nh kÃ­ch cá»¡ chá»¯ */
 .font-36 {
     -fx-font-size: 36px;
     -fx-font-weight: bold;
@@ -34,7 +34,7 @@
     -fx-font-size: 14px;
 }
 
-/* --- Nút phẳng dùng chung --- */
+/* --- NÃºt pháº³ng dÃ¹ng chung --- */
 .flat-btn {
     -fx-background-color: transparent !important;
     -fx-border-color: transparent;
@@ -67,7 +67,7 @@
     -fx-table-cell-border-color: transparent;
 }
 
-/*chỉnh css breadcrumblink*/
+/*chá»‰nh css breadcrumblink*/
 .breadcrumb-item {
     -fx-border-width: 0;
     -fx-background-insets: 0;
@@ -78,9 +78,9 @@
     -fx-cursor: hand;
 }
 
-/*chỉnh css cho status button*/
+/*chá»‰nh css cho status button*/
 #statusButton {
-    -fx-background-color: #84D18D; /* Màu xanh lá nhạt */
+    -fx-background-color: #84D18D; /* MÃ u xanh lÃ¡ nháº¡t */
     -fx-border-color: black;
     -fx-border-width: 1;
     -fx-padding: 5 15 5 15;
@@ -89,7 +89,7 @@
     -fx-font-size: 15px;
 }
 
-/*css cho tiêu đề của các nội dung thông tin project*/
+/*css cho tiÃªu Ä‘á» cá»§a cÃ¡c ná»™i dung thÃ´ng tin project*/
 #contentTitle{
     -fx-font-size: 20px;
     -fx-font-weight: 700;
@@ -129,12 +129,12 @@
     -fx-line-spacing: 5px;
 }
 
-/* Màu mặc định cho menu item */
+/* MÃ u máº·c Ä‘á»‹nh cho menu item */
 .menu-item .label {
     -fx-text-fill: black;
 }
 
-/*-- Style chung cho các TableView --*/
+/*-- Style chung cho cÃ¡c TableView --*/
 .custom-table {
     -fx-background-color: white;
     -fx-border-color: black;
@@ -143,12 +143,12 @@
     -fx-background-radius: 5px;
 }
 
-/* Màu nền của hàng khi được chọn */
+/* MÃ u ná»n cá»§a hÃ ng khi Ä‘Æ°á»£c chá»n */
 .custom-table .table-row-cell:filled:selected {
     -fx-background-color: #E0E0E0;
 }
 
-/* Ép màu chữ thành đen cho các ô trong hàng đang chọn */
+/* Ã‰p mÃ u chá»¯ thÃ nh Ä‘en cho cÃ¡c Ã´ trong hÃ ng Ä‘ang chá»n */
 .custom-table .table-row-cell:filled:selected .table-cell {
     -fx-text-fill: black;
 }
@@ -183,7 +183,7 @@
     -fx-background-radius: 5px;
 }
 
-/* Chỉ áp dụng riêng bảng All My Tasks */
+/* Chá»‰ Ã¡p dá»¥ng riÃªng báº£ng All My Tasks */
 #taskTable {
     -fx-border-width: 0.2px;
 }
@@ -243,7 +243,7 @@
     -fx-opacity: 0;
 }
 
-/*-- Style cho Input và Button --*/
+/*-- Style cho Input vÃ  Button --*/
 .input-field {
     -fx-background-color: white;
     -fx-border-color: #CCCCCC;
@@ -416,7 +416,7 @@
     -fx-background-insets: 0;
     -fx-border-insets: 0;
     -fx-padding: 0;
-    -fx-font-family: "Urbanist Medium";
+    -fx-font-family: "System";
     -fx-font-size: 20px;
     -fx-font-weight: 500;
     -fx-text-fill: #666666;
@@ -436,7 +436,7 @@
     -fx-border-radius: 999px;
     -fx-background-radius: 999px;
     -fx-padding: 7 16 7 16;
-    -fx-font-family: "Urbanist Medium";
+    -fx-font-family: "System";
     -fx-font-size: 14px;
     -fx-text-fill: #1F2937;
     -fx-cursor: hand;
@@ -455,7 +455,7 @@
 }
 
 .project-detail-header-label {
-    -fx-font-family: "Urbanist Medium";
+    -fx-font-family: "System";
     -fx-font-size: 15px;
     -fx-text-fill: #667085;
 }
@@ -474,7 +474,7 @@
 
 /* Project page main title: same visual rhythm as big task/project headers */
 .project-main-title {
-    -fx-font-family: "Urbanist Medium";
+    -fx-font-family: "System";
     -fx-font-size: 36px;
     -fx-font-weight: 500;
     -fx-text-fill: #111111;
@@ -504,7 +504,7 @@
 }
 
 .project-card-title {
-    -fx-font-family: "Urbanist Medium";
+    -fx-font-family: "System";
     -fx-font-size: 20px;
     -fx-text-fill: #101828;
 }
@@ -512,39 +512,39 @@
 .project-card-badge {
     -fx-background-color: #E8F1FF;
     -fx-text-fill: #1C63C7;
-    -fx-font-family: "Urbanist Medium";
+    -fx-font-family: "System";
     -fx-font-size: 11px;
     -fx-padding: 3 8 3 8;
     -fx-background-radius: 999px;
 }
 
 .project-card-meta-label {
-    -fx-font-family: "Urbanist Light";
+    -fx-font-family: "System";
     -fx-font-size: 13px;
     -fx-text-fill: #667085;
 }
 
 .project-card-meta-value {
-    -fx-font-family: "Urbanist Regular";
+    -fx-font-family: "System";
     -fx-font-size: 14px;
     -fx-text-fill: #344054;
 }
 
 .project-list-heading {
-    -fx-font-family: "Urbanist Medium";
+    -fx-font-family: "System";
     -fx-font-size: 36px;
     -fx-font-weight: 500;
     -fx-text-fill: #111111;
 }
 
-/* Tiêu đề màn hình */
+/* TiÃªu Ä‘á» mÃ n hÃ¬nh */
 .screen-title {
     -fx-font-size: 28px;
     -fx-font-weight: normal;
     -fx-text-fill: black;
 }
 
-/* Xóa viền mặc định của ScrollPane */
+/* XÃ³a viá»n máº·c Ä‘á»‹nh cá»§a ScrollPane */
 .edge-to-edge {
     -fx-background-color: transparent;
     -fx-background: transparent;
@@ -558,15 +558,15 @@
 /* Base style cho Item */
 .notification-item {
     -fx-background-radius: 8px;
-    -fx-cursor: hand; /* Đổi con trỏ chuột khi hover */
+    -fx-cursor: hand; /* Äá»•i con trá» chuá»™t khi hover */
 }
 
-/* Style khi chưa đọc (nền xám) */
+/* Style khi chÆ°a Ä‘á»c (ná»n xÃ¡m) */
 .notification-item-unread {
     -fx-background-color: #e5e5e5;
 }
 
-/* Style khi đã đọc (nền trắng/trong suốt) */
+/* Style khi Ä‘Ã£ Ä‘á»c (ná»n tráº¯ng/trong suá»‘t) */
 .notification-item-read {
     -fx-background-color: transparent;
 }
@@ -588,15 +588,15 @@
     -fx-text-fill: #888888;
 }
 
-/* Trạng thái Icon */
+/* Tráº¡ng thÃ¡i Icon */
 .status-read {
-    -fx-text-fill: #4da6ff; /* Màu xanh nước biển nhạt */
+    -fx-text-fill: #4da6ff; /* MÃ u xanh nÆ°á»›c biá»ƒn nháº¡t */
     -fx-font-size: 18px;
     -fx-font-weight: bold;
 }
 
 .status-unread {
-    -fx-text-fill: #888888; /* Màu xám */
+    -fx-text-fill: #888888; /* MÃ u xÃ¡m */
     -fx-font-size: 18px;
     -fx-font-weight: bold;
 }
@@ -654,3 +654,4 @@
 #progressPieChart .default-color4.chart-legend-item-symbol {
     -fx-background-color: #FF5252;
 }
+

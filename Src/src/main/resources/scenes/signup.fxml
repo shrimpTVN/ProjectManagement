@@ -32,7 +32,7 @@
                 <Label alignment="CENTER" onMouseClicked="#goToLogin" text="You have an account ? Login now"
                        textFill="#4896fe">
                     <font>
-                        <Font name="Urbanist Medium" size="14.0"/>
+                        <Font name="System" size="14.0"/>
                     </font>
                     <cursor>
                         <Cursor fx:constant="HAND"/>
@@ -41,37 +41,37 @@
 
                 <VBox maxWidth="320.0" spacing="4.0">
                     <children>
-                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'Urbanist Bold';"
+                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'System Bold';"
                                styleClass="font-14" text="Username"/>
                         <TextField fx:id="usernameInput" maxWidth="1.7976931348623157E308" prefHeight="35.0"
                                    style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;"/>
 
-                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'Urbanist Bold';"
+                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'System Bold';"
                                styleClass="font-14" text="Name"/>
                         <TextField fx:id="nameInput" maxWidth="1.7976931348623157E308" prefHeight="35.0"
                                    style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;"/>
 
-                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'Urbanist Bold';"
+                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'System Bold';"
                                styleClass="font-14" text="Telephone"/>
                         <TextField fx:id="phoneInput" maxWidth="1.7976931348623157E308" prefHeight="35.0"
                                    style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;"/>
 
-                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'Urbanist Bold';"
+                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'System Bold';"
                                styleClass="font-14" text="Date of Birth"/>
                         <DatePicker fx:id="dobInput" maxWidth="1.7976931348623157E308" prefHeight="35.0"
                                     style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;"/>
 
                         <Label maxWidth="1.7976931348623157E308" prefHeight="13.0" prefWidth="320.0"
-                               style="-fx-font-family: 'Urbanist Bold';" styleClass="font-14" text="Sex"/>
+                               style="-fx-font-family: 'System Bold';" styleClass="font-14" text="Sex"/>
                         <HBox alignment="CENTER" spacing="30.0">
                             <children>
-                                <RadioButton mnemonicParsing="false" style="-fx-font-family: 'Urbanist Bold';"
+                                <RadioButton mnemonicParsing="false" style="-fx-font-family: 'System Bold';"
                                              styleClass="font-14" text="Male">
                                     <toggleGroup>
                                         <ToggleGroup fx:id="gender"/>
                                     </toggleGroup>
                                 </RadioButton>
-                                <RadioButton mnemonicParsing="false" style="-fx-font-family: 'Urbanist Bold';"
+                                <RadioButton mnemonicParsing="false" style="-fx-font-family: 'System Bold';"
                                              styleClass="font-14" text="Female" toggleGroup="$gender"/>
                             </children>
                             <VBox.margin>
@@ -79,12 +79,12 @@
                             </VBox.margin>
                         </HBox>
 
-                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'Urbanist Bold';"
+                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'System Bold';"
                                styleClass="font-14" text="Password"/>
                         <PasswordField fx:id="passwordInput" maxWidth="1.7976931348623157E308" prefHeight="35.0"
                                        style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;"/>
 
-                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'Urbanist Bold';"
+                        <Label maxWidth="1.7976931348623157E308" style="-fx-font-family: 'System Bold';"
                                styleClass="font-14" text="Password again"/>
                         <PasswordField fx:id="passwordAgainInput" maxWidth="1.7976931348623157E308" prefHeight="35.0"
                                        style="-fx-border-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;"/>
@@ -97,7 +97,7 @@
                                 style="-fx-background-color: #4896FE; -fx-background-radius: 10; -fx-border-radius: 10;"
                                 text="SIGN UP" textFill="WHITE">
                             <font>
-                                <Font name="Urbanist Bold" size="16.0"/>
+                                <Font name="System Bold" size="16.0"/>
                             </font>
                             <VBox.margin>
                                 <Insets top="5.0"/>
@@ -109,5 +109,6 @@
         </VBox>
     </children>
 </AnchorPane>
+
 
 
