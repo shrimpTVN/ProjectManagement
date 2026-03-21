@@ -1,8 +1,5 @@
 package com.app.src.models;
 
-import java.util.ArrayList;
-import java.util.Date;
-
 public class Task {
     private int taskId;
     private String taskName;
@@ -10,7 +7,6 @@ public class Task {
     private String taskStartTime;
     private String taskEndTime;
     private User user;
-//    private ArrayList<StatusUpdating> statusUpdatingList;
 
     private int projectId;
 
@@ -77,7 +73,13 @@ public class Task {
         this.taskEndTime = taskEndTime;
     }
 
-//    public String getTaskStatus() {
-//        return "Task_status";
-//    }
+    private String taskStatus;
+
+    public String getTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(String taskStatus) {
+        this.taskStatus = taskStatus;
+    }
 }

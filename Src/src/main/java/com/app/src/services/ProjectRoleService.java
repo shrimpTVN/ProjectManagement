@@ -6,13 +6,17 @@ import com.app.src.models.ProjectRole;
 import java.util.List;
 
 public class ProjectRoleService {
-    private final ProjectRoleDAO projectRoleDao;
+    private static ProjectRoleDAO projectRoleDao ;
 
     public ProjectRoleService() {
         projectRoleDao = ProjectRoleDAO.getInstance();
     }
 
-    public List<ProjectRole> getAllRoles() {
+    public static List<ProjectRole> getAllRoles() {
         return projectRoleDao.findAll();
+    }
+
+    public static String getRoleNameById(int roleId){
+        return projectRoleDao.findById(roleId).getRoleName();
     }
 }

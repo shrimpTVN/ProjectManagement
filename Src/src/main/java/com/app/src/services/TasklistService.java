@@ -1,13 +1,17 @@
 package com.app.src.services;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.app.src.authentication.RoleValidator;
+import com.app.src.core.AppContext;
 import com.app.src.daos.TaskDAO;
 import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.models.Task;
 
 public class TasklistService {
 
-    private TaskDAO taskDAO;
+    private static TaskDAO taskDAO;
 
     public TasklistService() {
         // CẬP NHẬT: Sử dụng Singleton pattern chuẩn xác thay vì dùng toán tử new
@@ -84,6 +88,16 @@ public class TasklistService {
         return taskDAO.appendStatusUpdating(taskId, oldStatus, newStatus, content, userId);
     }
 
+    public boolean updateTaskDeadline(int taskId, String deadline) {
+        if (taskId <= 0) {
+            throw new IllegalArgumentException("ID công việc không hợp lệ!");
+        }
+        if (deadline == null || deadline.trim().isEmpty()) {
+            throw new IllegalArgumentException("Deadline không được để trống!");
+        }
+        return taskDAO.updateTaskDeadline(taskId, deadline.trim());
+    }
+
     // ==========================================
     // 4. XÓA CÔNG VIỆC (DELETE)
     // ==========================================
@@ -100,8 +114,18 @@ public class TasklistService {
      * Hàm này được gọi bởi ListController để hiển thị dữ liệu theo Tab.
      * @param projectId ID của dự án cần lấy task.
      */
-    public List<PersonalTaskDTO> getTasksByProject(int projectId) {
-        return taskDAO.findByProjectId(projectId);
+    public List<Task> getTasksByProject(int projectId, String userRoleName) {
+        List<Task> tasks = new ArrayList<>();
+        List<Task> allTask = taskDAO.findByProjectId(projectId);
+        if (!RoleValidator.isManagerOrAdmin(userRoleName)) {
+            for (Task task : allTask) {
+                if (task.getUser().getUserId() == AppContext.getUserData().getUserId()) {
+                    tasks.add(task);
+                }
+            }
+        }else{ tasks = allTask; }
+
+        return tasks ;
     }
 
     public boolean addTask(Task newTask) {
@@ -120,5 +144,11 @@ public class TasklistService {
         newTask.setTaskName(newTask.getTaskName().trim());
 
         return taskDAO.createTask(newTask);
+    }
+
+    public static String getCurrentStatusById(int taskId)
+    {
+
+        return taskDAO.getStatusNameById(taskId) ;
     }
 }

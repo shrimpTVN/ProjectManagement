@@ -13,7 +13,7 @@
 <?import javafx.scene.text.Font?>
 
 <?import javafx.scene.Cursor?>
-<AnchorPane prefHeight="652.0" prefWidth="983.0" style="-fx-background-color: white;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.task.TaskDetailController">
+<AnchorPane prefHeight="652.0" prefWidth="983.0" style="-fx-background-color: #fafafa;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.task.TaskDetailController">
    <children>
       <VBox prefHeight="651.2" prefWidth="983.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <padding>
@@ -65,7 +65,12 @@
                         <Insets />
                      </HBox.margin>
                   </Label>
-                  <Region prefHeight="46.0" prefWidth="270.0" />
+                  <Region prefHeight="46.0" prefWidth="220.0" />
+                  <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#handleEditClick" prefHeight="40.0" prefWidth="90.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-radius: 8; -fx-background-radius: 8; -fx-cursor: hand;" text="Edit">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Button>
                   <MenuButton id="statusButton" fx:id="menubtnStatus" alignment="CENTER" maxHeight="58.0" maxWidth="123.0" minHeight="7.0" minWidth="120.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="123.0" style="-fx-padding: 0;" text="Status" wrapText="true">
                     <items>
                       <MenuItem mnemonicParsing="false" text="To do" />
@@ -174,7 +179,7 @@
                               </Button>
                            </children>
                         </HBox>
-<!--                        Sẽ load component của comment và status vào đây-->
+<!--                        Sáº½ load component cá»§a comment vÃ  status vÃ o Ä‘Ã¢y-->
                         <ScrollPane fx:id="taskDetailSubViewContainer" fitToWidth="true" prefHeight="410.0" prefWidth="438.0" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS" />
 
                      </children>
@@ -184,3 +189,4 @@
          </children></VBox>
    </children>
 </AnchorPane>
+

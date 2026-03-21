@@ -18,22 +18,30 @@
 
 package com.app.src.controllers.task;
 
+import com.app.src.authentication.RoleValidator;
 import com.app.src.controllers.ViewNavigator;
 import com.app.src.controllers.project.ProjectDetailController;
+import com.app.src.core.AppContext;
 import com.app.src.daos.ProjectDAO;
 import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.models.Project;
 import com.app.src.services.ProjectJoiningService;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 
 public class TaskDetailController {
 
+    private static final String ACTIVE_TAB_STYLE_CLASS = "active-tab";
     // --- Các thành phần giao diện đã được khai báo trong file FXML ---
     @FXML
     private Label lblProjectName;
@@ -63,13 +71,15 @@ public class TaskDetailController {
     @FXML
     private Button btnHistory;
     @FXML
-    ScrollPane taskDetailSubViewContainer;
 
+    private Button btnEdit; // Nút chỉnh sửa
+    @FXML
+    private ScrollPane taskDetailSubViewContainer;
     // Biến lưu trữ Task hiện tại đang xem
     private PersonalTaskDTO currentTask;
     private int fromProject = 0;
     private String currentSubView;
-    private static final String ACTIVE_TAB_STYLE_CLASS = "active-tab";
+
 
     /**
      * Hàm này được gọi từ TasklistController để truyền dữ liệu Task vào
@@ -98,6 +108,8 @@ public class TaskDetailController {
         // Cập nhật nút Dropdown Trạng thái
         menubtnStatus.setText(task.getStatusName() != null ? task.getStatusName() : "Trạng thái");
 
+        updateEditButtonVisibility();
+
         // --- Phần này bạn cần bổ sung thêm nếu muốn hiển thị ---
         // lblReporter.setText("Người báo cáo...");
         // lblAuthor.setText(task.getUser().getUserName()); // Nếu Model của bạn hỗ trợ lấy người tạo
@@ -119,6 +131,31 @@ public class TaskDetailController {
 
     public void setProjectId(int id) {
         this.fromProject = id;
+        updateEditButtonVisibility();
+    }
+
+    private void updateEditButtonVisibility() {
+        if (btnEdit == null) {
+            return;
+        }
+
+        // Mặc định ẩn nút Edit cho mọi trường hợp không xác định rõ role.
+        btnEdit.setVisible(false);
+        btnEdit.setManaged(false);
+
+        if (fromProject <= 0) {
+            return;
+        }
+
+        for (Project project : AppContext.getProjects()) {
+            if (project.getProjectId() == fromProject) {
+                String roleName = project.getUserRoleName();
+                boolean canEdit = roleName != null && RoleValidator.isManagerOrAdmin(roleName);
+                btnEdit.setVisible(canEdit);
+                btnEdit.setManaged(canEdit);
+                return;
+            }
+        }
     }
 
     public void handleBackClick(MouseEvent mouseEvent) {
@@ -126,7 +163,11 @@ public class TaskDetailController {
             ProjectDetailController controller = ViewNavigator.getInstance().loadSubScene("/scenes/ProjectDetail.fxml");
 
             // Lấy Project đầy đủ với PROJECT_JOINING data
-            Project fullProject = ProjectDAO.getInstance().getProjectWithJoinings(fromProject);
+            Project fullProject = new Project();
+            for (Project project: AppContext.getProjects())
+                if (project.getProjectId() == this.fromProject)
+                    fullProject = project;
+
             ProjectJoiningService projectJoiningService = new ProjectJoiningService();
             String adminName = projectJoiningService.getAdmin(fromProject);
             controller.renderData(fullProject, adminName);
@@ -135,9 +176,9 @@ public class TaskDetailController {
         }
     }
 
-    public void loadTaskDetailSubView(String componentName){
+    public void loadTaskDetailSubView(String componentName) {
         System.out.println("Loading task detail subview for: " + componentName);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/components/TaskDetail/"+ componentName+ ".fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/components/TaskDetail/" + componentName + ".fxml"));
         try {
             if (currentTask == null) {
                 throw new IllegalStateException("Task data is not initialized before loading subview");
@@ -148,8 +189,7 @@ public class TaskDetailController {
             Object childController = loader.getController();
             if (childController instanceof CommentBoxController commentController) {
                 commentController.renderData(currentTask.getTaskId());
-            } else if (childController instanceof StatusNotiController statusNotiController) {
-                //gọi renderData từ container chứa status
+            } else if (childController instanceof StatusNotiController statusNotiController) {                //gọi renderData từ container chứa status
                 statusNotiController.renderData(currentTask.getTaskId());
             }
 
@@ -158,6 +198,7 @@ public class TaskDetailController {
             throw new RuntimeException(e);
         }
     }
+
     public void handleSwitchSubViewClick(MouseEvent mouseEvent) {
         Object target = mouseEvent.getSource();
 
@@ -169,10 +210,11 @@ public class TaskDetailController {
                 currentSubView = "CommentBox";
                 loadTaskDetailSubView(currentSubView);
                 applySubViewButtonStyle();
-            } else if (!currentSubView.equals("StatusChangeNoti") & buttonText.equals("Status")) {
+            } else if (!currentSubView.equals("StatusNotiContainer") & buttonText.equals("Status")) {
                 //StatusNotiContainer là Vbox bao các status -> load vbox lên
-                loadTaskDetailSubView("StatusNotiContainer");
-                currentSubView = "StatusChangeNoti";
+                currentSubView = "StatusNotiContainer";
+                loadTaskDetailSubView(currentSubView);
+
                 applySubViewButtonStyle();
             }
         }
@@ -180,7 +222,7 @@ public class TaskDetailController {
 
     private void applySubViewButtonStyle() {
         boolean isCommentActive = "CommentBox".equals(currentSubView);
-        boolean isStatusActive = "StatusChangeNoti".equals(currentSubView);
+        boolean isStatusActive = "StatusNotiContainer".equals(currentSubView);
 
         toggleActiveTabStyle(btnCmt, isCommentActive);
         toggleActiveTabStyle(btnHistory, isStatusActive);
@@ -201,5 +243,16 @@ public class TaskDetailController {
         button.getStyleClass().remove(ACTIVE_TAB_STYLE_CLASS);
     }
 
+    @FXML
+    private void handleEditClick(ActionEvent event) {
+        if (currentTask == null) {
+            return;
+        }
+
+        CreateTaskController controller = ViewNavigator.getInstance().loadSubScene("/scenes/CreateTask.fxml");
+        if (controller != null) {
+            controller.setEditDeadlineContext(currentTask, fromProject);
+        }
+    }
 
 }

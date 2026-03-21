@@ -1,8 +1,10 @@
 package com.app.src.daos;
 
-import com.app.src.dtos.PersonalTaskDTO; // Đã sửa import
+import com.app.src.dtos.PersonalTaskDTO;
+import com.app.src.exceptions.DataAccessException;
 import com.app.src.models.StatusUpdating;
 import com.app.src.models.Task;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic type
-
+    private static Connection connection;
     private static TaskDAO instance;
 
-    public static TaskDAO getInstance(){
-        if(instance == null){
+    public static TaskDAO getInstance() {
+        if (instance == null) {
             instance = new TaskDAO();
         }
         return instance;
@@ -40,7 +42,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 task = new PersonalTaskDTO();
                 task.setTaskId(id);
                 task.setTaskName(rs.getString("Task_name"));
@@ -86,7 +88,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             ResultSet rs = ps.executeQuery();
             System.out.println("Thực thi SQL thành công, đang đọc kết quả...");
 
-            while(rs.next()) {
+            while (rs.next()) {
                 PersonalTaskDTO task = new PersonalTaskDTO();
                 task.setTaskId(rs.getInt("Task_id"));
                 task.setTaskName(rs.getString("Task_name"));
@@ -117,9 +119,18 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
     // --- Bổ sung thêm hàm lấy task theo User (Vì bài toán ban đầu là Bảng Task Cá Nhân) ---
     public List<PersonalTaskDTO> findAllByUserId(int userId) {
         List<PersonalTaskDTO> tasks = new ArrayList<>();
-        String sql = "SELECT t.*, p.Pro_name FROM TASK t "+
-                "    LEFT JOIN PROJECT p ON t.Pro_id = p.Pro_id "+
-                "   WHERE t.USER_id = ?;";
+        String sql = "SELECT t.*, p.Pro_name, " +
+                "COALESCE((" +
+                "   SELECT ts.Sta_name " +
+                "   FROM STATUS_UPDATING su " +
+                "   JOIN TASK_STATUS ts ON su.Sta_id = ts.Sta_id " +
+                "   WHERE su.Task_id = t.Task_id " +
+                "   ORDER BY su.StU_id DESC " +
+                "   LIMIT 1" +
+                "), 'To Do') AS Sta_name " +
+                "FROM TASK t " +
+                "LEFT JOIN PROJECT p ON t.Pro_id = p.Pro_id " +
+                "WHERE t.USER_id = ?;";
         Connection connection = null;
         try {
             connection = getConnection();
@@ -127,7 +138,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
 
-            while(rs.next()) {
+            while (rs.next()) {
                 PersonalTaskDTO task = new PersonalTaskDTO();
                 task.setTaskId(rs.getInt("Task_id"));
                 task.setTaskName(rs.getString("Task_name"));
@@ -141,8 +152,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
 
                 task.setTaskDescription(rs.getString("Task_description"));
                 task.setProjectName(rs.getString("Pro_name"));
-//                task.setStatusName(rs.getString("Sta_name"));
-                System.out.println(task.getTaskName());
+                task.setStatusName(rs.getString("Sta_name"));
                 tasks.add(task);
             }
             this.closeResource(ps, connection, rs);
@@ -165,28 +175,51 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
 
     @Override
     public boolean delete(int id) {
-        return false;
+        String sql = "DELETE FROM TASK WHERE Task_id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                closeResource(ps, conn, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
     /**
      * Lấy danh sách công việc thuộc về một dự án cụ thể.
      * Sử dụng LEFT JOIN để lấy kèm tên người thực hiện (Assignee).
+     *
      * @param projectId ID của dự án cần lọc.
      */
-    public List<PersonalTaskDTO> findByProjectId(int projectId) {
-        List<PersonalTaskDTO> tasks = new ArrayList<>();
-
-        // Cập nhật câu SQL để lấy thêm Sta_name
-        String sql = "SELECT t.Task_id, t.Task_name, t.Task_description, t.Task_startDate, t.Task_endDate, " +
-                "u.User_name, ts.Sta_name " +
+    public List<Task> findByProjectId(int projectId) {
+        List<Task> tasks = new ArrayList<>();
+        String sql = "SELECT t.*, u.User_name, " +
+                "COALESCE((" +
+                "   SELECT ts.Sta_name " +
+                "   FROM STATUS_UPDATING su " +
+                "   JOIN TASK_STATUS ts ON su.Sta_id = ts.Sta_id " +
+                "   WHERE su.Task_id = t.Task_id " +
+                "   ORDER BY su.StU_id DESC " +
+                "   LIMIT 1" +
+                "), 'To Do') AS Sta_name " +
                 "FROM TASK t " +
                 "LEFT JOIN USER u ON t.User_id = u.User_id " +
-                "LEFT JOIN STATUS_UPDATING su ON t.Task_id = su.Task_id " +
-                "    AND su.StU_date = (SELECT MAX(StU_date) FROM STATUS_UPDATING WHERE Task_id = t.Task_id) " +
-                "LEFT JOIN TASK_STATUS ts ON su.Sta_id = ts.Sta_id " +
                 "WHERE t.Pro_id = ?";
-
         Connection connection = null;
 
         try {
@@ -196,17 +229,17 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                PersonalTaskDTO task = new PersonalTaskDTO();
+                Task task = new Task();
                 task.setTaskId(rs.getInt("Task_id"));
                 task.setTaskName(rs.getString("Task_name"));
                 task.setTaskStartTime(String.valueOf(rs.getTimestamp("Task_startDate")));
                 task.setTaskEndTime(String.valueOf(rs.getTimestamp("Task_endDate")));
                 task.setTaskDescription(rs.getString("Task_description"));
-                task.setStatusName(rs.getString("Sta_name"));
+                task.setTaskStatus(rs.getString("Sta_name"));
 
-                // Map dữ liệu User (Assignee trên giao diện)
                 com.app.src.models.User user = new com.app.src.models.User();
                 user.setUserName(rs.getString("User_name"));
+                user.setUserId(rs.getInt("User_id"));
                 task.setUser(user);
 
                 tasks.add(task);
@@ -222,41 +255,46 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
      * Lấy lịch sử thay đổi trạng thái của một công việc.
      * Sử dụng Window Function LAG() để xác định trạng thái trước đó mà không cần truy vấn nhiều lần.
      * * @param taskId ID của công việc cần lấy lịch sử.
+     *
      * @return Danh sách các bản ghi thay đổi trạng thái kèm chuỗi định dạng (Cũ ➜ Mới).
-//     */
-   public List<StatusUpdating> getStatusHistory(int taskId) {
-       List<StatusUpdating> list = new ArrayList<>();
-       // SQL sử dụng Window Function LAG để lấy trạng thái trước đó của cùng một Task
-       String sql = "SELECT h.StU_date, s_curr.Sta_name AS new_status, " +
-               "LAG(s_curr.Sta_name) OVER (PARTITION BY h.Task_id ORDER BY h.StU_date ASC) AS old_status " +
-               "FROM status_updating h " +
-               "JOIN task_status s_curr ON h.Sta_id = s_curr.Sta_id " +
-               "WHERE h.Task_id = ? " +
-               "ORDER BY h.StU_date DESC";
+     * //
+     */
+    public List<StatusUpdating> getStatusHistory(int taskId) {
+        List<StatusUpdating> list = new ArrayList<>();
+        // 1. Thêm u.User_name vào SELECT và JOIN với bảng USER u
+        String sql = "SELECT h.StU_date, u.User_name, s_curr.Sta_name AS new_status, " +
+                "LAG(s_curr.Sta_name) OVER (PARTITION BY h.Task_id ORDER BY h.StU_date ASC) AS old_status " +
+                "FROM status_updating h " +
+                "JOIN task_status s_curr ON h.Sta_id = s_curr.Sta_id " +
+                "JOIN user u ON h.User_id = u.User_id " + // <--- JOIN để lấy tên người dùng
+                "WHERE h.Task_id = ? " +
+                "ORDER BY h.StU_date DESC";
 
-       try (Connection conn = getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)) {
-           ps.setInt(1, taskId);
-           ResultSet rs = ps.executeQuery();
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, taskId);
+            ResultSet rs = ps.executeQuery();
 
-           while (rs.next()) {
-               String newSta = rs.getString("new_status");
-               String oldSta = rs.getString("old_status");
+            while (rs.next()) {
+                String userNameFromDB = rs.getString("User_name"); // Lấy tên từ cột mới JOIN
+                String newSta = rs.getString("new_status");
+                String oldSta = rs.getString("old_status");
+                String displayOld = (oldSta == null) ? "None" : oldSta;
 
-               // Nếu là dòng đầu tiên (không có trạng thái cũ), ta để là "None" hoặc tên trạng thái mới luôn
-               String displayOld = (oldSta == null) ? "None" : oldSta;
-               String formattedContent = displayOld + " \u279F " + newSta; // Tạo chuỗi: To Do ➔ In Progressing
+                // 2. GÓI DỮ LIỆU: "Tên người dùng | Trạng thái cũ -> Trạng thái mới"
+                // Dùng dấu gạch đứng "|" để tí nữa Controller dễ tách (split)
+                String formattedContent = userNameFromDB + "|" + displayOld + " \u279F " + newSta;
 
-               StatusUpdating item = new StatusUpdating();
-               item.setDate(rs.getTimestamp("StU_date"));
-               item.setContent(formattedContent); // Ghi đè chuỗi đẹp vào biến content của Model
-               list.add(item);
-           }
-       } catch (SQLException e) {
-           e.printStackTrace();
-       }
-       return list;
-   }
+                StatusUpdating item = new StatusUpdating();
+                item.setDate(rs.getTimestamp("StU_date"));
+                item.setContent(formattedContent);
+                list.add(item);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
     // Cập nhật trạng thái task và chặn chuyển In Preview -> Done nếu user chỉ là Member.
     public boolean appendStatusUpdating(int taskId, String oldStatus, String newStatus, String content, int userId) {
@@ -321,8 +359,8 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
     }
 
     // Lấy trạng thái mới nhất của task theo STATUS_UPDATING.
-    private int getCurrentStatusId(Connection connection, int taskId) throws SQLException {
-        final String sql = "SELECT su.Sta_id FROM STATUS_UPDATING su WHERE su.Task_id = ? ORDER BY su.StU_id DESC LIMIT 1";
+    public int getCurrentStatusId(Connection connection, int taskId) throws SQLException {
+        final String sql = "SELECT su.Sta_id FROM STATUS_UPDATING su WHERE su.Task_id = ? ORDER BY su.Sta_id DESC LIMIT 1";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, taskId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -331,7 +369,36 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
                 }
             }
         }
+
         return 1;
+    }
+
+    public String getStatusNameById(int taskId)
+    {
+        String statusName = "";
+        final String sql = "SELECT ts.Sta_name " +
+                "FROM STATUS_UPDATING su " +
+                "JOIN TASK_STATUS ts ON su.Sta_id = ts.Sta_id " +
+                "WHERE su.Task_id = ? " +
+                "ORDER BY su.StU_id DESC LIMIT 1";
+        try {
+            connection = getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, taskId);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                statusName = rs.getString("Sta_name");
+            } else {
+                statusName = "To Do";
+            }
+
+            closeResource(ps, connection, rs);
+        } catch (Exception e) {
+            throw new DataAccessException("Khong the truy cap data base", e);
+        }
+
+        return statusName;
     }
 
     // Lấy role hiện tại của user trong project chứa task.
@@ -353,6 +420,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
         }
         return -1;
     }
+
     public boolean createTask(Task task) {
         final String sql = "INSERT INTO TASK (Task_name, Task_description, Task_startDate, Task_endDate, Pro_id, User_id) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
@@ -392,6 +460,29 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             int rows = ps.executeUpdate();
             return rows > 0;
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                closeResource(ps, conn, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean updateTaskDeadline(int taskId, String deadline) {
+        final String sql = "UPDATE TASK SET Task_endDate = ? WHERE Task_id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setDate(1, java.sql.Date.valueOf(deadline));
+            ps.setInt(2, taskId);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

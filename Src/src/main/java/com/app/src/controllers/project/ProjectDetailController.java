@@ -1,7 +1,11 @@
 package com.app.src.controllers.project;
 
+import com.app.src.authentication.RoleValidator;
+import com.app.src.authentication.VisibleManer;
 import com.app.src.controllers.ViewNavigator;
+import com.app.src.core.AppContext;
 import com.app.src.models.Project;
+import com.app.src.services.ProjectJoiningService;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -41,6 +45,8 @@ public class ProjectDetailController {
 
     private Project project;
     private String adminName;
+    private String userRoleName;
+    private  final int userId= AppContext.getUserData().getUserId();
 
     public void renderData(Project project, String adminName) {
 
@@ -49,11 +55,27 @@ public class ProjectDetailController {
 
         lblProjectName.setText(project.getProjectName());
         ProjectDetailNavigator.getInstance().setMainContentArea(tabContentArea);
-        SummaryController summaryController = ProjectDetailNavigator.getInstance().loadSubView("/components/ProjectDetail/Summary.fxml");
-        summaryController.renderData(project, adminName);
 
-        // Mặc định highlight tab Summary khi mở màn hình Project Detail.
-        setActiveTab(tabSummary);
+        userRoleName = project.getUserRoleName();
+        //Nếu là Member thì chỉ render List,  Member và Infor
+        if (!RoleValidator.getInstance().isManagerOrAdmin(userRoleName)) {
+            //ẩn summary và board
+            VisibleManer.hideNode(tabSummary);
+            VisibleManer.hideNode(tabBoard);
+
+            //render List đầu
+            ListController listController = ProjectDetailNavigator.getInstance().loadSubView("/components/ProjectDetail/List.fxml");
+            listController.renderData(project, adminName);
+            setActiveTab(tabList);
+
+        } else{
+            //render trang Summary dau tien
+            SummaryController summaryController = ProjectDetailNavigator.getInstance().loadSubView("/components/ProjectDetail/Summary.fxml");
+            summaryController.renderData(project, adminName);
+            // Mặc định highlight tab Summary khi mở màn hình Project Detail.
+            setActiveTab(tabSummary);
+        }
+
     }
 
 

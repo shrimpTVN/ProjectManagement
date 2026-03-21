@@ -1,5 +1,7 @@
 package com.app.src;
 
+import com.app.src.authentication.RoleValidator;
+import com.app.src.authentication.VisibleManer;
 import com.app.src.controllers.SceneManager;
 import com.app.src.exceptions.GlobalExceptionHandler;
 import com.app.src.core.AppContext;
@@ -46,14 +48,32 @@ public class ProjectManagementApplication extends Application {
         SceneManager sceneManager = SceneManager.getInstance();
         sceneManager.initStage(stage);
 
+
+
         // Load AuthWrapper làm màn hình gốc
         sceneManager.switchScene("/scenes/AuthWrapper.fxml");
+
+//        try {
+//            loadExampleData();
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+
+        loadSessionData();
+    }
+
+
+    private void loadSessionData(){
+
+        RoleValidator.getInstance();
+        VisibleManer.getInstance();
     }
 
     private void loadExampleData() throws SQLException {
         SceneManager sceneManager = SceneManager.getInstance();
         UserService userService = new UserService();
         UserSession.getInstance().setUser(userService.getUserById(3)); //id=3 -> van nghia
+
         AppContext.getInstance();
         sceneManager.switchScene("/scenes/dashboard.fxml");
     }

@@ -8,16 +8,16 @@ public class Comment {
     private String comment;
     private Date date;
     private int userId;
-    private int previousCommentId;
+
 
     public Comment(){}
-    public Comment(int id, int taskId, String comment, Date date, int userId, int previousCommentId) {
+    public Comment(int id, int taskId, String comment, Date date, int userId) {
         this.id = id;
         this.taskId = taskId;
         this.comment = comment;
         this.date = date;
         this.userId = userId;
-        this.previousCommentId = previousCommentId;
+
     }
 
     public int getId() {
@@ -58,13 +58,5 @@ public class Comment {
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public int getPreviousCommentId() {
-        return previousCommentId;
-    }
-
-    public void setPreviousCommentId(int previousCommentId) {
-        this.previousCommentId = previousCommentId;
     }
 }

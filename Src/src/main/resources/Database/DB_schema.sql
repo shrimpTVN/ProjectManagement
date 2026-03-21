@@ -79,10 +79,8 @@ CREATE TABLE COMMENT
     Com_date        DATETIME DEFAULT CURRENT_TIMESTAMP,
     User_id         INT,
     Task_id         INT,
-    Previous_Com_id INT, -- For 'phan_hoi' (replies)
     FOREIGN KEY (User_id) REFERENCES USER (User_id),
-    FOREIGN KEY (Task_id) REFERENCES TASK (Task_id) ON DELETE CASCADE,
-    FOREIGN KEY (Previous_Com_id) REFERENCES COMMENT (Com_id)
+    FOREIGN KEY (Task_id) REFERENCES TASK (Task_id) ON DELETE CASCADE
 );
 
 -- 9. STATUS_UPDATING
@@ -93,16 +91,9 @@ CREATE TABLE STATUS_UPDATING
     StU_content TEXT,
     Task_id     INT,
     Sta_id      INT,
+    User_id     INT,
     FOREIGN KEY (Task_id) REFERENCES TASK (Task_id) ON DELETE CASCADE,
-    FOREIGN KEY (Sta_id) REFERENCES TASK_STATUS (Sta_id)
+    FOREIGN KEY (Sta_id) REFERENCES TASK_STATUS (Sta_id),
+    FOREIGN KEY (User_id) REFERENCES USER (User_id)
 );
 
--- 10. NOTIFICATION Table
-CREATE TABLE NOTIFICATION
-(
-    Not_id          INT AUTO_INCREMENT PRIMARY KEY,
-    Not_description TEXT NOT NULL,
-    Not_isRead      BOOLEAN DEFAULT FALSE,
-    StU_id          INT,
-    FOREIGN KEY (StU_id) REFERENCES STATUS_UPDATING (StU_id) ON DELETE CASCADE
-);
