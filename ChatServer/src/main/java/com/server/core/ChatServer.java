@@ -1,7 +1,7 @@
 package com.server.core;
 
 import com.google.gson.Gson;
-import com.server.model.ChatMessage;
+import com.server.model.Comment;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -38,7 +38,7 @@ public class ChatServer {
     }
 
     // Hàm Broadcast: Chỉ gửi tin nhắn cho những ai thuộc có chat trong task
-    public void broadcastToChatBox(ChatMessage message, ClientHandler sender) {
+    public void broadcastToChatBox(Comment message, ClientHandler sender) {
         int taskId = message.getTaskId();
         Set<ClientHandler> box = chatBoxs.get(taskId);
 
@@ -46,6 +46,7 @@ public class ChatServer {
             String jsonPayload = gson.toJson(message); // Đóng gói thành JSON
             for (ClientHandler client : box) {
                 if (client != sender) {
+                    System.out.println("gui tin nhan den " + message.getTaskId());
                     client.sendMessage(jsonPayload);
                 }
             }

@@ -2,7 +2,9 @@ package com.server.core;
 import java.io.*;
 import java.net.Socket;
 import com.google.gson.Gson;
-import com.server.model.ChatMessage;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.server.model.Comment;
 
 public class ClientHandler implements Runnable {
     private final Socket socket;
@@ -24,8 +26,13 @@ public class ClientHandler implements Runnable {
 
             String incomingJson;
             while ((incomingJson = in.readLine()) != null) {
-                // 1. Dịch JSON thành Object
-                ChatMessage msg = gson.fromJson(incomingJson, ChatMessage.class);
+                System.out.println("Incoming: " + incomingJson);
+                // Parse linh hoạt: hỗ trợ cả JSON object và JSON string chứa object.
+                Comment msg = parseIncomingComment(incomingJson);
+                if (msg == null || msg.getTaskId() <= 0) {
+                    System.out.println("Bo qua payload khong hop le tu " + socket.getRemoteSocketAddress());
+                    continue;
+                }
 
                 // 2. Đảm bảo Client này đã được đăng ký vào phòng của task đó
                 server.joinChatBox(msg.getTaskId(), this);
@@ -45,6 +52,32 @@ public class ClientHandler implements Runnable {
     public synchronized void sendMessage(String jsonPayload) {
         if (out != null) {
             out.println(jsonPayload);
+        }
+    }
+
+    private Comment parseIncomingComment(String incomingJson) {
+        if (incomingJson == null || incomingJson.isBlank()) {
+            return null;
+        }
+
+        try {
+            JsonElement payload = gson.fromJson(incomingJson, JsonElement.class);
+            if (payload == null || payload.isJsonNull()) {
+                return null;
+            }
+
+            // Một số client gửi double-encoded JSON: "{...}".
+            if (payload.isJsonPrimitive() && payload.getAsJsonPrimitive().isString()) {
+                payload = gson.fromJson(payload.getAsString(), JsonElement.class);
+            }
+
+            if (!payload.isJsonObject()) {
+                return null;
+            }
+
+            return gson.fromJson(payload, Comment.class);
+        } catch (JsonParseException | IllegalStateException e) {
+            return null;
         }
     }
 }
