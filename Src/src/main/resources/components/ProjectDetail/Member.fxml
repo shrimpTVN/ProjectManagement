@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="850.0" styleClass="member-root" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.MemberController">
+<AnchorPane prefHeight="500.0" prefWidth="850.0" styleClass="member-root" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.MemberController">
     <children>
         <VBox spacing="12.0" styleClass="member-layout" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
             <padding>
@@ -65,3 +65,4 @@
         </VBox>
     </children>
 </AnchorPane>
+

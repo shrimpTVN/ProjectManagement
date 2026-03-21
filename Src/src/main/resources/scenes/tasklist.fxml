@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="652.0" prefWidth="983.0" styleClass="tasklist-root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.task.TasklistController">
+<AnchorPane prefHeight="652.0" prefWidth="983.0" styleClass="tasklist-root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.task.TasklistController">
    <children>
       <VBox layoutY="6.0" prefHeight="522.0" prefWidth="468.0" styleClass="tasklist-content" AnchorPane.bottomAnchor="-6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="6.0">
          <padding>
@@ -138,5 +138,6 @@
       </VBox>
    </children>
 </AnchorPane>
+
 
 

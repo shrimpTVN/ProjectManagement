@@ -1,21 +1,25 @@
 package com.app.src.controllers.task;
 
+import com.app.src.core.service.chat.ChatClientService;
+import com.app.src.core.service.chat.MessageListener;
 import com.app.src.core.session.UserSession;
 import com.app.src.models.Comment;
 import com.app.src.services.CommentService;
 import com.app.src.services.UserService;
+import com.google.gson.Gson;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
-public class CommentBoxController {
+public class CommentBoxController implements MessageListener {
     private final CommentService commentService = new CommentService();
     @FXML
     private VBox vboxChatContent;
@@ -24,6 +28,9 @@ public class CommentBoxController {
     @FXML
     private Button btnSend;
     private int currentTaskId;
+    @FXML
+    ScrollPane scrollChat;
+    private Gson gson = new Gson();
 
     @FXML
     public void initialize() {
@@ -50,7 +57,8 @@ public class CommentBoxController {
 
         int currentUserId = UserSession.getInstance().getUser().getUserId();
 
-        // Gọi hàm postComment gọn nhẹ, Service tự đi check DB xem lấy ID nào
+        sendComment("com", currentUserId, content);
+        // luu du lieu xuong DB
         boolean success = commentService.postComment(currentTaskId, currentUserId, content);
 
         if (success) {
@@ -66,13 +74,10 @@ public class CommentBoxController {
 
         for (Comment cmt : comments) {
             String realName = null;
-            try {
                 realName = userService.getUserById(cmt.getUserId()).getUserName();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
             loadMessageUI(cmt, realName);
         }
+        scrollChat.setVvalue(1.0);
     }
 
     private void loadMessageUI(Comment comment, String userName) {
@@ -96,6 +101,24 @@ public class CommentBoxController {
             vboxChatContent.getChildren().add(node);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onMessageReceived(Comment comment) {
+
+        String userName = UserService.getInstance().getUserById(comment.getUserId()).getUserName();
+        loadMessageUI(comment, userName);
+        scrollChat.setVvalue(1.0);
+    }
+
+    public void sendComment(String header, int currentUserId, String content) {
+        //gui object comment den chat server
+        String json = gson.toJson(new Comment(currentTaskId, currentUserId, content, new Date()));
+        boolean chatSent = ChatClientService.getInstance().sendMessage(header +":"+ json);
+        System.out.println(content);
+        if (!chatSent) {
+            System.err.println("[CHAT-WARN] Tin nhan chua gui duoc len server.");
         }
     }
 }

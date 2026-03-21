@@ -22,6 +22,7 @@ import com.app.src.authentication.RoleValidator;
 import com.app.src.controllers.ViewNavigator;
 import com.app.src.controllers.project.ProjectDetailController;
 import com.app.src.core.AppContext;
+import com.app.src.core.service.chat.ChatClientService;
 import com.app.src.daos.ProjectDAO;
 import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.models.Project;
@@ -164,7 +165,7 @@ public class TaskDetailController {
 
             // Lấy Project đầy đủ với PROJECT_JOINING data
             Project fullProject = new Project();
-            for (Project project: AppContext.getProjects())
+            for (Project project : AppContext.getProjects())
                 if (project.getProjectId() == this.fromProject)
                     fullProject = project;
 
@@ -189,7 +190,10 @@ public class TaskDetailController {
             Object childController = loader.getController();
             if (childController instanceof CommentBoxController commentController) {
                 commentController.renderData(currentTask.getTaskId());
-            } else if (childController instanceof StatusNotiController statusNotiController) {                //gọi renderData từ container chứa status
+                ChatClientService.getInstance().setListener(commentController);
+                commentController.sendComment("req", AppContext.getUserData().getUserId(), "request to connecto to chat box");
+
+            } else if (childController instanceof StatusNotiController statusNotiController) {  //gọi renderData từ container chứa status
                 statusNotiController.renderData(currentTask.getTaskId());
             }
 

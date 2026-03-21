@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane styleClass="create-project-root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.CreateProjectController">
+<StackPane styleClass="create-project-root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.CreateProjectController">
     <children>
         <VBox maxWidth="700.0" spacing="14.0" styleClass="create-project-card">
             <padding>
@@ -85,3 +85,4 @@
         </VBox>
     </children>
 </StackPane>
+

@@ -9,9 +9,9 @@ import javafx.scene.layout.VBox;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-public final class GlobalExceptionHandler {
+public final class GlobalExceptionHandler implements Thread.UncaughtExceptionHandler {
 
-    private GlobalExceptionHandler() {
+    public GlobalExceptionHandler() {
     }
 
     public static void registerDefaultHandler() {
@@ -84,6 +84,11 @@ public final class GlobalExceptionHandler {
         throwable.printStackTrace(printWriter);
         printWriter.flush();
         return stringWriter.toString();
+    }
+
+    @Override
+    public void uncaughtException(Thread t, Throwable e) {
+
     }
 }
 

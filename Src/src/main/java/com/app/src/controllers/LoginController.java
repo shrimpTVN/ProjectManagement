@@ -1,8 +1,9 @@
 package com.app.src.controllers;
 
+import com.app.src.core.async.AsyncExecutor;
+import com.app.src.core.service.chat.ChatClientService;
 import com.app.src.core.session.UserSession;
 import com.app.src.exceptions.AppException;
-import com.app.src.models.User;
 import com.app.src.services.LoginService;
 import com.app.src.services.UserService;
 import javafx.event.ActionEvent;
@@ -16,7 +17,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import static com.app.src.exceptions.ErrorCode.DATABASE_ERROR;
@@ -56,7 +56,7 @@ public class LoginController implements Initializable {
     }
 
     @FXML
-    public void handleLoginBtnClick(ActionEvent event) throws SQLException {
+    public void handleLoginBtnClick(ActionEvent event) {
         // Xóa thông báo lỗi cũ mỗi lần bấm đăng nhập
         labelLoginMess.setText("");
 
@@ -71,6 +71,9 @@ public class LoginController implements Initializable {
                     UserService userService = new UserService();
                     UserSession.getInstance().setUser(userService.getUserById(userId));
                     SceneManager.getInstance().switchScene("/scenes/dashboard.fxml");
+
+                    // connection den chat server
+                    connectChatServerSafely();
                 } else {
                     labelLoginMess.setText("Invalid username or password!");
                 }
@@ -79,5 +82,17 @@ public class LoginController implements Initializable {
                 throw new AppException(DATABASE_ERROR, "Không thể truy cập dữ liệu để xác thực");
             }
         }
+    }
+
+    private void connectChatServerSafely() {
+        // Ket noi chat o background thread de khong block JavaFX UI thread.
+        AsyncExecutor.getInstance().runAsync(() -> {
+            try {
+                ChatClientService.getInstance().connectDefault();
+            } catch (Exception chatException) {
+                System.err.println("[CHAT-WARN] Khong the ket noi chat server: " + chatException.getMessage());
+                chatException.printStackTrace();
+            }
+        });
     }
 }

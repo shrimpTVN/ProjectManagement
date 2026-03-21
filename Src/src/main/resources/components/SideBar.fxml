@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" prefHeight="655.0" prefWidth="322.0" style="-fx-border-color: black; -fx-border-width: 0 0.2 0.2 0.2;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.SideBarController">
+<VBox alignment="TOP_CENTER" prefHeight="655.0" prefWidth="322.0" style="-fx-border-color: black; -fx-border-width: 0 0.2 0.2 0.2;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.SideBarController">
     <children>
         <HBox fx:id="forMeMenu" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="257.0" styleClass="menu-item">
             <children>
@@ -100,4 +100,5 @@
       <URL value="@../css/style.css" />
    </stylesheets>
 </VBox>
+
 
