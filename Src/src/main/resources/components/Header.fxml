@@ -20,7 +20,7 @@
             </ImageView>
                 <Label prefHeight="53.0" prefWidth="208.0" text="TiskTask">
                <font>
-                  <Font name="Urbanist Medium" size="36.0" />
+                  <Font name="System" size="36.0" />
                </font>
                <padding>
                   <Insets left="10.0" />
@@ -53,3 +53,4 @@
         </HBox>
     </children>
 </HBox>
+

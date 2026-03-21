@@ -1,26 +1,26 @@
 * {
-    -fx-font-family: "Urbanist";
+    -fx-font-family: "System";
 }
 
-.urbanist-regular {
-    -fx-font-family: "Urbanist Regular";
+.System-regular {
+    -fx-font-family: "System";
 }
 
-.urbanist-medium {
-    -fx-font-family: "Urbanist Medium";
+.System-medium {
+    -fx-font-family: "System";
 }
 
-.urbanist-light {
-    -fx-font-family: "Urbanist Light";
+.System-light {
+    -fx-font-family: "System";
 }
 
-.urbanist-bold {
-    -fx-font-family: "Urbanist Bold";
+.System-bold {
+    -fx-font-family: "System";
 }
 
-/* Áp dụng cho toàn bộ ứng dụng */
+/* Ãp dá»¥ng cho toÃ n bá»™ á»©ng dá»¥ng */
 
-/* Các class quy định kích cỡ chữ */
+/* CÃ¡c class quy Ä‘á»‹nh kÃ­ch cá»¡ chá»¯ */
 .font-36 {
     -fx-font-size: 36px;
     -fx-font-weight: bold;
@@ -34,7 +34,7 @@
     -fx-font-size: 14px;
 }
 
-/* --- Nút phẳng dùng chung --- */
+/* --- NÃºt pháº³ng dÃ¹ng chung --- */
 .flat-btn {
     -fx-background-color: transparent !important;
     -fx-border-color: transparent;
@@ -67,7 +67,16 @@
     -fx-table-cell-border-color: transparent;
 }
 
-/*chỉnh css breadcrumblink*/
+#taskTable .table-cell {
+    -fx-font-weight: 400;
+    -fx-text-fill: #333333;
+}
+
+#taskTable .table-row-cell .table-cell {
+    -fx-font-size: 17px;
+}
+
+/*chá»‰nh css breadcrumblink*/
 .breadcrumb-item {
     -fx-border-width: 0;
     -fx-background-insets: 0;
@@ -78,9 +87,9 @@
     -fx-cursor: hand;
 }
 
-/*chỉnh css cho status button*/
+/*chá»‰nh css cho status button*/
 #statusButton {
-    -fx-background-color: #84D18D; /* Màu xanh lá nhạt */
+    -fx-background-color: #84D18D; /* MÃ u xanh lÃ¡ nháº¡t */
     -fx-border-color: black;
     -fx-border-width: 1;
     -fx-padding: 5 15 5 15;
@@ -89,7 +98,7 @@
     -fx-font-size: 15px;
 }
 
-/*css cho tiêu đề của các nội dung thông tin project*/
+/*css cho tiÃªu Ä‘á» cá»§a cÃ¡c ná»™i dung thÃ´ng tin project*/
 #contentTitle{
     -fx-font-size: 20px;
     -fx-font-weight: 700;
@@ -129,12 +138,12 @@
     -fx-line-spacing: 5px;
 }
 
-/* Màu mặc định cho menu item */
+/* MÃ u máº·c Ä‘á»‹nh cho menu item */
 .menu-item .label {
     -fx-text-fill: black;
 }
 
-/*-- Style chung cho các TableView --*/
+/*-- Style chung cho cÃ¡c TableView --*/
 .custom-table {
     -fx-background-color: white;
     -fx-border-color: black;
@@ -143,12 +152,12 @@
     -fx-background-radius: 5px;
 }
 
-/* Màu nền của hàng khi được chọn */
+/* MÃ u ná»n cá»§a hÃ ng khi Ä‘Æ°á»£c chá»n */
 .custom-table .table-row-cell:filled:selected {
     -fx-background-color: #E0E0E0;
 }
 
-/* Ép màu chữ thành đen cho các ô trong hàng đang chọn */
+/* Ã‰p mÃ u chá»¯ thÃ nh Ä‘en cho cÃ¡c Ã´ trong hÃ ng Ä‘ang chá»n */
 .custom-table .table-row-cell:filled:selected .table-cell {
     -fx-text-fill: black;
 }
@@ -183,7 +192,7 @@
     -fx-background-radius: 5px;
 }
 
-/* Chỉ áp dụng riêng bảng All My Tasks */
+/* Chá»‰ Ã¡p dá»¥ng riÃªng báº£ng All My Tasks */
 #taskTable {
     -fx-border-width: 0.2px;
 }
@@ -243,7 +252,7 @@
     -fx-opacity: 0;
 }
 
-/*-- Style cho Input và Button --*/
+/*-- Style cho Input vÃ  Button --*/
 .input-field {
     -fx-background-color: white;
     -fx-border-color: #CCCCCC;
@@ -352,20 +361,45 @@
 }
 
 #taskTable .column-header-background {
-    -fx-background-color: #F5F5F5;
+    -fx-background-color: transparent;
     -fx-border-color: transparent transparent #000000 transparent;
     -fx-border-width: 0 0 0.2px 0;
+    -fx-padding: 7 0 7 0;
 }
 
 #taskTable .column-header,
 #taskTable .filler {
-    -fx-background-color: #F5F5F5;
+    -fx-background-color: transparent;
     -fx-border-width: 0 0 0.2px 0;
+    -fx-padding: 0;
+    -fx-cell-size: 44px;
 }
 
 #taskTable .column-header .label {
     -fx-font-size: 15px;
-    -fx-text-fill: #111111;
+    -fx-text-fill: #555555;
+    -fx-font-weight: 200;
+}
+
+#taskTable .column-header {
+    -fx-padding: 0;
+}
+
+#taskTable .table-cell {
+    -fx-font-weight: 400;
+    -fx-text-fill: #333333;
+}
+
+#taskTable .table-row-cell .table-cell {
+    -fx-font-size: 17px;
+}
+
+#taskTable .table-row-cell:filled:selected {
+    -fx-background-color: #E8F4FF;
+}
+
+#taskTable .table-row-cell:filled:selected .table-cell {
+    -fx-text-fill: #555555;
 }
 
 #taskTable .scroll-bar:vertical {
@@ -408,6 +442,155 @@
     -fx-opacity: 0;
 }
 
+/* Project Detail - Member tab */
+.member-root {
+    -fx-background-color: #F8F8F8;
+}
+
+.member-layout {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12px;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12px;
+}
+
+.member-toolbar {
+    -fx-padding: 2 0 6 0;
+}
+
+.member-input {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 13px;
+}
+
+.member-btn,
+.member-btn-primary,
+.member-btn-cancel,
+.member-btn-danger {
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-cursor: hand;
+}
+
+.member-btn {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D5DB;
+    -fx-text-fill: #374151;
+}
+
+.member-btn:hover {
+    -fx-background-color: #F3F4F6;
+}
+
+.member-btn-primary {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #93C5FD;
+    -fx-text-fill: #2563EB;
+}
+
+.member-btn-primary:hover {
+    -fx-background-color: #EFF6FF;
+}
+
+.member-btn-cancel {
+    -fx-background-color: #6B7280;
+    -fx-border-color: #6B7280;
+    -fx-text-fill: #FFFFFF;
+}
+
+.member-btn-cancel:hover {
+    -fx-background-color: #4B5563;
+}
+
+.member-btn-danger {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #FCA5A5;
+    -fx-text-fill: #DC2626;
+}
+
+.member-btn-danger:hover {
+    -fx-background-color: #FEF2F2;
+}
+
+.member-table {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-table-cell-border-color: transparent;
+}
+
+.member-table .column-header-background {
+    -fx-background-color: #F8FAFC;
+    -fx-border-color: transparent transparent #E5E7EB transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.member-table .column-header,
+.member-table .filler {
+    -fx-background-color: transparent;
+    -fx-size: 40px;
+}
+
+.member-table .column-header .label {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #475569;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 10 0 10;
+}
+
+.member-table .table-cell {
+    -fx-font-size: 14px;
+    -fx-text-fill: #334155;
+    -fx-padding: 0 10 0 10;
+    -fx-border-color: transparent;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.member-table .table-row-cell {
+    -fx-cell-size: 42px;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: transparent transparent #F1F5F9 transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.member-table .table-row-cell:hover {
+    -fx-background-color: #F8FAFC;
+}
+
+.member-table .table-row-cell:filled:selected {
+    -fx-background-color: #EAF2FF;
+}
+
+.member-table .table-row-cell:filled:selected .table-cell {
+    -fx-text-fill: #1E3A8A;
+}
+
+.member-table .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 10px;
+}
+
+.member-table .scroll-bar:vertical .track {
+    -fx-background-color: #EEF2F6;
+    -fx-background-radius: 999px;
+}
+
+.member-table .scroll-bar:vertical .thumb {
+    -fx-background-color: #C9CED6;
+    -fx-background-radius: 999px;
+}
+
+.member-table .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #B8BEC7;
+}
+
 /* ProjectDetail nav tabs - same active feel as TaskList filters */
 .project-detail-tab {
     -fx-background-color: transparent;
@@ -416,7 +599,7 @@
     -fx-background-insets: 0;
     -fx-border-insets: 0;
     -fx-padding: 0;
-    -fx-font-family: "Urbanist Medium";
+    -fx-font-family: "System";
     -fx-font-size: 20px;
     -fx-font-weight: 500;
     -fx-text-fill: #666666;
@@ -436,7 +619,7 @@
     -fx-border-radius: 999px;
     -fx-background-radius: 999px;
     -fx-padding: 7 16 7 16;
-    -fx-font-family: "Urbanist Medium";
+    -fx-font-family: "System";
     -fx-font-size: 14px;
     -fx-text-fill: #1F2937;
     -fx-cursor: hand;
@@ -455,7 +638,7 @@
 }
 
 .project-detail-header-label {
-    -fx-font-family: "Urbanist Medium";
+    -fx-font-family: "System";
     -fx-font-size: 15px;
     -fx-text-fill: #667085;
 }
@@ -474,7 +657,7 @@
 
 /* Project page main title: same visual rhythm as big task/project headers */
 .project-main-title {
-    -fx-font-family: "Urbanist Medium";
+    -fx-font-family: "System";
     -fx-font-size: 36px;
     -fx-font-weight: 500;
     -fx-text-fill: #111111;
@@ -504,7 +687,7 @@
 }
 
 .project-card-title {
-    -fx-font-family: "Urbanist Medium";
+    -fx-font-family: "System";
     -fx-font-size: 20px;
     -fx-text-fill: #101828;
 }
@@ -512,39 +695,39 @@
 .project-card-badge {
     -fx-background-color: #E8F1FF;
     -fx-text-fill: #1C63C7;
-    -fx-font-family: "Urbanist Medium";
+    -fx-font-family: "System";
     -fx-font-size: 11px;
     -fx-padding: 3 8 3 8;
     -fx-background-radius: 999px;
 }
 
 .project-card-meta-label {
-    -fx-font-family: "Urbanist Light";
+    -fx-font-family: "System";
     -fx-font-size: 13px;
     -fx-text-fill: #667085;
 }
 
 .project-card-meta-value {
-    -fx-font-family: "Urbanist Regular";
+    -fx-font-family: "System";
     -fx-font-size: 14px;
     -fx-text-fill: #344054;
 }
 
 .project-list-heading {
-    -fx-font-family: "Urbanist Medium";
+    -fx-font-family: "System";
     -fx-font-size: 36px;
     -fx-font-weight: 500;
     -fx-text-fill: #111111;
 }
 
-/* Tiêu đề màn hình */
+/* TiÃªu Ä‘á» mÃ n hÃ¬nh */
 .screen-title {
     -fx-font-size: 28px;
     -fx-font-weight: normal;
     -fx-text-fill: black;
 }
 
-/* Xóa viền mặc định của ScrollPane */
+/* XÃ³a viá»n máº·c Ä‘á»‹nh cá»§a ScrollPane */
 .edge-to-edge {
     -fx-background-color: transparent;
     -fx-background: transparent;
@@ -558,15 +741,15 @@
 /* Base style cho Item */
 .notification-item {
     -fx-background-radius: 8px;
-    -fx-cursor: hand; /* Đổi con trỏ chuột khi hover */
+    -fx-cursor: hand; /* Äá»•i con trá» chuá»™t khi hover */
 }
 
-/* Style khi chưa đọc (nền xám) */
+/* Style khi chÆ°a Ä‘á»c (ná»n xÃ¡m) */
 .notification-item-unread {
     -fx-background-color: #e5e5e5;
 }
 
-/* Style khi đã đọc (nền trắng/trong suốt) */
+/* Style khi Ä‘Ã£ Ä‘á»c (ná»n tráº¯ng/trong suá»‘t) */
 .notification-item-read {
     -fx-background-color: transparent;
 }
@@ -588,15 +771,778 @@
     -fx-text-fill: #888888;
 }
 
-/* Trạng thái Icon */
+/* Tráº¡ng thÃ¡i Icon */
 .status-read {
-    -fx-text-fill: #4da6ff; /* Màu xanh nước biển nhạt */
+    -fx-text-fill: #4da6ff; /* MÃ u xanh nÆ°á»›c biá»ƒn nháº¡t */
     -fx-font-size: 18px;
     -fx-font-weight: bold;
 }
 
 .status-unread {
-    -fx-text-fill: #888888; /* Màu xám */
+    -fx-text-fill: #888888; /* MÃ u xÃ¡m */
     -fx-font-size: 18px;
     -fx-font-weight: bold;
 }
+
+/* PieChart custom styling for Project Summary */
+.pie-chart {
+    -fx-padding: 0;
+    -fx-legend-visible: true;
+}
+
+.pie-chart-title {
+    -fx-text-fill: #1f1f1f;
+}
+
+.chart-legend {
+    -fx-font-size: 12px;
+}
+
+/* Color styling for PieChart - Done (index 0) */
+#progressPieChart .default-color0.pie-slice {
+    -fx-pie-color: #4CAF50;
+}
+#progressPieChart .default-color0.chart-legend-item-symbol {
+    -fx-background-color: #4CAF50;
+}
+
+/* Color styling for PieChart - To Do (index 1) */
+#progressPieChart .default-color1.pie-slice {
+    -fx-pie-color: #FFC107;
+}
+#progressPieChart .default-color1.chart-legend-item-symbol {
+    -fx-background-color: #FFC107;
+}
+
+/* Color styling for PieChart - In Progress (index 2) */
+#progressPieChart .default-color2.pie-slice {
+    -fx-pie-color: #2196F3;
+}
+#progressPieChart .default-color2.chart-legend-item-symbol {
+    -fx-background-color: #2196F3;
+}
+
+/* Color styling for PieChart - In Preview (index 3) */
+#progressPieChart .default-color3.pie-slice {
+    -fx-pie-color: #9C27B0;
+}
+#progressPieChart .default-color3.chart-legend-item-symbol {
+    -fx-background-color: #9C27B0;
+}
+
+/* Color styling for PieChart - Overdue (index 4) */
+#progressPieChart .default-color4.pie-slice {
+    -fx-pie-color: #FF5252;
+}
+#progressPieChart .default-color4.chart-legend-item-symbol {
+    -fx-background-color: #FF5252;
+}
+
+/* --- ProjectDetail Info: refreshed card UI --- */
+.project-info-root {
+    -fx-background-color: #F8F8F8;
+}
+
+.project-info-scroll {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.project-info-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.project-info-content {
+    -fx-background-color: transparent;
+}
+
+.project-info-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-border-color: #E6E6E6;
+    -fx-border-radius: 12px;
+    -fx-padding: 14 16 14 16;
+}
+
+.project-info-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1F2937;
+}
+
+.project-info-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B7280;
+}
+
+.project-info-card-title {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B7280;
+}
+
+.project-info-card-value {
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #111827;
+}
+
+.project-info-desc {
+    -fx-font-size: 14px;
+    -fx-text-fill: #374151;
+    -fx-line-spacing: 2px;
+}
+
+.project-info-btn-edit {
+    -fx-background-color: white;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #1F2937;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.project-info-btn-edit:hover {
+    -fx-background-color: #F3F4F6;
+}
+
+.project-info-btn-delete {
+    -fx-background-color: #EF4444;
+    -fx-background-radius: 8px;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.project-info-btn-delete:hover {
+    -fx-background-color: #DC2626;
+}
+
+/* Information scene refresh */
+.info-page-root {
+    -fx-background-color: #F8F8F8;
+    -fx-padding: 22;
+}
+
+.info-main-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 16px;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(17, 24, 39, 0.10), 24, 0.22, 0, 8);
+}
+
+.info-header-card {
+    -fx-background-color: transparent;
+}
+
+.info-header-bg {
+    -fx-arc-width: 18px;
+    -fx-arc-height: 18px;
+}
+
+.info-avatar {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.16), 14, 0.25, 0, 2);
+}
+
+.info-name {
+    -fx-font-size: 30px;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+}
+
+.info-email {
+    -fx-font-size: 14px;
+    -fx-text-fill: rgba(255, 255, 255, 0.95);
+}
+
+.info-detail-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12px;
+    -fx-border-color: #E6E9EF;
+    -fx-border-radius: 12px;
+}
+
+.info-detail-title {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6B7280;
+}
+
+.info-detail-value {
+    -fx-font-size: 21px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #111827;
+}
+
+.info-update-message {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B7280;
+}
+
+.info-action-btn {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #1F2937;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 8 14 8 14;
+    -fx-cursor: hand;
+}
+
+.info-action-btn:hover {
+    -fx-background-color: #F3F4F6;
+}
+
+.info-action-save {
+    -fx-background-color: #4896FE;
+    -fx-border-color: #4896FE;
+    -fx-text-fill: #FFFFFF;
+}
+
+.info-action-save:hover {
+    -fx-background-color: #2F80ED;
+}
+
+.info-action-cancel {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D5DB;
+    -fx-text-fill: #374151;
+}
+
+.info-edit-input {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 8 10 8 10;
+    -fx-font-size: 14px;
+    -fx-text-fill: #111827;
+}
+
+/* Task detail scene refresh */
+.task-detail-root {
+    -fx-background-color: #F8F8F8;
+}
+
+.task-detail-breadcrumb-row {
+    -fx-padding: 0 2 0 2;
+}
+
+.task-detail-project-crumb {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6B7280;
+    -fx-padding: 0 0 0 10;
+}
+
+.task-detail-main-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 14px;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.08), 18, 0.2, 0, 5);
+}
+
+.task-detail-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #111827;
+}
+
+.task-detail-edit-btn {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #1F2937;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.task-detail-edit-btn:hover {
+    -fx-background-color: #F3F4F6;
+}
+
+.task-detail-info-panel,
+.task-detail-activity-panel {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12px;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12px;
+}
+
+.task-detail-left-header {
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #111827;
+    -fx-padding: 2 2 6 2;
+}
+
+.task-detail-meta-list {
+    -fx-padding: 0;
+}
+
+.task-detail-meta-card {
+    -fx-background-color: #F8FAFC;
+    -fx-background-radius: 10px;
+    -fx-border-color: #E5EDF6;
+    -fx-border-radius: 10px;
+    -fx-padding: 8 10 8 10;
+}
+
+.task-detail-desc-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 10px;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 10px;
+    -fx-padding: 10 12 10 12;
+}
+
+.task-detail-field-title {
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #6B7280;
+}
+
+.task-detail-field-value {
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #111827;
+}
+
+.task-detail-deadline {
+    -fx-text-fill: #9A3412;
+}
+
+.task-detail-description {
+    -fx-font-size: 14px;
+    -fx-font-weight: 400;
+    -fx-text-fill: #1F2937;
+    -fx-line-spacing: 2px;
+}
+
+.task-detail-tabs-row {
+    -fx-border-color: transparent transparent #E5E7EB transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.task-detail-subtab {
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #6B7280;
+}
+
+.task-detail-subtab.active-tab {
+    -fx-font-weight: 700;
+    -fx-text-fill: #111827;
+}
+
+.task-detail-subview-scroll {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 8;
+}
+
+.task-detail-subview-scroll > .viewport {
+    -fx-background-color: #FFFFFF;
+}
+
+/* Create Project scene */
+.create-project-root {
+    -fx-background-color: #F8F8F8;
+    -fx-padding: 24;
+}
+
+.create-project-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 14px;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(17, 24, 39, 0.08), 18, 0.2, 0, 6);
+}
+
+.create-project-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #111827;
+}
+
+.create-project-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B7280;
+    -fx-padding: 0 0 6 0;
+}
+
+.create-project-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #374151;
+}
+
+.create-project-input,
+.create-project-textarea {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #111827;
+}
+
+.create-project-input {
+    -fx-pref-height: 38px;
+}
+
+.create-project-textarea {
+    -fx-padding: 8 10 8 10;
+}
+
+.create-project-error {
+    -fx-font-size: 12px;
+    -fx-text-fill: #DC2626;
+}
+
+.create-project-secondary-btn {
+    -fx-background-color: #F3F4F6;
+    -fx-text-fill: #1F2937;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+}
+
+.create-project-secondary-btn:hover {
+    -fx-background-color: #E5E7EB;
+}
+
+.create-project-primary-btn {
+    -fx-background-color: #4896FE;
+    -fx-border-color: #4896FE;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-cursor: hand;
+}
+
+.create-project-primary-btn:hover {
+    -fx-background-color: #2F80ED;
+}
+
+/* Task list scene - refined table */
+.tasklist-root {
+    -fx-background-color: #F8F8F8;
+}
+
+.tasklist-content {
+    -fx-background-color: #F8F8F8;
+}
+
+.tasklist-title {
+    -fx-font-weight: 600;
+    -fx-text-fill: #111827;
+}
+
+.tasklist-separator {
+    -fx-background-color: #E5E7EB;
+}
+
+#taskTable,
+.tasklist-table {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E5E7EB;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-table-cell-border-color: transparent;
+}
+
+#taskTable .column-header-background,
+.tasklist-table .column-header-background {
+    -fx-background-color: #F8FAFC;
+    -fx-border-color: transparent transparent #E5E7EB transparent;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 7 0 7 0;
+}
+
+#taskTable .column-header,
+#taskTable .filler,
+.tasklist-table .column-header,
+.tasklist-table .filler {
+    -fx-background-color: transparent;
+    -fx-cell-size: 42px;
+}
+
+#taskTable .column-header .label,
+.tasklist-table .column-header .label {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #475569;
+}
+
+#taskTable .table-row-cell,
+.tasklist-table .table-row-cell {
+    -fx-cell-size: 46px;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: transparent transparent #F1F5F9 transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+#taskTable .table-row-cell:hover,
+.tasklist-table .table-row-cell:hover {
+    -fx-background-color: #F8FAFC;
+}
+
+#taskTable .table-row-cell:filled:selected,
+.tasklist-table .table-row-cell:filled:selected {
+    -fx-background-color: #ECF4FF;
+}
+
+#taskTable .table-row-cell:filled:selected .table-cell,
+.tasklist-table .table-row-cell:filled:selected .table-cell {
+    -fx-text-fill: #1E3A8A;
+}
+
+#taskTable .table-cell,
+.tasklist-table .table-cell {
+    -fx-border-color: transparent;
+    -fx-padding: 0 12 0 12;
+    -fx-font-size: 15px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #334155;
+}
+
+#taskTable .scroll-bar:vertical,
+.tasklist-table .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 10px;
+}
+
+#taskTable .scroll-bar:vertical .track,
+.tasklist-table .scroll-bar:vertical .track {
+    -fx-background-color: #EEF2F6;
+    -fx-background-radius: 999px;
+}
+
+#taskTable .scroll-bar:vertical .thumb,
+.tasklist-table .scroll-bar:vertical .thumb {
+    -fx-background-color: #C9CED6;
+    -fx-background-radius: 999px;
+}
+
+#taskTable .scroll-bar:vertical .thumb:hover,
+#taskTable .scroll-bar:vertical .thumb:pressed,
+.tasklist-table .scroll-bar:vertical .thumb:hover,
+.tasklist-table .scroll-bar:vertical .thumb:pressed {
+    -fx-background-color: #B8BEC7;
+}
+
+#taskTable .scroll-bar:vertical .increment-button,
+#taskTable .scroll-bar:vertical .decrement-button,
+.tasklist-table .scroll-bar:vertical .increment-button,
+.tasklist-table .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-pref-height: 0;
+    -fx-opacity: 0;
+}
+
+/* Create Task scene */
+.create-task-root {
+    -fx-background-color: #F8F8F8;
+    -fx-padding: 24;
+}
+
+.create-task-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 14px;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(17, 24, 39, 0.08), 18, 0.2, 0, 6);
+}
+
+.create-task-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #111827;
+}
+
+.create-task-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B7280;
+    -fx-padding: 0 0 6 0;
+}
+
+.create-task-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #374151;
+}
+
+.create-task-input,
+.create-task-textarea {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #111827;
+}
+
+.create-task-input {
+    -fx-pref-height: 38px;
+}
+
+.create-task-textarea {
+    -fx-padding: 8 10 8 10;
+}
+
+.create-task-error {
+    -fx-font-size: 12px;
+    -fx-text-fill: #DC2626;
+}
+
+.create-task-secondary-btn {
+    -fx-background-color: #F3F4F6;
+    -fx-text-fill: #1F2937;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+}
+
+.create-task-secondary-btn:hover {
+    -fx-background-color: #E5E7EB;
+}
+
+.create-task-primary-btn {
+    -fx-background-color: #4896FE;
+    -fx-border-color: #4896FE;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-cursor: hand;
+}
+
+.create-task-primary-btn:hover {
+    -fx-background-color: #2F80ED;
+}
+
+.create-task-primary-btn:disabled,
+.create-task-secondary-btn:disabled,
+.create-task-input:disabled,
+.create-task-textarea:disabled {
+    -fx-opacity: 0.75;
+}
+
+/* Project detail summary */
+.summary-root {
+    -fx-background-color: #F8F8F8;
+}
+
+.summary-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12px;
+    -fx-border-color: #E4E7EC;
+    -fx-border-radius: 12px;
+    -fx-padding: 16;
+}
+
+.summary-card-title {
+    -fx-font-size: 18px;
+    -fx-text-fill: #1F2937;
+    -fx-font-weight: 700;
+}
+
+.summary-percent {
+    -fx-font-size: 24px;
+    -fx-text-fill: #2F6EE5;
+    -fx-font-weight: 700;
+}
+
+.summary-percent-sub {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B7280;
+}
+
+.summary-legend-row {
+    -fx-padding: 4 0;
+}
+
+.summary-legend-status {
+    -fx-font-size: 13px;
+    -fx-text-fill: #374151;
+}
+
+.summary-legend-count {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1F2937;
+}
+
+.summary-member-scroll {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.summary-member-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.summary-member-list {
+    -fx-background-color: transparent;
+}
+
+.summary-member-empty {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6B7280;
+}
+
+.summary-member-row {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 10px;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 10px;
+    -fx-padding: 10 12;
+}
+
+.summary-member-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #111827;
+}
+
+.summary-member-value {
+    -fx-font-size: 13px;
+    -fx-text-fill: #4B5563;
+}
+
+.summary-member-percent-chip {
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1D4ED8;
+    -fx-background-color: #DBEAFE;
+    -fx-background-radius: 999px;
+    -fx-padding: 2 8 2 8;
+}
+
+.summary-member-progress {
+    -fx-pref-height: 12px;
+}
+
+.summary-member-progress .track {
+    -fx-background-color: #EEF2F6;
+    -fx-background-radius: 999px;
+}
+
+.summary-member-progress .bar {
+    -fx-background-color: #4896FE;
+    -fx-background-radius: 999px;
+}
+

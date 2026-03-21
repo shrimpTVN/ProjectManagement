@@ -5,7 +5,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="600.0" prefWidth="800.0" spacing="20.0" style="-fx-background-color: #fafafa;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.notification.NotificationController">
+<VBox prefHeight="600.0" prefWidth="800.0" spacing="20.0" style="-fx-background-color: #f8f8f8;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.notification.NotificationController">
     <children>
         <Label styleClass="screen-title" text="Notification" />
 
@@ -23,3 +23,5 @@
         <Insets bottom="30.0" left="40.0" right="40.0" top="40.0" />
     </padding>
 </VBox>
+
+

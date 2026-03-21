@@ -1,60 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="652.0" prefWidth="958.0" spacing="20" style="-fx-padding: 30; -fx-background-color: white;"
-      stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.app.src.controllers.project.InforController">
+<VBox prefHeight="652.0" prefWidth="958.0" styleClass="project-info-root" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.InforController">
 
-    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: white;" VBox.vgrow="ALWAYS">
-        <VBox spacing="20" style="-fx-background-color: white;">
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="project-info-scroll" VBox.vgrow="ALWAYS">
+        <content>
+            <VBox spacing="14.0" styleClass="project-info-content">
+                <padding>
+                    <Insets bottom="20.0" left="22.0" right="22.0" top="20.0" />
+                </padding>
 
-            <VBox spacing="5">
-                <Label style="-fx-font-family: 'Urbanist Medium'; -fx-font-size: 16px;" text="Description:"/>
-                <Label fx:id="lblDescription" styleClass="font-14" text="Nội dung mô tả dự án sẽ hiển thị ở đây."
-                       wrapText="true"/>
+                <VBox spacing="6.0" styleClass="project-info-card">
+                    <children>
+                        <Label styleClass="project-info-title" text="Project Information" />
+                        <Label styleClass="project-info-subtitle" text="Overview of timeline, members, and owner roles." />
+                    </children>
+                </VBox>
+
+                <VBox spacing="8.0" styleClass="project-info-card">
+                    <children>
+                        <Label styleClass="project-info-card-title" text="Description" />
+                        <Label fx:id="lblDescription" styleClass="project-info-desc" text="Project description will be shown here." wrapText="true" />
+                    </children>
+                </VBox>
+
+                <HBox spacing="12.0">
+                    <children>
+                        <VBox spacing="6.0" styleClass="project-info-card" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label styleClass="project-info-card-title" text="Start Date" />
+                                <Label fx:id="lblStartDate" styleClass="project-info-card-value" text="01/01/2026" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="6.0" styleClass="project-info-card" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label styleClass="project-info-card-title" text="Deadline" />
+                                <Label fx:id="lblEndDate" styleClass="project-info-card-value" text="10/01/2026" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <HBox spacing="12.0">
+                    <children>
+                        <VBox spacing="6.0" styleClass="project-info-card" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label styleClass="project-info-card-title" text="Members" />
+                                <Label fx:id="lblMemberCount" styleClass="project-info-card-value" text="2" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="6.0" styleClass="project-info-card" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label styleClass="project-info-card-title" text="Admin" />
+                                <Label fx:id="lblAdminName" styleClass="project-info-card-value" text="Admin name" wrapText="true" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <VBox spacing="6.0" styleClass="project-info-card">
+                    <children>
+                        <Label styleClass="project-info-card-title" text="Manager" />
+                        <Label fx:id="lblManagerName" styleClass="project-info-card-value" text="Manager name" wrapText="true" />
+                    </children>
+                </VBox>
             </VBox>
-
-            <VBox spacing="5">
-                <Label style="-fx-font-family: 'Urbanist Medium'; -fx-font-size: 16px;" text="Start:"/>
-                <Label fx:id="lblStartDate" styleClass="font-14" text="1/1/2026"/>
-            </VBox>
-
-            <VBox spacing="5">
-                <Label style="-fx-font-family: 'Urbanist Medium'; -fx-font-size: 16px;" text="Deadline:"/>
-                <Label fx:id="lblEndDate" styleClass="font-14" text="10/1/2026"/>
-            </VBox>
-
-            <VBox spacing="5">
-                <Label style="-fx-font-family: 'Urbanist Medium'; -fx-font-size: 16px;" text="Members:"/>
-                <Label fx:id="lblMemberCount" styleClass="font-14" text="2"/>
-            </VBox>
-
-            <VBox spacing="5">
-                <Label style="-fx-font-family: 'Urbanist Medium'; -fx-font-size: 16px;" text="Admin:"/>
-                <Label fx:id="lblAdminName" styleClass="font-14" text="Tên Admin"/>
-            </VBox>
-
-            <VBox prefHeight="122.0" prefWidth="896.0" spacing="5">
-                <Label style="-fx-font-family: 'Urbanist Medium'; -fx-font-size: 16px;" text="Manager:"/>
-                <Label fx:id="lblManagerName" prefHeight="34.0" prefWidth="436.0" styleClass="font-14"
-                       text="Tên Manager" wrapText="true"/>
-            </VBox>
-
-        </VBox>
+        </content>
     </ScrollPane>
 
-    <HBox alignment="BOTTOM_RIGHT" spacing="10">
-        <Button fx:id="btnEdit"
-                style="-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 4; -fx-background-radius: 4; -fx-cursor: hand; -fx-pref-width: 120; -fx-pref-height: 30;"
-                text="Edit"/>
-        <Button fx:id="btnDelete"
-                style="-fx-background-color: black; -fx-text-fill: white; -fx-background-radius: 4; -fx-cursor: hand; -fx-pref-width: 120; -fx-pref-height: 30; -fx-font-family: 'Urbanist Medium';"
-                text="DELETE"/>
+    <HBox alignment="CENTER_RIGHT" spacing="10.0" styleClass="project-info-action-row">
+        <children>
+            <Button fx:id="btnEdit" minWidth="110.0" prefHeight="34.0" styleClass="project-info-btn-edit" text="Edit" />
+            <Button fx:id="btnDelete" minWidth="120.0" prefHeight="34.0" styleClass="project-info-btn-delete" text="Delete" />
+        </children>
+        <VBox.margin>
+            <Insets bottom="18.0" left="22.0" right="22.0" />
+        </VBox.margin>
     </HBox>
 
 </VBox>
