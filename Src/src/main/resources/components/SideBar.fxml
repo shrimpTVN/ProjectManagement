@@ -75,7 +75,7 @@
                   <Insets left="38.0" top="10.0" />
                </VBox.margin>
                <font>
-                  <Font name="Urbanist Medium" size="16.0" />
+                  <Font name="System" size="16.0" />
                </font>
             </Label>
             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" prefHeight="260.0" style="-fx-background-color: white; -fx-padding: 0;" styleClass="project-scroll-pane">
@@ -100,3 +100,4 @@
       <URL value="@../css/style.css" />
    </stylesheets>
 </VBox>
+
