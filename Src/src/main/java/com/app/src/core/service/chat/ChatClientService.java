@@ -1,55 +1,89 @@
- package com.app.src.core.service.chat;
+package com.app.src.core.service.chat;
 
 import com.app.src.core.async.AsyncExecutor;
+import com.app.src.models.Comment;
+import com.google.gson.Gson;
 import javafx.application.Platform;
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.*;
 
-
 public class ChatClientService {
-    private Socket socket;
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
-    private volatile boolean isRunning = false;
+    public static final String DEFAULT_HOST = "127.0.0.1";
+    public static final int DEFAULT_PORT = 8080;
 
-    // Hàng đợi chống tràn (Backpressure)
-    private final BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
+    private Socket socket;
+    // 1. SỬA ĐỔI KIỂU DỮ LIỆU CỦA STREAM
+    private PrintWriter out;
+    private BufferedReader in;
+
+    private volatile boolean isRunning = false;
+    private final BlockingQueue<Comment> messageQueue = new LinkedBlockingQueue<>();
+    private MessageListener uiListener;
+    private final Gson gson = new Gson();
+    private static ChatClientService instance;
+
+    private ChatClientService() {};
+
+    public static ChatClientService getInstance() {
+        if (instance == null) {
+            instance = new ChatClientService();
+        }
+        return instance;
+    }
+
+    public void setListener(MessageListener listener) {
+        this.uiListener = listener;
+    }
 
     public void connect(String host, int port) throws IOException {
-        socket = new Socket(host, port); // tao ket noi den socketServer
-        out = new ObjectOutputStream(socket.getOutputStream()); //tao doi tuong nhan
-        in = new ObjectInputStream(socket.getInputStream());// tao doi tuong gui
+        socket = new Socket(host, port);
+
+        // 2. KHỞI TẠO STREAM CHUẨN ĐỂ TRUYỀN JSON (Hỗ trợ tiếng Việt UTF-8)
+        out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
+        in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+
         isRunning = true;
 
-        // Bắt đầu luồng lắng nghe Socket
         AsyncExecutor.getInstance().runAsync(this::listenForMessages);
-
-        // Bắt đầu luồng xử lý hàng đợi và update UI
         AsyncExecutor.getInstance().runAsync(this::processMessageQueue);
     }
 
-    // Luồng 1: Lắng nghe liên tục (Persistent Listener)
+    public void connectDefault() throws IOException {
+        connect(DEFAULT_HOST, DEFAULT_PORT);
+    }
+
+    public boolean isConnected() {
+        return socket != null && socket.isConnected() && !socket.isClosed() && out != null;
+    }
+
+    // Luồng 1: Lắng nghe liên tục
     private void listenForMessages() {
         try {
-            while (isRunning && !socket.isClosed()) {
-                String message = (String) in.readObject();
-                messageQueue.offer(message); // Đẩy vào hàng đợi thay vì gọi UI ngay
+            String incomingJson;
+            // 3. ĐỌC DỮ LIỆU CHUẨN XÁC
+            while (isRunning && !socket.isClosed() && (incomingJson = in.readLine()) != null) {
+                Comment receivedMsg = gson.fromJson(incomingJson, Comment.class);
+                messageQueue.offer(receivedMsg);
             }
         } catch (Exception e) {
-            if (isRunning) throw new RuntimeException("Lỗi mất kết nối Socket", e);
+            if (isRunning) {
+                System.err.println("Lỗi mất kết nối Socket: " + e.getMessage());
+            }
         }
     }
 
-    // Luồng 2: Xử lý hàng đợi và đưa lên UI một cách an toàn
+    // Luồng 2: Xử lý hàng đợi (Giữ nguyên, bạn làm rất tốt)
     private void processMessageQueue() {
         try {
             while (isRunning) {
-                // Sẽ block nếu hàng đợi trống, không ăn CPU
-                String message = messageQueue.take();
+                Comment message = messageQueue.take();
                 Platform.runLater(() -> {
-                    // Cập nhật UI ở đây (hoặc trigger Observer pattern tới UI Controller)
-                    System.out.println("UI nhận: " + message);
+                    System.out.println(" load message cho " + message.getTaskId() +" tu user " + message.getUserId());
+                    if (uiListener != null) {
+                        uiListener.onMessageReceived(message);
+                    }
                 });
             }
         } catch (InterruptedException e) {
@@ -57,21 +91,31 @@ public class ChatClientService {
         }
     }
 
-    // Sử dụng Thread Pool cho tác vụ gửi đi (Outbound actions)
-    public void sendMessage(String msg) {
-        AsyncExecutor.getInstance().runAsync(() -> {
+    // --- SENDING ---
+    public boolean sendMessage(Comment msg) {
+        if (!isConnected()) {
+            System.err.println("[CHAT-WARN] Chua ket noi server, khong the gui tin nhan.");
+            return false;
+        }
+
+        String json = gson.toJson(msg);
+        synchronized (this) { // Lock này giúp an toàn nếu nhiều luồng cùng gọi sendMessage
             try {
-                out.writeObject(msg);
-                out.flush();
-            } catch (IOException e) {
-                throw new RuntimeException("Không thể gửi tin nhắn", e);
+                // 4. DÙNG PRINTLN ĐỂ TỰ ĐỘNG THÊM KÝ TỰ XUỐNG DÒNG (\n)
+                out.println(json);
+                // Không cần out.flush() nữa vì PrintWriter đã khởi tạo với cờ auto-flush = true
+                System.out.println("[CHAT-DEBUG] Đã gửi: " + json);
+                return true;
+            } catch (Exception e) {
+                System.err.println("[CHAT-ERROR] Gui tin nhan that bai: " + e.getMessage());
+                return false;
             }
-        });
+        }
     }
 
     public void disconnect() {
         isRunning = false;
         try { if (socket != null) socket.close(); }
-        catch (IOException e) { /* Bỏ qua lỗi lúc đóng */ }
+        catch (IOException e) { /* Bỏ qua */ }
     }
 }

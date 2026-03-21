@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="652.0" prefWidth="958.0" styleClass="project-info-root" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.InforController">
+<VBox prefHeight="652.0" prefWidth="958.0" styleClass="project-info-root" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.InforController">
 
     <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="project-info-scroll" VBox.vgrow="ALWAYS">
         <content>
@@ -85,3 +85,4 @@
     </HBox>
 
 </VBox>
+

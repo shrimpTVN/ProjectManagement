@@ -65,11 +65,10 @@ public class CommentDAO extends AbstractDAO {
 
             while (resultSet.next()) {
                 Comment comment = new Comment(
-                        resultSet.getInt("Com_id"),
                         resultSet.getInt("Task_id"),
+                        resultSet.getInt("User_id"),
                         resultSet.getString("Com_description"),
-                        resultSet.getTimestamp("Com_date"),
-                        resultSet.getInt("User_id")
+                        resultSet.getTimestamp("Com_date")
                 );
                 comments.add(comment);
             }

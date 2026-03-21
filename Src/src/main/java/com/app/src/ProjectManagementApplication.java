@@ -31,6 +31,10 @@ public class ProjectManagementApplication extends Application {
         sceneManager.switchScene("/scenes/AuthWrapper.fxml");
 
         loadSessionData();
+
+        // 3. Khởi tạo các Service cần thiết
+        chatService = ChatClientService.getInstance();
+
     }
 
     @Override
@@ -54,16 +58,15 @@ public class ProjectManagementApplication extends Application {
         VisibleManer.getInstance();
     }
 
-    private void loadFont(){
-
-    }
-
-    private void loadExampleData() throws SQLException {
+    private void loadExampleData() throws SQLException, IOException {
         SceneManager sceneManager = SceneManager.getInstance();
         UserService userService = new UserService();
         UserSession.getInstance().setUser(userService.getUserById(3)); //id=3 -> van nghia
 
         AppContext.getInstance();
         sceneManager.switchScene("/scenes/dashboard.fxml");
+
+        // Có thể gọi connect ở đây hoặc đợi user login xong
+        chatService.connectDefault();
     }
 }

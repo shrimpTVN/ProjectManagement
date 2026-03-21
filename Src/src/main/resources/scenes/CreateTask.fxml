@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane alignment="CENTER" prefHeight="614.0" prefWidth="631.0" styleClass="create-task-root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.task.CreateTaskController">
+<StackPane alignment="CENTER" prefHeight="614.0" prefWidth="631.0" styleClass="create-task-root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.task.CreateTaskController">
     <children>
         <VBox maxWidth="700.0" spacing="14.0" styleClass="create-task-card">
             <padding>
@@ -87,3 +87,4 @@
         </VBox>
     </children>
 </StackPane>
+

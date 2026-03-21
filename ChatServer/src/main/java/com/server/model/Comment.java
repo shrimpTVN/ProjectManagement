@@ -1,4 +1,6 @@
-package com.app.src.models;
+package com.server.model;
+
+import java.util.Date;
 
 import java.util.Date;
 

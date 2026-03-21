@@ -13,6 +13,7 @@ module com.app.src {
     requires org.pf4j;
     requires java.management;
     requires java.desktop;
+    requires com.google.gson;
     opens com.app.src to javafx.fxml;
     exports com.app.src;
     exports com.app.src.utils;
@@ -23,7 +24,7 @@ module com.app.src {
     opens com.app.src.core to javafx.fxml;
     exports com.app.src.api;
     opens com.app.src.api to javafx.fxml;
-    opens com.app.src.models to javafx.base, javafx.fxml;
+    opens com.app.src.models to javafx.base, javafx.fxml, com.google.gson;
     exports com.app.src.controllers.project;
     opens com.app.src.controllers.project to javafx.fxml;
     exports com.app.src.controllers.task;

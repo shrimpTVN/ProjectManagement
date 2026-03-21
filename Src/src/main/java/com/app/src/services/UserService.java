@@ -7,12 +7,17 @@ import java.sql.SQLException;
 
 public class UserService {
     private final UserDAO userDAO;
-
+    private static UserService instance;
+    public static UserService getInstance() {
+        if (instance == null) instance = new UserService();
+        return instance;
+    }
     public UserService() {
         userDAO = UserDAO.getInstance();
     }
 
-    public User getUserById(int userId) throws SQLException {
+    public User getUserById(int userId){
+
         return userDAO.findById(userId);
     }
 
