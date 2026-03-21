@@ -6,6 +6,7 @@ import com.app.src.core.session.UserSession;
 import com.app.src.models.Comment;
 import com.app.src.services.CommentService;
 import com.app.src.services.UserService;
+import com.google.gson.Gson;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -29,6 +30,7 @@ public class CommentBoxController implements MessageListener {
     private int currentTaskId;
     @FXML
     ScrollPane scrollChat;
+    private Gson gson = new Gson();
 
     @FXML
     public void initialize() {
@@ -55,12 +57,7 @@ public class CommentBoxController implements MessageListener {
 
         int currentUserId = UserSession.getInstance().getUser().getUserId();
 
-        //gui object comment den chat server
-        boolean chatSent = ChatClientService.getInstance().sendMessage(new Comment(currentTaskId, currentUserId, content, new Date()));
-        System.out.println(content);
-        if (!chatSent) {
-            System.err.println("[CHAT-WARN] Tin nhan chua gui duoc len server.");
-        }
+        sendComment("com", currentUserId, content);
         // luu du lieu xuong DB
         boolean success = commentService.postComment(currentTaskId, currentUserId, content);
 
@@ -113,5 +110,15 @@ public class CommentBoxController implements MessageListener {
         String userName = UserService.getInstance().getUserById(comment.getUserId()).getUserName();
         loadMessageUI(comment, userName);
         scrollChat.setVvalue(1.0);
+    }
+
+    public void sendComment(String header, int currentUserId, String content) {
+        //gui object comment den chat server
+        String json = gson.toJson(new Comment(currentTaskId, currentUserId, content, new Date()));
+        boolean chatSent = ChatClientService.getInstance().sendMessage(header +":"+ json);
+        System.out.println(content);
+        if (!chatSent) {
+            System.err.println("[CHAT-WARN] Tin nhan chua gui duoc len server.");
+        }
     }
 }

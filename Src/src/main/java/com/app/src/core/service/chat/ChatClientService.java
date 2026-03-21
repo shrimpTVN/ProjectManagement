@@ -64,8 +64,19 @@ public class ChatClientService {
             String incomingJson;
             // 3. ĐỌC DỮ LIỆU CHUẨN XÁC
             while (isRunning && !socket.isClosed() && (incomingJson = in.readLine()) != null) {
-                Comment receivedMsg = gson.fromJson(incomingJson, Comment.class);
-                messageQueue.offer(receivedMsg);
+                String[] message = incomingJson.split(":", 2);
+                String header = message[0];// not -> notification; req -> request to join chat box; com -> comment
+                String body = message[1];
+
+                if (header.equals("not")){
+
+                }
+
+                if (header.equals("com")){
+                    Comment receivedMsg = gson.fromJson(body, Comment.class);
+                    messageQueue.offer(receivedMsg);
+                }
+
             }
         } catch (Exception e) {
             if (isRunning) {
@@ -91,20 +102,20 @@ public class ChatClientService {
         }
     }
 
-    // --- SENDING ---
-    public boolean sendMessage(Comment msg) {
+    // --- SENDING for all case: notification, request, comment---
+    public boolean sendMessage(String msg) {
         if (!isConnected()) {
             System.err.println("[CHAT-WARN] Chua ket noi server, khong the gui tin nhan.");
             return false;
         }
 
-        String json = gson.toJson(msg);
+//        String json = gson.toJson(msg);
         synchronized (this) { // Lock này giúp an toàn nếu nhiều luồng cùng gọi sendMessage
             try {
                 // 4. DÙNG PRINTLN ĐỂ TỰ ĐỘNG THÊM KÝ TỰ XUỐNG DÒNG (\n)
-                out.println(json);
+                out.println(msg);
                 // Không cần out.flush() nữa vì PrintWriter đã khởi tạo với cờ auto-flush = true
-                System.out.println("[CHAT-DEBUG] Đã gửi: " + json);
+                System.out.println("[CHAT-DEBUG] Đã gửi: " + msg);
                 return true;
             } catch (Exception e) {
                 System.err.println("[CHAT-ERROR] Gui tin nhan that bai: " + e.getMessage());

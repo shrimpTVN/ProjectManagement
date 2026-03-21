@@ -1,4 +1,4 @@
-package com.app.src.models;
+package com.server.model;
 
 public class Notification {
 
