@@ -3,6 +3,7 @@ package com.app.src.controllers.task;
 import com.app.src.controllers.ViewNavigator;
 import com.app.src.controllers.project.ProjectDetailController;
 import com.app.src.core.AppContext;
+import com.app.src.core.service.chat.ChatClientService;
 import com.app.src.daos.ProjectDAO;
 import com.app.src.daos.UserDAO;
 import com.app.src.dtos.PersonalTaskDTO;
@@ -243,8 +244,12 @@ public class CreateTaskController {
 
         // GỌI SERVICE LƯU
         try {
-            TasklistService service = new TasklistService();
-            if (service.addTask(newTask)) {
+
+            if (TasklistService.getInstance().addTask(newTask)) {
+                String message = ChatClientService.getInstance().generateNotification("Bạn có quà từ Xếp nè!",
+                            "Bạn đã được giao task mới. " + newTask.getTaskName() + " Trong project " + currentProject.getProjectName() + " deadline là ngày " + newTask.getTaskEndTime(),
+                                newTask.getUser().getUserId());
+                ChatClientService.getInstance().sendMessage(message);
                 backToProjectDetail();
             } else {
                 lblErrorName.setText("System error: Unable to create task.");

@@ -12,6 +12,14 @@ import com.app.src.models.Task;
 public class TasklistService {
 
     private static TaskDAO taskDAO;
+    private static TasklistService instance;
+
+    public static TasklistService getInstance() {
+        if (instance == null) {
+            instance = new TasklistService();
+        }
+        return instance;
+    }
 
     public TasklistService() {
         // CẬP NHẬT: Sử dụng Singleton pattern chuẩn xác thay vì dùng toán tử new

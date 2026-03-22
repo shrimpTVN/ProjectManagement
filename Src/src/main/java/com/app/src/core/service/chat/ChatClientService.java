@@ -1,12 +1,15 @@
 package com.app.src.core.service.chat;
 
+import com.app.src.controllers.notification.NotificationController;
 import com.app.src.core.async.AsyncExecutor;
 import com.app.src.models.Comment;
+import com.app.src.models.Notification;
 import com.google.gson.Gson;
 import javafx.application.Platform;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.concurrent.*;
 
 public class ChatClientService {
@@ -20,7 +23,9 @@ public class ChatClientService {
 
     private volatile boolean isRunning = false;
     private final BlockingQueue<Comment> messageQueue = new LinkedBlockingQueue<>();
-    private MessageListener uiListener;
+    private final BlockingQueue<Notification> notificationQueue = new LinkedBlockingQueue<>();
+    private MessageListener commentListener;
+    private NotificationController notificationController;
     private final Gson gson = new Gson();
     private static ChatClientService instance;
 
@@ -33,8 +38,12 @@ public class ChatClientService {
         return instance;
     }
 
-    public void setListener(MessageListener listener) {
-        this.uiListener = listener;
+    public void setMessageListener(MessageListener listener) {
+        this.commentListener = listener;
+    }
+
+    public void setNotificationController(NotificationController notificationController) {
+        this.notificationController = notificationController;
     }
 
     public void connect(String host, int port) throws IOException {
@@ -47,7 +56,7 @@ public class ChatClientService {
         isRunning = true;
 
         AsyncExecutor.getInstance().runAsync(this::listenForMessages);
-        AsyncExecutor.getInstance().runAsync(this::processMessageQueue);
+        AsyncExecutor.getInstance().runAsync(this::processCommentQueue);
     }
 
     public void connectDefault() throws IOException {
@@ -86,14 +95,14 @@ public class ChatClientService {
     }
 
     // Luồng 2: Xử lý hàng đợi (Giữ nguyên, bạn làm rất tốt)
-    private void processMessageQueue() {
+    private void processCommentQueue() {
         try {
             while (isRunning) {
-                Comment message = messageQueue.take();
+                Comment comment = messageQueue.take();
                 Platform.runLater(() -> {
-                    System.out.println(" load message cho " + message.getTaskId() +" tu user " + message.getUserId());
-                    if (uiListener != null) {
-                        uiListener.onMessageReceived(message);
+                    System.out.println(" load comment cho " + comment.getTaskId() +" tu user " + comment.getUserId());
+                    if (commentListener != null) {
+                        commentListener.onMessageReceived(comment);
                     }
                 });
             }
@@ -101,6 +110,25 @@ public class ChatClientService {
             Thread.currentThread().interrupt();
         }
     }
+
+    //luầng 3: xử lý hàng đợi cho thông báo
+    // Luồng 2: Xử lý hàng đợi (Giữ nguyên, bạn làm rất tốt)
+    private void processNotificationQueue() {
+        try {
+            while (isRunning) {
+                Notification notification = notificationQueue.take();
+                Platform.runLater(() -> {
+                    System.out.println(" load message cho tu user " + notification.getUserId());
+                    if (notificationController != null) {
+                        notificationController.onNotificationReceive(notification);
+                    }
+                });
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
 
     // --- SENDING for all case: notification, request, comment---
     public boolean sendMessage(String msg) {
@@ -125,8 +153,11 @@ public class ChatClientService {
     }
 
     public void disconnect() {
-        isRunning = false;
-        try { if (socket != null) socket.close(); }
-        catch (IOException e) { /* Bỏ qua */ }
+
+    }
+
+    public String generateNotification(String title, String content, int userId) {
+
+        return "com:"+gson.toJson(new Notification(title, content, false, String.valueOf( new Date()), userId));
     }
 }

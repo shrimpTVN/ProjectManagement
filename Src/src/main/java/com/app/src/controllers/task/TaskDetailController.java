@@ -190,7 +190,7 @@ public class TaskDetailController {
             Object childController = loader.getController();
             if (childController instanceof CommentBoxController commentController) {
                 commentController.renderData(currentTask.getTaskId());
-                ChatClientService.getInstance().setListener(commentController);
+                ChatClientService.getInstance().setMessageListener(commentController);
                 commentController.sendComment("req", AppContext.getUserData().getUserId(), "request to connecto to chat box");
 
             } else if (childController instanceof StatusNotiController statusNotiController) {  //gọi renderData từ container chứa status
