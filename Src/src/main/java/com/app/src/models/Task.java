@@ -26,7 +26,7 @@ public class Task {
 
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     public void setUser(User user) {

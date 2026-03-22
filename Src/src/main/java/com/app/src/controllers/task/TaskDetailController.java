@@ -76,9 +76,9 @@ public class TaskDetailController {
     @FXML
     private Button btnHistory;
     @FXML
-
     private Button btnEdit; // Nút chỉnh sửa
     @FXML
+
     private ScrollPane taskDetailSubViewContainer;
     // Biến lưu trữ Task hiện tại đang xem
     private PersonalTaskDTO currentTask;
@@ -170,16 +170,12 @@ public class TaskDetailController {
             ProjectDetailController controller = ViewNavigator.getInstance().loadSubScene("/scenes/ProjectDetail.fxml");
 
             // Lấy Project đầy đủ với PROJECT_JOINING data
-            Project fullProject = new Project();
-            for (Project project : AppContext.getProjects())
-                if (project.getProjectId() == this.fromProject)
-                    fullProject = project;
-
-            ProjectJoiningService projectJoiningService = new ProjectJoiningService();
-            String adminName = projectJoiningService.getAdmin(fromProject);
+            Project fullProject = AppContext.getProjectById(this.fromProject);
+            String adminName = ProjectJoiningService.getAdmin(fromProject);
             controller.renderData(fullProject, adminName);
+
         } else {
-            ViewNavigator.getInstance().loadSubScene("/scenes/Home.fxml");
+            ViewNavigator.getInstance().loadSubScene("/scenes/tasklist.fxml");
         }
     }
 
@@ -196,7 +192,7 @@ public class TaskDetailController {
             Object childController = loader.getController();
             if (childController instanceof CommentBoxController commentController) {
                 commentController.renderData(currentTask.getTaskId());
-                ChatClientService.getInstance().setListener(commentController);
+                ChatClientService.getInstance().setMessageListener(commentController);
                 commentController.sendComment("req", AppContext.getUserData().getUserId(), "request to connecto to chat box");
 
             } else if (childController instanceof StatusNotiController statusNotiController) {  //gọi renderData từ container chứa status

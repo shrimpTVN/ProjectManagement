@@ -7,8 +7,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
+
 import java.io.IOException;
 import java.util.List;
+
 import com.app.src.core.AppContext;
 
 public class NotificationController {
@@ -28,7 +30,8 @@ public class NotificationController {
         this.notificationService = new NotificationService();
 
         // 2. Lấy user hiện tại từ AppContext
-        this.currentUser = AppContext.getInstance().getUserData();
+        AppContext.getInstance();
+        this.currentUser = AppContext.getUserData();
 
         // 3. Tự động load dữ liệu nếu đã có user
         if (currentUser != null) {
@@ -43,34 +46,41 @@ public class NotificationController {
         System.out.println("Chay được Loader");
         notificationsContainer.getChildren().clear();
 
-        try {
-            List<Notification> notificationList = notificationService.getNotificationsByUserId(userId);
 
-            if (notificationList == null || notificationList.isEmpty()) {
-                System.out.println("Thông báo: Không có thông báo nào cho người dùng này.");
-                return;
-            }
+        List<Notification> notificationList = NotificationService.getNotificationsByUserId(userId);
 
-            for (Notification noti : notificationList) {
-                try {
-                    // Đảm bảo đường dẫn FXML chính xác (nên bắt đầu bằng /com/app/...)
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/NotificationItem.fxml"));
-                    Node itemNode = loader.load();
-
-                    // Lấy controller của item và truyền dữ liệu
-                    NotificationItemController itemController = loader.getController();
-                    itemController.setData(noti);
-
-                    // Đưa item vào container
-                    notificationsContainer.getChildren().add(itemNode);
-
-                } catch (IOException e) {
-                    System.err.println("Lỗi khi load NotificationItem FXML: " + e.getMessage());
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Lỗi khi lấy dữ liệu từ Service: " + e.getMessage());
-            e.printStackTrace();
+        if (notificationList == null || notificationList.isEmpty()) {
+            System.out.println("Thông báo: Không có thông báo nào cho người dùng này.");
+            return;
         }
+
+
+        for (Notification noti : notificationList) {
+            addNotificationItem(notificationsContainer.getChildren().size(), noti);
+        }
+
+    }
+
+    public void addNotificationItem(int index, Notification noti) {
+        try {
+            // Đảm bảo đường dẫn FXML chính xác (nên bắt đầu bằng /com/app/...)
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/components/NotificationItem.fxml"));
+            Node itemNode = loader.load();
+
+            // Lấy controller của item và truyền dữ liệu
+            NotificationItemController itemController = loader.getController();
+            itemController.setData(noti);
+
+            // Đưa item vào container
+            notificationsContainer.getChildren().add(index, itemNode);
+
+        } catch (IOException e) {
+            System.err.println("Lỗi khi load NotificationItem FXML: " + e.getMessage());
+        }
+    }
+
+    public void onNotificationReceive(Notification noti) {
+        System.out.println("render new notification");
+        addNotificationItem(0, noti);
     }
 }
