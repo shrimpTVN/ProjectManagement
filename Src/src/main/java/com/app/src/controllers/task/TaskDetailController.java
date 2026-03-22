@@ -35,7 +35,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+
+import com.app.src.ui.components.TaskButton.*;
 
 import java.io.IOException;
 
@@ -252,6 +255,55 @@ public class TaskDetailController {
         CreateTaskController controller = ViewNavigator.getInstance().loadSubScene("/scenes/CreateTask.fxml");
         if (controller != null) {
             controller.setEditDeadlineContext(currentTask, fromProject);
+        }
+    }
+    @FXML
+    private HBox hboxActionButtons; // Container mới thay cho MenuButton;
+
+    private void renderActionButtons(PersonalTaskDTO taskDto) {
+        if (hboxActionButtons == null) return;
+        hboxActionButtons.getChildren().clear(); // Xóa các nút cũ để tránh bị trùng lặp
+
+        String status = taskDto.getStatusName();
+        if (status == null) return;
+
+        // Chuyển đổi DTO sang Model Task (vì AbstractTaskButton yêu cầu object Task)
+        Task taskModel = new Task();
+        taskModel.setTaskId(taskDto.getTaskId());
+        taskModel.setTaskName(taskDto.getTaskName());
+        // (Lưu ý: Bạn có thể cần set thêm User cho taskModel ở đây nếu updateDatabase() cần userID)
+
+        // Định nghĩa hành động sau khi người dùng bấm nút và DB cập nhật thành công
+        Runnable refreshCallback = () -> {
+            System.out.println("Cập nhật trạng thái thành công!");
+            // Gọi hàm reload lại dữ liệu hoặc đóng popup ở đây
+        };
+
+        switch (status) {
+            case "To do":
+                AcceptTaskButton acceptBtn = new AcceptTaskButton();
+                acceptBtn.setup(taskModel, refreshCallback);
+
+                RejectTaskButton rejectBtn = new RejectTaskButton();
+                rejectBtn.setup(taskModel, refreshCallback);
+
+                hboxActionButtons.getChildren().addAll(acceptBtn, rejectBtn);
+                break;
+
+            case "In progress":
+                SubmitReviewTaskButton submitBtn = new SubmitReviewTaskButton();
+                submitBtn.setup(taskModel, refreshCallback);
+
+                hboxActionButtons.getChildren().add(submitBtn);
+                break;
+
+            case "In preview":
+                // TODO: Thêm ApproveButton và RejectButton dành cho Manager
+                break;
+
+            default:
+                // "Done" hoặc "Canceled" sẽ không có nút hành động nào
+                break;
         }
     }
 
