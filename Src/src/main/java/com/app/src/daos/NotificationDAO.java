@@ -36,7 +36,6 @@ public class NotificationDAO extends AbstractDAO<Notification> {
 
             if (rs.next()) {
                 notification = new Notification();
-                notification.setNotiId(rs.getInt("Not_id"));
                 notification.setNotiTitle(rs.getString("Not_title"));
                 notification.setNotiDescription(rs.getString("Not_description"));
                 notification.setNotiIsRead(rs.getBoolean("Not_isRead"));
@@ -68,11 +67,10 @@ public class NotificationDAO extends AbstractDAO<Notification> {
 
             while (rs.next()) {
                 Notification noti = new Notification();
-                noti.setNotiId(rs.getInt("Not_id"));
                 noti.setNotiTitle(rs.getString("Not_title"));
                 noti.setNotiDescription(rs.getString("Not_description"));
                 noti.setNotiIsRead(rs.getBoolean("Not_isRead"));
-
+                noti.setUserId(rs.getInt("User_id"));
                 if (rs.getTimestamp("Not_date") != null) {
                     noti.setNotiTime(String.valueOf(rs.getTimestamp("Not_date")));
                 }
@@ -102,11 +100,10 @@ public class NotificationDAO extends AbstractDAO<Notification> {
 
             while (rs.next()) {
                 Notification noti = new Notification();
-                noti.setNotiId(rs.getInt("Not_id"));
                 noti.setNotiTitle(rs.getString("Not_title"));
                 noti.setNotiDescription(rs.getString("Not_description"));
                 noti.setNotiIsRead(rs.getBoolean("Not_isRead"));
-
+                noti.setUserId(rs.getInt("User_id"));
                 if (rs.getTimestamp("Not_date") != null) {
                     noti.setNotiTime(String.valueOf(rs.getTimestamp("Not_date")));
                 }
@@ -123,7 +120,7 @@ public class NotificationDAO extends AbstractDAO<Notification> {
     @Override
     public boolean create(Notification entity) {
         // Cập nhật SQL khớp với các trường mới
-        String sql = "INSERT INTO NOTIFICATION (Not_title, Not_description, Not_isRead, Not_date) VALUES (?, ?, ?, CURRENT_TIMESTAMP)";
+        String sql = "INSERT INTO NOTIFICATION (Not_title, Not_description, Not_isRead, Not_date, User_id) VALUES (?, ?, ?, CURRENT_TIMESTAMP, ?)";
         Connection connection = null;
         PreparedStatement ps = null;
 
@@ -134,9 +131,7 @@ public class NotificationDAO extends AbstractDAO<Notification> {
             ps.setString(1, entity.getNotiTitle()); // Cần đảm bảo Model có getNotiTitle()
             ps.setString(2, entity.getNotiDescription());
             ps.setBoolean(3, entity.isNotiIsRead());
-
-            // Nếu bạn có trường User_id trong Notification Model, có thể thêm vào đây:
-            // ps.setInt(4, entity.getUserId());
+            ps.setInt(4, entity.getUserId());
 
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
@@ -153,7 +148,7 @@ public class NotificationDAO extends AbstractDAO<Notification> {
 
     @Override
     public boolean update(int id, Notification entity) {
-        String sql = "UPDATE NOTIFICATION SET Not_title = ?, Not_description = ?, Not_isRead = ? WHERE Not_id = ?";
+        String sql = "UPDATE NOTIFICATION SET Not_title = ?, Not_description = ?, Not_isRead = ?, User_id =? WHERE Not_id = ?";
         Connection connection = null;
         PreparedStatement ps = null;
 
@@ -164,7 +159,8 @@ public class NotificationDAO extends AbstractDAO<Notification> {
             ps.setString(1, entity.getNotiTitle());
             ps.setString(2, entity.getNotiDescription());
             ps.setBoolean(3, entity.isNotiIsRead());
-            ps.setInt(4, id);
+            ps.setInt(4, entity.getUserId());
+            ps.setInt(5, id);
 
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
@@ -194,6 +190,29 @@ public class NotificationDAO extends AbstractDAO<Notification> {
             return rowsAffected > 0;
         } catch (SQLException ex) {
             throw new RuntimeException("Lỗi khi xóa Notification: " + ex.getMessage(), ex);
+        } finally {
+            try {
+                this.closeResource(ps, connection, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean markAsRead(int notiId) {
+        String sql = "UPDATE NOTIFICATION SET Not_isRead = true WHERE Noti_id = ?";
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            connection = getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, notiId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException ex) {
+            throw new RuntimeException("Lỗi khi đánh dấu đã đọc Notification: " + ex.getMessage(), ex);
         } finally {
             try {
                 this.closeResource(ps, connection, null);

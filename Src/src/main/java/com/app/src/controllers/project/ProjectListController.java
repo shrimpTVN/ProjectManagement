@@ -27,6 +27,8 @@ public class ProjectListController {
     private final ProjectJoiningService projectJoiningService = new ProjectJoiningService();
     private final ArrayList<Project> allProjects = new ArrayList<>();
 
+    private static final double PROJECT_CARD_WIDTH = 270.0;
+
     @FXML
     public void initialize() {
         loadProjects();
@@ -50,6 +52,11 @@ public class ProjectListController {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/components/ProjectCard.fxml"));
                 VBox card = loader.load();
+
+                // Keep cards compact in Project List so default width shows 3 items per row.
+                card.setPrefWidth(PROJECT_CARD_WIDTH);
+                card.setMinWidth(PROJECT_CARD_WIDTH);
+                card.setMaxWidth(PROJECT_CARD_WIDTH);
 
                 ProjectCardController projectCardController = loader.getController();
                 projectCardController.setData(project.getProjectName(), roleName, adminName);

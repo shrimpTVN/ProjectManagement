@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="652.0" prefWidth="983.0" style="-fx-background-color: #fafafa;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.task.TasklistController">
+<AnchorPane prefHeight="652.0" prefWidth="983.0" styleClass="tasklist-root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.task.TasklistController">
    <children>
-      <VBox layoutY="6.0" prefHeight="522.0" prefWidth="468.0" AnchorPane.bottomAnchor="-6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="6.0">
+      <VBox layoutY="6.0" prefHeight="522.0" prefWidth="468.0" styleClass="tasklist-content" AnchorPane.bottomAnchor="-6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="6.0">
          <padding>
             <Insets bottom="102.0" top="20.0" />
          </padding>
@@ -56,7 +56,7 @@
                   </Label>
                </children>
             </HBox>
-            <Label fx:id="lblTitle" style="-fx-font-weight: 500;" text="ALL MY TASKS:">
+            <Label fx:id="lblTitle" styleClass="tasklist-title" text="ALL MY TASKS:">
                <VBox.margin>
                   <Insets left="55.0" top="1.0" />
                </VBox.margin>
@@ -107,7 +107,7 @@
                         <Insets left="10.0" right="10.0" top="10.0" />
                      </padding>
                   </HBox>
-                  <Separator maxHeight="0.5" minHeight="0.5" prefHeight="0.5" prefWidth="851.0" style="-fx-background-color: black;" VBox.vgrow="ALWAYS">
+                  <Separator maxHeight="0.5" minHeight="0.5" prefHeight="0.5" prefWidth="851.0" styleClass="tasklist-separator" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets left="65.0" right="65.0" />
                      </VBox.margin>
@@ -118,7 +118,7 @@
                </VBox.margin>
             </VBox>
 <!--             Table component-->
-            <TableView fx:id="taskTable" prefHeight="200.0" prefWidth="843.0" styleClass="custom-table task-table" VBox.vgrow="ALWAYS">
+            <TableView fx:id="taskTable" prefHeight="200.0" prefWidth="843.0" styleClass="tasklist-table" VBox.vgrow="ALWAYS">
               <columns>
                 <TableColumn fx:id="colName" prefWidth="245.5" style="-fx-alignment: CENTER_LEFT; -fx-border-color: black; -fx-border-width: 0 0 0 0;" text="Name" />
                 <TableColumn fx:id="colProject" prefWidth="100.5" style="-fx-alignment: CENTER_LEFT;" text="Project" />
@@ -138,4 +138,6 @@
       </VBox>
    </children>
 </AnchorPane>
+
+
 

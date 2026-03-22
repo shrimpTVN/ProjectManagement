@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="652.0" prefWidth="958.0" style="-fx-background-color: #fafafa;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.HomeController">
+<VBox prefHeight="652.0" prefWidth="958.0" style="-fx-background-color: #f8f8f8;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.HomeController">
     <padding>
         <Insets bottom="30.0" left="40.0" right="40.0" top="30.0" />
     </padding>
@@ -22,7 +22,7 @@
             </children>
         </HBox>
 
-       <VBox alignment="CENTER" prefHeight="603.0" prefWidth="899.0" spacing="30.0" style="-fx-background-color: #fafafa;" VBox.vgrow="ALWAYS">
+       <VBox alignment="CENTER" prefHeight="603.0" prefWidth="899.0" spacing="30.0" style="-fx-background-color: #f8f8f8;" VBox.vgrow="ALWAYS">
           <children>
              <HBox fx:id="allTasksHBox" alignment="BOTTOM_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="235.0" prefWidth="742.0" style="-fx-border-color: grey; -fx-border-width: 0.5; -fx-border-radius: 10; -fx-background-color: white; -fx-background-radius: 10;">
                 <children>
@@ -30,18 +30,18 @@
                       <children>
                          <Label fx:id="allTasksLabel" prefHeight="59.0" prefWidth="251.0" text="All my tasks">
                             <VBox.margin><Insets left="20.0" top="10.0" /></VBox.margin>
-                            <font><Font name="Urbanist Medium" size="36.0" /></font>
+                            <font><Font name="System" size="36.0" /></font>
                          </Label>
                          <Label fx:id="allTasksDescLabel" prefHeight="31.0" prefWidth="212.0" text="List of tasks assigned to me.">
                             <VBox.margin><Insets left="20.0" /></VBox.margin>
                            <font>
-                              <Font name="Urbanist Light" size="16.0" />
+                              <Font name="System" size="16.0" />
                            </font>
                          </Label>
                          <Button fx:id="allTasksBtn" mnemonicParsing="false" onAction="#handleAllTaskBtnClick" prefHeight="32.0" prefWidth="115.0" style="-fx-background-color: #4896FE; -fx-border-radius: 15; -fx-background-radius: 15;" text="See" textFill="#f5f5f5">
                             <VBox.margin><Insets bottom="10.0" left="40.0" top="90.0" /></VBox.margin>
                             <cursor><Cursor fx:constant="HAND" /></cursor>
-                            <font><Font name="Urbanist Medium" size="16.0" /></font>
+                            <font><Font name="System" size="16.0" /></font>
                          </Button>
                       </children>
                    </VBox>
@@ -61,17 +61,17 @@
                       <children>
                          <Label fx:id="projectsLabel" prefHeight="64.0" prefWidth="441.0" text="According to the project" wrapText="true">
                             <VBox.margin><Insets left="20.0" top="10.0" /></VBox.margin>
-                            <font><Font name="Urbanist Medium" size="36.0" /></font>
+                            <font><Font name="System" size="36.0" /></font>
                          </Label>
                          <Label fx:id="projectsDescLabel" prefHeight="37.0" prefWidth="292.0" text="Here are all the projects I am involved in." wrapText="true">
                             <VBox.margin><Insets left="20.0" /></VBox.margin>
                            <font>
-                              <Font name="Urbanist Light" size="16.0" />
+                              <Font name="System" size="16.0" />
                            </font>
                          </Label>
                          <Button fx:id="projectsBtn" alignment="CENTER" mnemonicParsing="false" onAction="#handleProjectBtnClick" prefHeight="36.0" prefWidth="115.0" style="-fx-background-color: #4896FE; -fx-border-radius: 15; -fx-background-radius: 15;" text="See" textFill="WHITE">
                             <VBox.margin><Insets bottom="15.0" left="40.0" top="80.0" /></VBox.margin>
-                            <font><Font name="Urbanist Medium" size="16.0" /></font>
+                            <font><Font name="System" size="16.0" /></font>
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
@@ -90,4 +90,8 @@
        </VBox>
     </children>
 </VBox>
+
+
+
+
 

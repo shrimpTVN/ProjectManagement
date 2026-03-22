@@ -30,7 +30,7 @@ public class AcceptTaskButton extends AbstractTaskButton {
         int userId = task.getUser() != null ? task.getUser().getUserId() : 0;
         // Trạng thái cũ: To Do -> Trạng thái mới: In Progress
         return TaskDAO.getInstance().appendStatusUpdating(
-                task.getTaskId(), "To Do", "In Progress", "User đã nhận task và bắt đầu làm", userId
+                task.getTaskId(), "To Do", "In Progressing", "User đã nhận task và bắt đầu làm", userId
         );
     }
 }

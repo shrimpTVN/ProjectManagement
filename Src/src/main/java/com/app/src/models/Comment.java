@@ -3,7 +3,7 @@ package com.app.src.models;
 import java.util.Date;
 
 public class Comment {
-    private int id;
+
     private int taskId;
     private String comment;
     private Date date;
@@ -11,21 +11,12 @@ public class Comment {
 
 
     public Comment(){}
-    public Comment(int id, int taskId, String comment, Date date, int userId) {
-        this.id = id;
+    public Comment( int taskId, int userId, String comment, Date date) {
         this.taskId = taskId;
         this.comment = comment;
         this.date = date;
         this.userId = userId;
 
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getTaskId() {

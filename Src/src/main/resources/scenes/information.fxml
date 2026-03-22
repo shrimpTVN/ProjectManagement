@@ -1,117 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="522.0" prefWidth="468.0" style="-fx-background-color: #fafafa;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.InformationController">
+<StackPane prefHeight="640.0" prefWidth="980.0" styleClass="info-page-root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.InformationController">
    <children>
-      <Rectangle fx:id="Userbackground" arcHeight="5.0" arcWidth="5.0" height="218.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="960.0" />
-      <GridPane hgap="20.0" layoutY="288.0" prefHeight="364.0" prefWidth="960.0" vgap="30.0">
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="466.0" minWidth="10.0" prefWidth="466.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="465.0" minWidth="10.0" prefWidth="465.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints maxHeight="175.0" minHeight="10.0" prefHeight="113.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="139.0" minHeight="10.0" prefHeight="115.0" vgrow="SOMETIMES" />
-         </rowConstraints>
+      <VBox maxWidth="840.0" prefWidth="840.0" spacing="16.0" styleClass="info-main-card">
          <children>
-            <VBox alignment="CENTER_LEFT" prefHeight="137.0" prefWidth="506.0" style="-fx-padding: 0;">
+            <AnchorPane prefHeight="230.0" styleClass="info-header-card">
                <children>
-                  <Label text="Username">
-                     <font>
-                        <Font name="Urbanist Light" size="24.0" />
-                     </font>
-                     <padding>
-                        <Insets left="100.0" />
-                     </padding>
-                  </Label>
-                   <Label fx:id="dataEmailLabel" text="Date_email">
-                      <padding>
-                         <Insets left="100.0" />
-                      </padding>
-                      <font>
-                         <Font name="Urbanist Regular" size="26.0" />
-                      </font>
-                   </Label>
+                  <Rectangle fx:id="Userbackground" arcHeight="18.0" arcWidth="18.0" height="230.0" strokeWidth="0.0" styleClass="info-header-bg" width="840.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <VBox alignment="CENTER" spacing="10.0" AnchorPane.bottomAnchor="18.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="18.0">
+                     <children>
+                        <ImageView fx:id="profileImageView" fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" styleClass="info-avatar">
+                           <image>
+                              <Image url="@../image/profile2.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="nameLabel" alignment="CENTER" styleClass="info-name" text="Name" />
+                        <Label fx:id="dataEmailLabel" alignment="CENTER" styleClass="info-email" text="email@example.com" />
+                     </children>
+                  </VBox>
                </children>
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </VBox>
-            <VBox alignment="CENTER_LEFT" prefHeight="137.0" prefWidth="482.0" style="-fx-padding: 0;" GridPane.columnIndex="1">
+            </AnchorPane>
+
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
-                  <Label text="Sex">
-                     <font>
-                        <Font name="Urbanist Light" size="24.0" />
-                     </font>
-                  </Label>
-                   <Label fx:id="dataSexLabel" text="Date_sex">
-                     <font>
-                        <Font name="Urbanist Regular" size="26.0" />
-                     </font>
-                  </Label>
+                  <Label fx:id="updateMessageLabel" styleClass="info-update-message" text="" />
+                  <VBox HBox.hgrow="ALWAYS" />
+                  <Button fx:id="editButton" mnemonicParsing="false" onAction="#handleEditClick" styleClass="info-action-btn" text="Edit" />
+                  <Button fx:id="saveButton" managed="false" mnemonicParsing="false" onAction="#handleSaveClick" styleClass="info-action-btn info-action-save" text="Save" visible="false" />
+                  <Button fx:id="cancelButton" managed="false" mnemonicParsing="false" onAction="#handleCancelClick" styleClass="info-action-btn info-action-cancel" text="Cancel" visible="false" />
                </children>
-            </VBox>
-            <VBox prefHeight="170.0" prefWidth="466.0" style="-fx-padding: 0;" GridPane.rowIndex="1">
+            </HBox>
+
+            <VBox fillWidth="true" spacing="14.0" VBox.vgrow="ALWAYS">
                <children>
-                  <Label text="Date of birth">
-                     <font>
-                        <Font name="Urbanist Light" size="24.0" />
-                     </font>
+                  <VBox spacing="6.0" styleClass="info-detail-card">
+                     <children>
+                        <Label styleClass="info-detail-title" text="Name" />
+                        <Label fx:id="nameValueLabel" styleClass="info-detail-value" text="N/A" wrapText="true" />
+                        <TextField fx:id="nameField" managed="false" styleClass="info-edit-input" visible="false" />
+                     </children>
                      <padding>
-                        <Insets left="100.0" />
+                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
                      </padding>
-                  </Label>
-                   <Label fx:id="dataDateofbirthLabel" text="Data_dateofbirth">
-                     <font>
-                        <Font name="Urbanist Regular" size="26.0" />
-                     </font>
+                  </VBox>
+
+                  <VBox spacing="6.0" styleClass="info-detail-card">
+                     <children>
+                        <Label styleClass="info-detail-title" text="Date of birth" />
+                        <Label fx:id="dobValueLabel" styleClass="info-detail-value" text="N/A" wrapText="true" />
+                        <DatePicker fx:id="dobPicker" managed="false" styleClass="info-edit-input" visible="false" />
+                        <Label fx:id="dataDateofbirthLabel" managed="false" visible="false" />
+                     </children>
                      <padding>
-                        <Insets left="100.0" />
+                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
                      </padding>
-                  </Label>
-               </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-padding: 0;" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <children>
-                  <Label text="Telephone">
-                     <font>
-                        <Font name="Urbanist Light" size="24.0" />
-                     </font>
-                  </Label>
-                   <Label fx:id="dataTeleLabel" text="Date_tele">
-                     <font>
-                        <Font name="Urbanist Regular" size="26.0" />
-                     </font>
-                  </Label>
+                  </VBox>
+
+                  <VBox spacing="6.0" styleClass="info-detail-card">
+                     <children>
+                        <Label styleClass="info-detail-title" text="Sex" />
+                        <Label fx:id="sexValueLabel" styleClass="info-detail-value" text="N/A" />
+                        <ComboBox fx:id="sexCombo" managed="false" prefWidth="180.0" styleClass="info-edit-input" visible="false" />
+                        <Label fx:id="dataSexLabel" managed="false" visible="false" />
+                     </children>
+                     <padding>
+                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                     </padding>
+                  </VBox>
+
+                  <VBox spacing="6.0" styleClass="info-detail-card">
+                     <children>
+                        <Label styleClass="info-detail-title" text="Telephone" />
+                        <Label fx:id="teleValueLabel" styleClass="info-detail-value" text="N/A" wrapText="true" />
+                        <TextField fx:id="teleField" managed="false" styleClass="info-edit-input" visible="false" />
+                        <Label fx:id="dataTeleLabel" managed="false" visible="false" />
+                     </children>
+                     <padding>
+                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                     </padding>
+                  </VBox>
+
+                  <VBox spacing="6.0" styleClass="info-detail-card">
+                     <children>
+                        <Label styleClass="info-detail-title" text="Account" />
+                        <Label styleClass="info-detail-value" text="Email is shown below your name." wrapText="true" />
+                     </children>
+                     <padding>
+                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                     </padding>
+                  </VBox>
                </children>
             </VBox>
          </children>
-      </GridPane>
-       <VBox layoutX="324.0" layoutY="169.0" prefHeight="43.0" prefWidth="259.0">
-          <children>
-             <Label fx:id="nameLabel" alignment="CENTER" text="Name" textFill="#fff9f9">
-                <font>
-                   <Font name="Urbanist Medium" size="36.0" />
-                </font>
-             </Label>
-          </children>
-       </VBox>
-       <ImageView fx:id="profileImageView" fitHeight="124.0" fitWidth="149.0" layoutX="180.0" layoutY="156.0" pickOnBounds="true" preserveRatio="true">
-          <image>
-             <Image url="@../image/profile2.png" />
-          </image>
-       </ImageView>
+         <padding>
+            <Insets bottom="18.0" left="18.0" right="18.0" top="18.0" />
+         </padding>
+      </VBox>
    </children>
-</AnchorPane>
+</StackPane>
 

@@ -31,7 +31,7 @@ public class SubmitReviewTaskButton extends AbstractTaskButton {
         int userId = task.getUser() != null ? task.getUser().getUserId() : 0;
         // Trạng thái cũ: In Progress -> Trạng thái mới: In Preview
         return TaskDAO.getInstance().appendStatusUpdating(
-                task.getTaskId(), "In Progress", "In Preview", "User đã làm xong, gửi yêu cầu duyệt", userId
+                task.getTaskId(), "In Progressing", "In Preview", "User đã làm xong, gửi yêu cầu duyệt", userId
         );
     }
 }

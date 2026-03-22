@@ -1,14 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.app.src.controllers.project.SummaryController"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane prefHeight="600.0" prefWidth="880.0" styleClass="summary-root" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.SummaryController">
+    <children>
+        <HBox spacing="16.0" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="12.0">
+            <children>
+                <VBox prefWidth="450.0" spacing="10.0" styleClass="summary-card" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="summary-card-title" text="Overview" />
+                        <Separator />
+                        <VBox spacing="10.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="14.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                        <PieChart fx:id="progressPieChart" labelsVisible="true" legendVisible="false" prefHeight="250.0" prefWidth="280.0" HBox.hgrow="ALWAYS" />
+                                        <VBox fx:id="statusLegendBox" prefWidth="150.0" spacing="6.0" />
+                                    </children>
+                                </HBox>
+                                <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                    <children>
+                                        <Label fx:id="lblProgressPercent" alignment="CENTER" styleClass="summary-percent" text="0%" />
+                                        <Label fx:id="lblDoneOverTotal" alignment="CENTER" styleClass="summary-percent-sub" text="0 / 0 tasks completed" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
 
+                <VBox prefWidth="450.0" spacing="10.0" styleClass="summary-card" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="summary-card-title" text="Member Completion Progress" />
+                        <Separator />
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="summary-member-scroll" VBox.vgrow="ALWAYS">
+                            <content>
+                                <VBox fx:id="memberProgressBox" spacing="10.0" styleClass="summary-member-list">
+                                    <padding>
+                                        <Insets bottom="6.0" top="2.0" />
+                                    </padding>
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
 </AnchorPane>
+

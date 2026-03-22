@@ -22,9 +22,11 @@ import com.app.src.authentication.RoleValidator;
 import com.app.src.controllers.ViewNavigator;
 import com.app.src.controllers.project.ProjectDetailController;
 import com.app.src.core.AppContext;
+import com.app.src.core.service.chat.ChatClientService;
 import com.app.src.daos.ProjectDAO;
 import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.models.Project;
+import com.app.src.models.Task;
 import com.app.src.services.ProjectJoiningService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -56,6 +58,8 @@ public class TaskDetailController {
     @FXML
     private Label lblNameProject;
     @FXML
+    private Label lblTaskStatus;
+    @FXML
     private Label lblStart;
     @FXML
     private Label lblDeadline;
@@ -67,8 +71,6 @@ public class TaskDetailController {
     private Label lblDescription;
 
     // Các nút bấm
-    @FXML
-    private MenuButton menubtnStatus;
     @FXML
     private Button btnCmt;
     @FXML
@@ -82,7 +84,6 @@ public class TaskDetailController {
     private PersonalTaskDTO currentTask;
     private int fromProject = 0;
     private String currentSubView;
-
 
     /**
      * Hàm này được gọi từ TasklistController để truyền dữ liệu Task vào
@@ -98,10 +99,12 @@ public class TaskDetailController {
         // Đổ dữ liệu từ Object Task lên các Label trên màn hình
         String safeTaskName = task.getTaskName() != null ? task.getTaskName() : "(Không có tên task)";
         String safeProjectName = task.getProjectName() != null ? task.getProjectName() : "Chưa gắn dự án";
+        String safeStatus = task.getStatusName() != null ? task.getStatusName() : "Trạng thái trống";
 
         lblTaskName.setText(safeTaskName); // Cập nhật tên Task (cho tiêu đề lớn)
         lblNameProject.setText(safeProjectName);
         lblProjectName.setText("Project: " + safeProjectName);
+        lblTaskStatus.setText(safeStatus);
 
         lblStart.setText(task.getTaskStartTime() != null ? task.getTaskStartTime() : "Chưa xác định");
         lblDeadline.setText(task.getTaskEndTime() != null ? task.getTaskEndTime() : "Chưa xác định");
@@ -109,8 +112,9 @@ public class TaskDetailController {
         lblDescription.setText(task.getTaskDescription() != null ? task.getTaskDescription() : "Không có mô tả.");
 
         // Cập nhật nút Dropdown Trạng thái
-        menubtnStatus.setText(task.getStatusName() != null ? task.getStatusName() : "Trạng thái");
+//        menubtnStatus.setText(task.getStatusName() != null ? task.getStatusName() : "Trạng thái");
 
+        renderActionButtons(task);
         updateEditButtonVisibility();
 
         // --- Phần này bạn cần bổ sung thêm nếu muốn hiển thị ---
@@ -167,7 +171,7 @@ public class TaskDetailController {
 
             // Lấy Project đầy đủ với PROJECT_JOINING data
             Project fullProject = new Project();
-            for (Project project: AppContext.getProjects())
+            for (Project project : AppContext.getProjects())
                 if (project.getProjectId() == this.fromProject)
                     fullProject = project;
 
@@ -192,7 +196,10 @@ public class TaskDetailController {
             Object childController = loader.getController();
             if (childController instanceof CommentBoxController commentController) {
                 commentController.renderData(currentTask.getTaskId());
-            } else if (childController instanceof StatusNotiController statusNotiController) {                //gọi renderData từ container chứa status
+                ChatClientService.getInstance().setListener(commentController);
+                commentController.sendComment("req", AppContext.getUserData().getUserId(), "request to connecto to chat box");
+
+            } else if (childController instanceof StatusNotiController statusNotiController) {  //gọi renderData từ container chứa status
                 statusNotiController.renderData(currentTask.getTaskId());
             }
 
@@ -267,37 +274,42 @@ public class TaskDetailController {
         String status = taskDto.getStatusName();
         if (status == null) return;
 
-        // Chuyển đổi DTO sang Model Task (vì AbstractTaskButton yêu cầu object Task)
         Task taskModel = new Task();
         taskModel.setTaskId(taskDto.getTaskId());
         taskModel.setTaskName(taskDto.getTaskName());
-        // (Lưu ý: Bạn có thể cần set thêm User cho taskModel ở đây nếu updateDatabase() cần userID)
 
-        // Định nghĩa hành động sau khi người dùng bấm nút và DB cập nhật thành công
-        Runnable refreshCallback = () -> {
-            System.out.println("Cập nhật trạng thái thành công!");
-            // Gọi hàm reload lại dữ liệu hoặc đóng popup ở đây
-        };
-
+        System.out.println("-"+status+"-");
         switch (status) {
-            case "To do":
+            case "To Do":
                 AcceptTaskButton acceptBtn = new AcceptTaskButton();
-                acceptBtn.setup(taskModel, refreshCallback);
+                acceptBtn.setup(taskModel, () -> {
+                    System.out.println("Nhận task thành công!");
+                    taskDto.setStatusName("In Progress"); // Cập nhật DTO
+                    setTaskData(taskDto);                 // Load lại trang
+                });
 
                 RejectTaskButton rejectBtn = new RejectTaskButton();
-                rejectBtn.setup(taskModel, refreshCallback);
+                rejectBtn.setup(taskModel, () -> {
+                    System.out.println("Từ chối task thành công!");
+                    taskDto.setStatusName("Canceled");    // Cập nhật DTO
+                    setTaskData(taskDto);                 // Load lại trang
+                });
 
                 hboxActionButtons.getChildren().addAll(acceptBtn, rejectBtn);
                 break;
 
-            case "In progress":
+            case "In Progress":
+            case "In Progressing":
                 SubmitReviewTaskButton submitBtn = new SubmitReviewTaskButton();
-                submitBtn.setup(taskModel, refreshCallback);
-
+                submitBtn.setup(taskModel, () -> {
+                    System.out.println("Gửi duyệt thành công!");
+                    taskDto.setStatusName("In Preview");  // Cập nhật DTO
+                    setTaskData(taskDto);                 // Load lại trang
+                });
                 hboxActionButtons.getChildren().add(submitBtn);
                 break;
 
-            case "In preview":
+            case "In Preview":
                 // TODO: Thêm ApproveButton và RejectButton dành cho Manager
                 break;
 
