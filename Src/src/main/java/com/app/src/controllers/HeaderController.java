@@ -1,5 +1,7 @@
 package com.app.src.controllers;
 
+import com.app.src.controllers.notification.NotificationController;
+import com.app.src.core.service.chat.ChatClientService;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 
@@ -15,7 +17,8 @@ public class HeaderController {
         if (SideBarController.getInstance() != null) {
             SideBarController.getInstance().resetActive();
         }
-        ViewNavigator.getInstance().loadSubScene("/scenes/Notification.fxml");
+        NotificationController controller = ViewNavigator.getInstance().loadSubScene("/scenes/Notification.fxml");
+        ChatClientService.getInstance().setNotificationController(controller);
     }
 
     @FXML

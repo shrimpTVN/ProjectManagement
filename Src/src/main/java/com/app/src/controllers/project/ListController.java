@@ -5,6 +5,7 @@ import com.app.src.authentication.VisibleManer;
 import com.app.src.controllers.ViewNavigator;
 import com.app.src.controllers.task.CreateTaskController;
 import com.app.src.controllers.task.TaskDetailController;
+import com.app.src.core.service.chat.ChatClientService;
 import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.models.Project;
 import com.app.src.models.Task;
@@ -284,6 +285,7 @@ public class ListController implements IProjectDetailSubView, Initializable {
                 dto.setTaskStartTime(task.getTaskStartTime());
                 dto.setTaskEndTime(task.getTaskEndTime());
                 dto.setStatusName(formatStatusForDisplay(task.getTaskStatus()));
+                dto.setUser(task.getUser());
                 if (project != null) {
                     dto.setProjectName(project.getProjectName());
                 }
@@ -306,6 +308,11 @@ public class ListController implements IProjectDetailSubView, Initializable {
 
         if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             TasklistService service = new TasklistService();
+
+            String message = ChatClientService.getInstance().generateNotification("Task của bạn đã được Xếp xóa rồi nhé!",
+                    "Task \" " + selectedTask.getTaskName() + " \" trong project " + project.getProjectName() + " của bạn đã được sếp xóa.",
+                    selectedTask.getUser().getUserId());
+            ChatClientService.getInstance().sendMessage(message);
             boolean success = service.deleteTask(selectedTask.getTaskId());
 
             if (success) {

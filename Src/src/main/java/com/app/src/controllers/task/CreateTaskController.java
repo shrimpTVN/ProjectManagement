@@ -4,7 +4,6 @@ import com.app.src.controllers.ViewNavigator;
 import com.app.src.controllers.project.ProjectDetailController;
 import com.app.src.core.AppContext;
 import com.app.src.core.service.chat.ChatClientService;
-import com.app.src.daos.ProjectDAO;
 import com.app.src.daos.UserDAO;
 import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.models.Project;
@@ -161,12 +160,7 @@ public class CreateTaskController {
         this.backProjectId = projectId;
 
         if (projectId > 0) {
-            for (Project project : AppContext.getProjects()) {
-                if (project.getProjectId() == projectId) {
-                    this.currentProject = project;
-                    break;
-                }
-            }
+                  this.currentProject = AppContext.getProjectById(projectId);
         }
 
         txtName.setText(task.getTaskName() != null ? task.getTaskName() : "");
@@ -247,9 +241,10 @@ public class CreateTaskController {
 
             if (TasklistService.getInstance().addTask(newTask)) {
                 String message = ChatClientService.getInstance().generateNotification("Bạn có quà từ Xếp nè!",
-                            "Bạn đã được giao task mới. " + newTask.getTaskName() + " Trong project " + currentProject.getProjectName() + " deadline là ngày " + newTask.getTaskEndTime(),
-                                newTask.getUser().getUserId());
+                        "Bạn đã được giao task mới. \" " + newTask.getTaskName() + " \" Trong project " + currentProject.getProjectName() + " deadline là ngày " + newTask.getTaskEndTime(),
+                        newTask.getUser().getUserId());
                 ChatClientService.getInstance().sendMessage(message);
+
                 backToProjectDetail();
             } else {
                 lblErrorName.setText("System error: Unable to create task.");
@@ -279,7 +274,14 @@ public class CreateTaskController {
             return;
         }
 
+
+
         editingTask.setTaskEndTime(dpEnd.getValue().toString());
+        String message = ChatClientService.getInstance().generateNotification("Thay đổi Deadline Task!",
+                "Deadline của Task  \" " + editingTask.getTaskName() + " \" trong project " + currentProject.getProjectName() + " đã thanh đổi thành ngày " + editingTask.getTaskEndTime() ,
+                editingTask.getUser().getUserId());
+        ChatClientService.getInstance().sendMessage(message);
+
         backToTaskDetail();
     }
 
@@ -310,9 +312,9 @@ public class CreateTaskController {
             return;
         }
         ProjectDetailController controller = ViewNavigator.getInstance().loadSubScene("/scenes/ProjectDetail.fxml");
-        Project fullProject = ProjectDAO.getInstance().getProjectWithJoinings(currentProject.getProjectId());
-        ProjectJoiningService joiningService = new ProjectJoiningService();
-        String adminName = joiningService.getAdmin(currentProject.getProjectId());
+
+        Project fullProject = AppContext.getProjectById(currentProject.getProjectId());
+        String adminName = ProjectJoiningService.getAdmin(currentProject.getProjectId());
         controller.renderData(fullProject, adminName);
     }
 }

@@ -47,7 +47,7 @@ public class NotificationController {
         notificationsContainer.getChildren().clear();
 
 
-        List<Notification> notificationList = notificationService.getNotificationsByUserId(userId);
+        List<Notification> notificationList = NotificationService.getNotificationsByUserId(userId);
 
         if (notificationList == null || notificationList.isEmpty()) {
             System.out.println("Thông báo: Không có thông báo nào cho người dùng này.");
@@ -56,7 +56,7 @@ public class NotificationController {
 
 
         for (Notification noti : notificationList) {
-          addNotificationItem(notificationsContainer.getChildren().size(), noti);
+            addNotificationItem(notificationsContainer.getChildren().size(), noti);
         }
 
     }
@@ -72,10 +72,7 @@ public class NotificationController {
             itemController.setData(noti);
 
             // Đưa item vào container
-
-                notificationsContainer.getChildren().add(index, itemNode);
-
-
+            notificationsContainer.getChildren().add(index, itemNode);
 
         } catch (IOException e) {
             System.err.println("Lỗi khi load NotificationItem FXML: " + e.getMessage());
@@ -83,6 +80,7 @@ public class NotificationController {
     }
 
     public void onNotificationReceive(Notification noti) {
+        System.out.println("render new notification");
         addNotificationItem(0, noti);
     }
 }

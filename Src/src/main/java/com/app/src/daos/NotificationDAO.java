@@ -130,7 +130,7 @@ public class NotificationDAO extends AbstractDAO<Notification> {
 
             ps.setString(1, entity.getNotiTitle()); // Cần đảm bảo Model có getNotiTitle()
             ps.setString(2, entity.getNotiDescription());
-            ps.setBoolean(3, entity.isNotiIsRead());
+            ps.setBoolean(3, false);
             ps.setInt(4, entity.getUserId());
 
             int rowsAffected = ps.executeUpdate();

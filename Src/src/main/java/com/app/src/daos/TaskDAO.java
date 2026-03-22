@@ -4,6 +4,7 @@ import com.app.src.dtos.PersonalTaskDTO;
 import com.app.src.exceptions.DataAccessException;
 import com.app.src.models.StatusUpdating;
 import com.app.src.models.Task;
+import com.app.src.models.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -153,6 +154,11 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
                 task.setTaskDescription(rs.getString("Task_description"));
                 task.setProjectName(rs.getString("Pro_name"));
                 task.setStatusName(rs.getString("Sta_name"));
+
+                User user = new User();
+                user.setUserId(rs.getInt("User_id"));
+                task.setUser(user);
+
                 tasks.add(task);
             }
             this.closeResource(ps, connection, rs);

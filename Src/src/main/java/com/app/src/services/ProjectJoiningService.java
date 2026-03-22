@@ -16,7 +16,7 @@ public class ProjectJoiningService {
         projectJoiningDao = ProjectJoiningDAO.getInstance();
     }
 
-    public String getAdmin(int projectId) {
+    public static String getAdmin(int projectId) {
         return projectJoiningDao.getAdmin(projectId);
     }
 

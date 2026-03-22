@@ -1,9 +1,11 @@
 package com.app.src.core.service.chat;
 
 import com.app.src.controllers.notification.NotificationController;
+import com.app.src.core.AppContext;
 import com.app.src.core.async.AsyncExecutor;
 import com.app.src.models.Comment;
 import com.app.src.models.Notification;
+import com.app.src.services.NotificationService;
 import com.google.gson.Gson;
 import javafx.application.Platform;
 import java.io.*;
@@ -57,6 +59,8 @@ public class ChatClientService {
 
         AsyncExecutor.getInstance().runAsync(this::listenForMessages);
         AsyncExecutor.getInstance().runAsync(this::processCommentQueue);
+        AsyncExecutor.getInstance().runAsync(this::processNotificationQueue);
+
     }
 
     public void connectDefault() throws IOException {
@@ -71,14 +75,18 @@ public class ChatClientService {
     private void listenForMessages() {
         try {
             String incomingJson;
+
             // 3. ĐỌC DỮ LIỆU CHUẨN XÁC
             while (isRunning && !socket.isClosed() && (incomingJson = in.readLine()) != null) {
                 String[] message = incomingJson.split(":", 2);
                 String header = message[0];// not -> notification; req -> request to join chat box; com -> comment
                 String body = message[1];
 
-                if (header.equals("not")){
+                System.out.println("Received message: " + incomingJson);
 
+                if (header.equals("not")){
+                    Notification receivedNoti= gson.fromJson(body, Notification.class);
+                    notificationQueue.offer(receivedNoti);
                 }
 
                 if (header.equals("com")){
@@ -117,9 +125,10 @@ public class ChatClientService {
         try {
             while (isRunning) {
                 Notification notification = notificationQueue.take();
+                System.out.println(" load notification cho tu user " + notification.getUserId() + " user hien tai la: " + AppContext.getUserData().getUserId());
                 Platform.runLater(() -> {
-                    System.out.println(" load message cho tu user " + notification.getUserId());
-                    if (notificationController != null) {
+                    if (notificationController != null && notification.getUserId() == AppContext.getUserData().getUserId()) { // neu thong bao la cua user do thi moi hien thi
+
                         notificationController.onNotificationReceive(notification);
                     }
                 });
@@ -157,7 +166,9 @@ public class ChatClientService {
     }
 
     public String generateNotification(String title, String content, int userId) {
-
-        return "com:"+gson.toJson(new Notification(title, content, false, String.valueOf( new Date()), userId));
+        Notification notification = new Notification(title, content, false, String.valueOf( new Date()), userId);
+        NotificationService.getInstance();
+        NotificationService.createNotification(notification);
+        return "not:"+gson.toJson(notification);
     }
 }
