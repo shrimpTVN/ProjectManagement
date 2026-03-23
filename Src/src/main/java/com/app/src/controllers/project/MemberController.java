@@ -4,6 +4,7 @@ import com.app.src.authentication.RoleValidator;
 import com.app.src.authentication.VisibleManer;
 import com.app.src.controllers.ViewNavigator;
 import com.app.src.core.AppContext;
+import com.app.src.core.service.chat.ChatClientService;
 import com.app.src.models.Project;
 import com.app.src.models.ProjectJoining;
 import com.app.src.models.ProjectRole;
@@ -201,7 +202,13 @@ public class MemberController implements IProjectDetailSubView {
                     success = updateRole(newRoleId, selectedJoining.getUser().getUserId());
                 }
 
-                if (success) {
+                if (success && selectedJoining.getUser().getUserId() != AppContext.getUserData().getUserId()) { // tránh gửi thông báo cho người tự sửa role của mình
+                    String changedRoleName = ProjectRoleService.getRoleNameById(newRoleId);
+                    sendProjectNotification(
+                            "Bạn đã được bổ nhiệm " + changedRoleName + "!",
+                            "Vai trò của bạn trong project \"" + currentProject.getProjectName() + "\" đã được cập nhật thành " + changedRoleName + ".",
+                            selectedJoining.getUser().getUserId()
+                    );
 
                     loadMembers(); // Làm mới bảng
                     clearForm();   // Dọn dẹp form phía trên (nếu đang bấm vào dòng đó)
@@ -280,6 +287,12 @@ public class MemberController implements IProjectDetailSubView {
         boolean isSuccess = joiningService.createNewJoining(currentProject.getProjectId(), userId, selectRoleId);
 
         if (isSuccess) {
+            sendProjectNotification(
+                    "Bạn được thêm vào project",
+                    "Bạn đã được thêm vào project \"" + currentProject.getProjectName() + "\" với vai trò " + selectedRole.getRoleName() + ".",
+                    foundUser.getUserId()
+            );
+
             System.out.println("[DEBUG - Add Member] Success: Added user '" + inputUserName + "' to the project.");
             loadMembers(); // Load lại bảng dữ liệu để hiển thị dòng mới
             clearForm();   // Reset lại form nhập liệu
@@ -338,7 +351,13 @@ public class MemberController implements IProjectDetailSubView {
                 );
             }
 
-            if (success) {
+            if (success && selected.getUser().getUserId() != AppContext.getUserData().getUserId()) { // tránh gửi thông báo cho người tự thao tác
+                sendProjectNotification(
+                        "Bạn đã được mời ra khỏi project",
+                        "Bạn đã bị xóa khỏi project \"" + currentProject.getProjectName() + "\".",
+                        selected.getUser().getUserId()
+                );
+
                 loadMembers(); // Làm mới bảng
                 clearForm();   // Dọn dẹp form phía trên (nếu đang bấm vào dòng đó)
             } else {
@@ -355,5 +374,14 @@ public class MemberController implements IProjectDetailSubView {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    private void sendProjectNotification(String title, String content, int receiverUserId) {
+        try {
+            String msg = ChatClientService.getInstance().generateNotification(title, content, receiverUserId);
+            ChatClientService.getInstance().sendMessage(msg);
+        } catch (Exception ex) {
+            System.err.println("[NOTIFICATION-ERROR] " + ex.getMessage());
+        }
     }
 }
