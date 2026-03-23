@@ -4,6 +4,7 @@ import com.app.src.core.async.AsyncExecutor;
 import com.app.src.core.service.chat.ChatClientService;
 import com.app.src.core.session.UserSession;
 import com.app.src.exceptions.AppException;
+import com.app.src.models.Notification;
 import com.app.src.services.LoginService;
 import com.app.src.services.UserService;
 import javafx.event.ActionEvent;
@@ -74,6 +75,9 @@ public class LoginController implements Initializable {
 
                     // connection den chat server
                     connectChatServerSafely();
+
+                    String msg = ChatClientService.getInstance().generateNotification("Đăng ký kết nối","", userId);
+                    ChatClientService.getInstance().sendMessage(msg);
                 } else {
                     labelLoginMess.setText("Invalid username or password!");
                 }
