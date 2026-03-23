@@ -9,7 +9,7 @@
 
 <VBox prefHeight="652.0" prefWidth="958.0" styleClass="project-info-root" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.InforController">
 
-    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="project-info-scroll" VBox.vgrow="ALWAYS">
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="ALWAYS" styleClass="project-info-scroll" VBox.vgrow="ALWAYS" fitToHeight="false">
         <content>
             <VBox spacing="14.0" styleClass="project-info-content">
                 <padding>
@@ -70,19 +70,19 @@
                         <Label fx:id="lblManagerName" styleClass="project-info-card-value" text="Manager name" wrapText="true" />
                     </children>
                 </VBox>
+
+                <HBox alignment="CENTER_RIGHT" spacing="10.0" styleClass="project-info-action-row">
+                    <children>
+                        <Button fx:id="btnEdit" minWidth="110.0" prefHeight="34.0" styleClass="project-info-btn-edit" text="Edit" />
+                        <Button fx:id="btnDelete" minWidth="120.0" prefHeight="34.0" styleClass="project-info-btn-delete" text="Delete" />
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="18.0" left="0.0" right="0.0" />
+                    </VBox.margin>
+                </HBox>
             </VBox>
         </content>
     </ScrollPane>
-
-    <HBox alignment="CENTER_RIGHT" spacing="10.0" styleClass="project-info-action-row">
-        <children>
-            <Button fx:id="btnEdit" minWidth="110.0" prefHeight="34.0" styleClass="project-info-btn-edit" text="Edit" />
-            <Button fx:id="btnDelete" minWidth="120.0" prefHeight="34.0" styleClass="project-info-btn-delete" text="Delete" />
-        </children>
-        <VBox.margin>
-            <Insets bottom="18.0" left="22.0" right="22.0" />
-        </VBox.margin>
-    </HBox>
 
 </VBox>
 

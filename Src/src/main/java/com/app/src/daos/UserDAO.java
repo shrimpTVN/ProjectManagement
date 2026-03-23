@@ -170,6 +170,46 @@ public class UserDAO extends AbstractDAO<User>{
         return user;
     }
 
+    public User findByAccountUsername(String accountUsername) {
+        User user = null;
+        final String sql = "SELECT u.*, a.Acc_id, a.Acc_userName, a.Acc_password FROM user u JOIN account a ON u.User_id = a.User_id WHERE a.Acc_userName = ?";
+
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, accountUsername);
+
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                user = new User();
+                user.setUserId(resultSet.getInt("User_id"));
+                user.setUserName(resultSet.getString("User_name"));
+                user.setUserDoB(resultSet.getString("User_dateOfBirth"));
+                user.setUserGender(resultSet.getInt("User_gender") == 1);
+                user.setUserPhoneNumber(resultSet.getString("User_phoneNumber"));
+
+                Account account = new Account();
+                account.setAccountId(resultSet.getInt("Acc_id"));
+                account.setUserName(resultSet.getString("Acc_userName"));
+                account.setPassword(resultSet.getString("Acc_password"));
+                user.setAccount(account);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                closeResource(preparedStatement, connection, resultSet);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return user;
+    }
+
     @Override
     public boolean create(User entity) {
         return false;
