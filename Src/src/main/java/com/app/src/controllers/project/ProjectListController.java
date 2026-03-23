@@ -8,7 +8,10 @@ import com.app.src.services.ProjectJoiningService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
@@ -23,6 +26,10 @@ public class ProjectListController {
 
     @FXML
     private TextField searchProjectField;
+
+    @FXML
+    private Button btnRefresh;
+
 
     private final ProjectJoiningService projectJoiningService = new ProjectJoiningService();
     private final ArrayList<Project> allProjects = new ArrayList<>();
@@ -91,6 +98,17 @@ public class ProjectListController {
         });
     }
 
+    // Hàm hỗ trợ tìm Project Card từ node bị click
+    private Node findProjectCard(Node node) {
+        while (node != null && node != allProjectsFlowPane) {
+            if (node instanceof VBox && node.getUserData() instanceof Project) {
+                return node;
+            }
+            node = node.getParent();
+        }
+        return null;
+    }
+
     private void setupCardClickHandler() {
         allProjectsFlowPane.setOnMouseClicked(event -> {
             Node clickedNode = (Node) event.getTarget();
@@ -108,16 +126,20 @@ public class ProjectListController {
         });
     }
 
-
-
-    // Hàm hỗ trợ tìm Project Card từ node bị click
-    private Node findProjectCard(Node node) {
-        while (node != null && node != allProjectsFlowPane) {
-            if (node instanceof VBox && node.getUserData() instanceof Project) {
-                return node;
-            }
-            node = node.getParent();
-        }
-        return null;
+    // Helper method to show alerts
+    private void showAlert(Alert.AlertType alertType, String title, String content) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
+
+    public void handleRefreshClick(MouseEvent mouseEvent) {
+        AppContext.refreshProjects();
+        showAlert(Alert.AlertType.INFORMATION, "Successfully", "All your projects have been refreshed!");
+    }
+
+
+
 }
