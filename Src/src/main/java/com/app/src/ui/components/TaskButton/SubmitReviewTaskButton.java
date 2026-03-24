@@ -7,13 +7,13 @@ import com.app.src.ui.components.AbstractTaskButton;
 public class SubmitReviewTaskButton extends AbstractTaskButton {
 
     public SubmitReviewTaskButton() {
-        super("Gửi duyệt");
+        super("Submit");
     }
 
     @Override
     protected void setupCustomStyle() {
         // Màu vàng cam hoặc xanh dương nhạt cho hành động gửi duyệt
-        this.setStyle("-fx-background-color: #17a2b8; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;");
+        this.getStyleClass().addAll("task-action-btn", "btn-submit");
     }
 
     @Override

@@ -1573,3 +1573,44 @@
     -fx-background-radius: 999px;
 }
 
+/* --- STYLE CHUNG CHO CÁC NÚT ACTION CỦA TASK --- */
+
+#hboxActionButtons .task-action-btn {
+    -fx-min-width: USE_PREF_SIZE; /* QUAN TRỌNG: Ép các nút luôn rộng vừa khít với nội dung chữ */
+    -fx-padding: 8px 16px;        /* Bơm khoảng đệm (trên/dưới 8px, trái/phải 16px) để nút không bị gầy */
+}
+
+.task-action-btn {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 8px 18px;
+    -fx-background-radius: 6px; /* Bo góc mềm mại */
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 2); /* Đổ bóng nhẹ */
+}
+
+/* 1. Nút Chấp nhận & Duyệt (Màu Xanh lá - Success) */
+.btn-accept {
+    -fx-background-color: #28a745;
+}
+.btn-accept:hover {
+    -fx-background-color: #218838; /* Màu đậm hơn khi đưa chuột vào */
+}
+
+/* 2. Nút Từ chối / Yêu cầu làm lại (Màu Đỏ - Danger) */
+.btn-reject {
+    -fx-background-color: #dc3545;
+}
+.btn-reject:hover {
+    -fx-background-color: #c82333;
+}
+
+/* 3. Nút Nộp duyệt (Màu Xanh dương - Primary) */
+.btn-submit {
+    -fx-background-color: #007bff;
+}
+.btn-submit:hover {
+    -fx-background-color: #0069d9;
+}
+
