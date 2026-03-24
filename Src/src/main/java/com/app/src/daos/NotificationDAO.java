@@ -36,6 +36,7 @@ public class NotificationDAO extends AbstractDAO<Notification> {
 
             if (rs.next()) {
                 notification = new Notification();
+                notification.setNotiId(rs.getInt("Not_id"));
                 notification.setNotiTitle(rs.getString("Not_title"));
                 notification.setNotiDescription(rs.getString("Not_description"));
                 notification.setNotiIsRead(rs.getBoolean("Not_isRead"));
@@ -67,6 +68,7 @@ public class NotificationDAO extends AbstractDAO<Notification> {
 
             while (rs.next()) {
                 Notification noti = new Notification();
+                noti.setNotiId(rs.getInt("Not_id"));
                 noti.setNotiTitle(rs.getString("Not_title"));
                 noti.setNotiDescription(rs.getString("Not_description"));
                 noti.setNotiIsRead(rs.getBoolean("Not_isRead"));
@@ -100,6 +102,7 @@ public class NotificationDAO extends AbstractDAO<Notification> {
 
             while (rs.next()) {
                 Notification noti = new Notification();
+                noti.setNotiId(rs.getInt("Not_id"));
                 noti.setNotiTitle(rs.getString("Not_title"));
                 noti.setNotiDescription(rs.getString("Not_description"));
                 noti.setNotiIsRead(rs.getBoolean("Not_isRead"));
@@ -200,7 +203,7 @@ public class NotificationDAO extends AbstractDAO<Notification> {
     }
 
     public boolean markAsRead(int notiId) {
-        String sql = "UPDATE NOTIFICATION SET Not_isRead = true WHERE Noti_id = ?";
+        String sql = "UPDATE NOTIFICATION SET Not_isRead = true WHERE Not_id = ?";
         Connection connection = null;
         PreparedStatement ps = null;
 

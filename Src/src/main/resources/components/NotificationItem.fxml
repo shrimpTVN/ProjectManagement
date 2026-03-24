@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="itemContainer" alignment="CENTER_LEFT" spacing="15.0" styleClass="notification-item" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.notification.NotificationItemController">
+<HBox fx:id="itemContainer" alignment="CENTER_LEFT" spacing="15.0" styleClass="notification-item" stylesheets="@../css/style.css" onMouseClicked="#handleItemClicked" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.notification.NotificationItemController">
     <children>
         <VBox spacing="8.0" HBox.hgrow="ALWAYS">
             <children>
