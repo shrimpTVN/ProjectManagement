@@ -265,7 +265,7 @@ public class TaskDetailController {
 
     private void renderActionButtons(PersonalTaskDTO taskDto) {
         if (hboxActionButtons == null) return;
-        hboxActionButtons.getChildren().clear(); // Xóa các nút cũ để tránh bị trùng lặp
+        hboxActionButtons.getChildren().clear();
 
         String status = taskDto.getStatusName();
         if (status == null) return;
@@ -273,44 +273,83 @@ public class TaskDetailController {
         Task taskModel = new Task();
         taskModel.setTaskId(taskDto.getTaskId());
         taskModel.setTaskName(taskDto.getTaskName());
+        // Lấy User từ AppContext để truyền vào DB
+        if (AppContext.getUserData() != null) {
+            taskModel.setUser(AppContext.getUserData());
+        }
 
-        System.out.println("-"+status+"-");
+        // --- KIỂM TRA ROLE CỦA USER TRONG PROJECT HIỆN TẠI ---
+        boolean isManagerOrAdmin = false;
+        if (fromProject > 0) {
+            for (Project project : AppContext.getProjects()) {
+                if (project.getProjectId() == fromProject) {
+                    String roleName = project.getUserRoleName();
+                    isManagerOrAdmin = roleName != null && RoleValidator.isManagerOrAdmin(roleName);
+                    break;
+                }
+            }
+        }
+
+        System.out.println("- Trạng thái: " + status + " | Is Manager/Admin: " + isManagerOrAdmin);
+
         switch (status) {
             case "To Do":
-                AcceptTaskButton acceptBtn = new AcceptTaskButton();
-                acceptBtn.setup(taskModel, () -> {
-                    System.out.println("Nhận task thành công!");
-                    taskDto.setStatusName("In Progress"); // Cập nhật DTO
-                    setTaskData(taskDto);                 // Load lại trang
-                });
+                // Chỉ hiện cho Member (hoặc người được giao)
+                if (!isManagerOrAdmin) {
+                    AcceptTaskButton acceptBtn = new AcceptTaskButton();
+                    acceptBtn.setup(taskModel, () -> {
+                        System.out.println("Nhận task thành công!");
+                        taskDto.setStatusName("In Progress");
+                        setTaskData(taskDto);
+                    });
 
-                RejectTaskButton rejectBtn = new RejectTaskButton();
-                rejectBtn.setup(taskModel, () -> {
-                    System.out.println("Từ chối task thành công!");
-                    taskDto.setStatusName("Canceled");    // Cập nhật DTO
-                    setTaskData(taskDto);                 // Load lại trang
-                });
+                    RejectTaskButton rejectBtn = new RejectTaskButton();
+                    rejectBtn.setup(taskModel, () -> {
+                        System.out.println("Từ chối task thành công!");
+                        taskDto.setStatusName("Canceled");
+                        setTaskData(taskDto);
+                    });
 
-                hboxActionButtons.getChildren().addAll(acceptBtn, rejectBtn);
+                    hboxActionButtons.getChildren().addAll(acceptBtn, rejectBtn);
+                }
                 break;
 
             case "In Progress":
             case "In Progressing":
-                SubmitReviewTaskButton submitBtn = new SubmitReviewTaskButton();
-                submitBtn.setup(taskModel, () -> {
-                    System.out.println("Gửi duyệt thành công!");
-                    taskDto.setStatusName("In Preview");  // Cập nhật DTO
-                    setTaskData(taskDto);                 // Load lại trang
-                });
-                hboxActionButtons.getChildren().add(submitBtn);
+                // Chỉ hiện cho Member
+                if (!isManagerOrAdmin) {
+                    SubmitReviewTaskButton submitBtn = new SubmitReviewTaskButton();
+                    submitBtn.setup(taskModel, () -> {
+                        System.out.println("Gửi duyệt thành công!");
+                        taskDto.setStatusName("In Preview");
+                        setTaskData(taskDto);
+                    });
+                    hboxActionButtons.getChildren().add(submitBtn);
+                }
                 break;
 
             case "In Preview":
-                // TODO: Thêm ApproveButton và RejectButton dành cho Manager
+                // CHỈ HIỆN CHO MANAGER HOẶC ADMIN
+                if (isManagerOrAdmin) {
+                    ApproveTaskButton approveBtn = new ApproveTaskButton();
+                    approveBtn.setup(taskModel, () -> {
+                        System.out.println("Duyệt task thành công!");
+                        taskDto.setStatusName("Done");
+                        setTaskData(taskDto);
+                    });
+
+                    RejectPreviewTaskButton rejectPreviewBtn = new RejectPreviewTaskButton();
+                    rejectPreviewBtn.setup(taskModel, () -> {
+                        System.out.println("Yêu cầu làm lại thành công!");
+                        taskDto.setStatusName("In Progress"); // Trả về cho member làm lại
+                        setTaskData(taskDto);
+                    });
+
+                    hboxActionButtons.getChildren().addAll(approveBtn, rejectPreviewBtn);
+                }
                 break;
 
             default:
-                // "Done" hoặc "Canceled" sẽ không có nút hành động nào
                 break;
         }
     }

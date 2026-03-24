@@ -57,6 +57,7 @@ public abstract class AbstractTaskButton extends Button {
 
     // --- HOOK METHOD: Class con có thể ghi đè (override) để custom CSS ---
     protected void setupCustomStyle() {
-        // Mặc định là nút xám bình thường của JavaFX
+
+//        this.getStyleClass().addAll("task-action-btn", " ");
     }
 }
