@@ -42,7 +42,7 @@ public final class GlobalExceptionHandler implements Thread.UncaughtExceptionHan
 
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Application Error");
-            alert.setHeaderText("Da xay ra loi trong qua trinh xu ly");
+            alert.setHeaderText("An error occurred during processing");
             alert.setContentText(
                     "ErrorCode: " + appException.getErrorCode().getCode() + "\n" +
                     "Message: " + appException.getMessage() + "\n" +

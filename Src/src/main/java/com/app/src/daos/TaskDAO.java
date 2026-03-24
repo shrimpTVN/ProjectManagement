@@ -556,6 +556,48 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
         }
     }
 
+    /** Lấy nhanh ngày bắt đầu và project id của task để validate deadline. */
+    public TaskDateMeta findTaskDateMeta(int taskId) {
+        final String sql = "SELECT Task_startDate, Pro_id FROM TASK WHERE Task_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, taskId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    TaskDateMeta meta = new TaskDateMeta();
+                    meta.setStartDate(rs.getDate("Task_startDate"));
+                    int projectId = rs.getInt("Pro_id");
+                    meta.setProjectId(rs.wasNull() ? null : projectId);
+                    return meta;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static class TaskDateMeta {
+        private java.sql.Date startDate;
+        private Integer projectId;
+
+        public java.sql.Date getStartDate() {
+            return startDate;
+        }
+
+        public void setStartDate(java.sql.Date startDate) {
+            this.startDate = startDate;
+        }
+
+        public Integer getProjectId() {
+            return projectId;
+        }
+
+        public void setProjectId(Integer projectId) {
+            this.projectId = projectId;
+        }
+    }
+
 //    public List<StatusUpdating> getStatusHistory(int taskId) {
 //    }
 }

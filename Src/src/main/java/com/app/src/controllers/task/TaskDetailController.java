@@ -36,6 +36,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -69,6 +70,13 @@ public class TaskDetailController {
     private Label lblAuthor;   // (Tương tự lblReporter)
     @FXML
     private Label lblDescription;
+
+    @FXML
+    private Hyperlink breadcrumbHome;
+    @FXML
+    private Hyperlink breadcrumbAllTasks;
+    @FXML
+    private Label breadcrumbTaskName;
 
     // Các nút bấm
     @FXML
@@ -105,6 +113,10 @@ public class TaskDetailController {
         lblNameProject.setText(safeProjectName);
         lblProjectName.setText("Project: " + safeProjectName);
         lblTaskStatus.setText(safeStatus);
+
+        if (breadcrumbTaskName != null) {
+            breadcrumbTaskName.setText(safeTaskName);
+        }
 
         lblStart.setText(task.getTaskStartTime() != null ? task.getTaskStartTime() : "Chưa xác định");
         lblDeadline.setText(task.getTaskEndTime() != null ? task.getTaskEndTime() : "Chưa xác định");
@@ -175,6 +187,18 @@ public class TaskDetailController {
             controller.renderData(fullProject, adminName);
 
         } else {
+            ViewNavigator.getInstance().loadSubScene("/scenes/tasklist.fxml");
+        }
+    }
+
+    @FXML
+    private void handleBreadcrumbClick(javafx.event.ActionEvent event) {
+        Object source = event.getSource();
+        if (source == breadcrumbHome) {
+            ViewNavigator.getInstance().loadSubScene("/scenes/Home.fxml");
+            return;
+        }
+        if (source == breadcrumbAllTasks) {
             ViewNavigator.getInstance().loadSubScene("/scenes/tasklist.fxml");
         }
     }

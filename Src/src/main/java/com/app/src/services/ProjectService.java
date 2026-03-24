@@ -30,10 +30,6 @@ public class ProjectService {
         return projectDAO.update(project.getProjectId(), project);
     }
 
-    public boolean updateProjectManager(int projectId, int newManagerId) {
-        return ProjectJoiningDAO.getInstance().updateManager(projectId, newManagerId);
-    }
-
     public boolean deleteProject(int projectId) {
         return projectDAO.deleteByProjectId(projectId);
     }

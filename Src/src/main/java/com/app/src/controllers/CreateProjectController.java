@@ -4,7 +4,11 @@ import com.app.src.core.AppContext;
 import com.app.src.daos.UserDAO;
 import com.app.src.models.Project;
 import com.app.src.models.User;
+import com.app.src.services.ProjectJoiningService;
 import com.app.src.services.ProjectService;
+import com.app.src.controllers.project.ProjectDetailController;
+import com.app.src.controllers.project.ProjectDetailNavigator;
+import com.app.src.controllers.project.IProjectDetailSubView;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +27,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,39 +157,51 @@ public class CreateProjectController implements Initializable {
     }
 
     private void handleCreate() {
-        System.out.println("Xử lý tạo hoặc cập nhật dự án...");
+        System.out.println("Handling create/update project...");
         clearErrors();
 
-        // 1. Lấy dữ liệu cơ bản từ Form
+        // 1. Read form data
         String name = txtProjectName.getText();
         LocalDate startDate = dpStartDate.getValue();
         LocalDate endDate = dpEndDate.getValue();
         String description = txtDescription.getText();
 
-        System.out.println("Dữ liệu trên form - Name: " + name + ", Start: " + startDate + ", End: " + endDate);
+        System.out.println("Form data - Name: " + name + ", Start: " + startDate + ", End: " + endDate);
 
-        // 2. Validate dữ liệu chung
+        // 2. Validate
         boolean isValid = true;
         if (name == null || name.trim().isEmpty()) {
-            lblErrorName.setText("Vui lòng nhập tên dự án");
+            lblErrorName.setText("Please enter project name");
             isValid = false;
         }
         if (startDate == null) {
-            lblErrorStartDate.setText("Vui lòng chọn ngày bắt đầu");
+            lblErrorStartDate.setText("Please select start date");
             isValid = false;
         }
         if (endDate == null) {
-            lblErrorEndDate.setText("Vui lòng chọn ngày kết thúc");
+            lblErrorEndDate.setText("Please select end date");
             isValid = false;
         }
 
-        if (startDate != null && endDate != null && endDate.isBefore(startDate)) {
-            lblErrorEndDate.setText("Ngày kết thúc phải sau ngày bắt đầu");
+        Date today = truncateToDate(new Date());
+        Date startDateValue = toDate(startDate);
+        Date endDateValue = toDate(endDate);
+
+        if (startDateValue != null && endDateValue != null && endDateValue.before(startDateValue)) {
+            lblErrorEndDate.setText("End date must be after start date");
+            isValid = false;
+        }
+        if (startDateValue != null && startDateValue.before(today)) {
+            lblErrorStartDate.setText("Start date cannot be before today");
+            isValid = false;
+        }
+        if (endDateValue != null && endDateValue.before(today)) {
+            lblErrorEndDate.setText("End date cannot be before today");
             isValid = false;
         }
 
         if (!isValid) {
-            System.out.println("Bị chặn lại vì thiếu dữ liệu trên form!");
+            System.out.println("Blocked due to missing/invalid form data");
             return; // Dừng lại nếu form thiếu
         }
 
@@ -197,12 +214,12 @@ public class CreateProjectController implements Initializable {
 
         // 4. Phân luồng
         if (editingProject == null) {
-            System.out.println("Đang chạy luồng: TẠO MỚI");
-            // TẠO MỚI: Bắt buộc lấy Manager từ ComboBox
+            System.out.println("Flow: CREATE NEW");
+            // CREATE: manager is required
             String managerUsername = cbManager.getEditor().getText().trim();
             User selectedManager = managerMap.get(managerUsername);
             if (selectedManager == null) {
-                System.out.println("Lỗi: Chưa chọn Manager hợp lệ (username không tồn tại)");
+                System.out.println("Error: manager not selected or username not found");
                 return;
             }
 
@@ -210,27 +227,20 @@ public class CreateProjectController implements Initializable {
             int adminId = AppContext.getInstance().getUserData().getUserId();
 
             if (projectService.createProjectWithManager(projectData, adminId, managerId)) {
-                finalizeAction("Tạo thành công!");
+                finalizeAction("Created successfully!");
             }
         } else {
-            System.out.println("Đang chạy luồng: EDIT - ID dự án: " + editingProject.getProjectId());
+            System.out.println("Flow: EDIT - project ID: " + editingProject.getProjectId());
             // 1. Cập nhật thông tin cơ bản
             projectData.setProjectId(editingProject.getProjectId());
             boolean success = projectService.updateProject(projectData);
 
-            // 2. Cập nhật Manager
-            String managerUsername = cbManager.getEditor().getText().trim();
-            User selectedManager = managerMap.get(managerUsername);
-            if (selectedManager != null) {
-                projectService.updateProjectManager(editingProject.getProjectId(), selectedManager.getUserId());
-            }
-
-            System.out.println("Kết quả update từ database: " + success);
+            System.out.println("Update result from database: " + success);
 
             if (success) {
-                finalizeAction("Cập nhật thành công!");
+                finalizeAction("Updated successfully!");
             } else {
-                System.out.println("Lỗi: Hàm updateProject trả về false.");
+                System.out.println("Error: updateProject returned false.");
             }
         }
     }
@@ -244,8 +254,22 @@ public class CreateProjectController implements Initializable {
         ViewNavigator.getInstance().loadSubScene("/scenes/ProjectList.fxml");
     }
 
-    private void handleCancel() {
-        System.out.println("Hủy tạo dự án. Quay về màn hình Home.");
+    private void handleCancel() {   // Nếu đang edit thì quay về detail, nếu đang tạo mới thì về home
+        if (editingProject != null) {
+            Project fullProject = AppContext.getProjectById(editingProject.getProjectId());
+            String adminName = new ProjectJoiningService().getAdmin(editingProject.getProjectId());
+
+            ProjectDetailController controller = ViewNavigator.getInstance().loadSubScene("/scenes/ProjectDetail.fxml");
+            if (controller != null) {
+                controller.renderData(fullProject, adminName);
+                IProjectDetailSubView infoController = ProjectDetailNavigator.getInstance()
+                        .loadSubView("/components/ProjectDetail/Infor.fxml");
+                if (infoController != null) {
+                    infoController.renderData(fullProject, adminName);
+                }
+            }
+            return;
+        }
         ViewNavigator.getInstance().loadSubScene("/scenes/Home.fxml");
     }
 
@@ -253,6 +277,16 @@ public class CreateProjectController implements Initializable {
         lblErrorName.setText("");
         lblErrorStartDate.setText("");
         lblErrorEndDate.setText("");
+    }
+
+    private Date toDate(LocalDate localDate) {
+        if (localDate == null) return null;
+        return truncateToDate(java.sql.Date.valueOf(localDate));
+    }
+
+    private Date truncateToDate(Date date) {
+        if (date == null) return null;
+        return new java.sql.Date(date.getTime());
     }
 
     public void setProjectInfo(Project project) {
@@ -271,6 +305,11 @@ public class CreateProjectController implements Initializable {
 
         // Đổi tên nút bấm để người dùng biết họ đang Lưu chứ không phải Tạo mới
         btnCreate.setText("Save Changes");
+
+        // Không cho đổi manager khi edit
+        cbManager.setDisable(true);
+        cbManager.setEditable(false);
+        cbManager.setPromptText("Manager unchanged on edit");
 
         txtDescription.setText(project.getProjectDescription());
     }

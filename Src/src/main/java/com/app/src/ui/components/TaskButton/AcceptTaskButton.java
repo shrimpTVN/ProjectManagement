@@ -6,7 +6,7 @@ import com.app.src.ui.components.AbstractTaskButton;
 public class AcceptTaskButton extends AbstractTaskButton {
 
     public AcceptTaskButton() {
-        super("Accept"); // Chữ hiển thị trên nút
+        super("Accept task"); // button label
     }
 
     @Override
@@ -17,12 +17,12 @@ public class AcceptTaskButton extends AbstractTaskButton {
 
     @Override
     protected String getAlertTitle() {
-        return "Xác nhận nhận việc";
+        return "Confirm task acceptance";
     }
 
     @Override
     protected String getAlertMessage() {
-        return "Bạn đã sẵn sàng bắt đầu thực hiện công việc này (Chuyển sang In Progress)?";
+        return "Ready to start this task and move it to In Progress?";
     }
 
     @Override
@@ -30,7 +30,7 @@ public class AcceptTaskButton extends AbstractTaskButton {
         int userId = task.getUser() != null ? task.getUser().getUserId() : 0;
         // Trạng thái cũ: To Do -> Trạng thái mới: In Progress
         return TaskDAO.getInstance().appendStatusUpdating(
-                task.getTaskId(), "To Do", "In Progressing", "User đã nhận task và bắt đầu làm", userId
+                task.getTaskId(), "To Do", "In Progressing", "User accepted the task and started work", userId
         );
     }
 }
