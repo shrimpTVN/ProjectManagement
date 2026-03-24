@@ -22,6 +22,7 @@ import javafx.util.StringConverter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -217,14 +218,48 @@ public class CreateTaskController {
         if (dpStart.getValue() != null) newTask.setTaskStartTime(dpStart.getValue().toString());
         if (dpEnd.getValue() != null) newTask.setTaskEndTime(dpEnd.getValue().toString());
 
+        Date today = truncateToDate(new Date());
+        Date startDate = toDate(dpStart.getValue());
+        Date endDate = toDate(dpEnd.getValue());
+
         // Validate thứ tự ngày
-        if (dpStart.getValue() != null && dpEnd.getValue() != null && dpEnd.getValue().isBefore(dpStart.getValue())) {
+        if (startDate != null && endDate != null && endDate.before(startDate)) {
             lblErrorName.setText("End date must be after start date");
+            return;
+        }
+        if (startDate != null && startDate.before(today)) {
+            lblErrorName.setText("Start date không được trước hôm nay");
+            return;
+        }
+        if (endDate != null && endDate.before(today)) {
+            lblErrorName.setText("Deadline không được trước hôm nay");
             return;
         }
 
         if (currentProject != null) {
             newTask.setProjectId(currentProject.getProjectId());
+            Date projectStart = truncateToDate(currentProject.getProjectStartDate());
+            Date projectEnd = truncateToDate(currentProject.getProjectEndDate());
+            if (projectStart != null) {
+                if (startDate != null && startDate.before(projectStart)) {
+                    lblErrorName.setText("Ngày bắt đầu task không được trước ngày bắt đầu dự án");
+                    return;
+                }
+                if (endDate != null && endDate.before(projectStart)) {
+                    lblErrorName.setText("Deadline không được trước ngày bắt đầu dự án");
+                    return;
+                }
+            }
+            if (projectEnd != null) {
+                if (startDate != null && startDate.after(projectEnd)) {
+                    lblErrorName.setText("Ngày bắt đầu task không được sau ngày kết thúc dự án");
+                    return;
+                }
+                if (endDate != null && endDate.after(projectEnd)) {
+                    lblErrorName.setText("Deadline không được sau ngày kết thúc dự án");
+                    return;
+                }
+            }
         }
 
         // BẮT BUỘC CHỌN NGƯỜI
@@ -273,7 +308,33 @@ public class CreateTaskController {
             return;
         }
 
-        TasklistService service = new TasklistService();
+        Date today = truncateToDate(new Date());
+        Date newDeadline = toDate(dpEnd.getValue());
+        if (newDeadline != null && newDeadline.before(today)) {
+            lblErrorName.setText("Deadline không được trước hôm nay");
+            return;
+        }
+
+        Date taskStartDate = parseToDate(editingTask.getTaskStartTime());
+        if (taskStartDate != null && newDeadline != null && newDeadline.before(taskStartDate)) {
+            lblErrorName.setText("Deadline không được trước ngày bắt đầu task");
+            return;
+        }
+
+        if (currentProject != null) {
+            Date projectStart = truncateToDate(currentProject.getProjectStartDate());
+            Date projectEnd = truncateToDate(currentProject.getProjectEndDate());
+            if (projectStart != null && newDeadline.before(projectStart)) {
+                lblErrorName.setText("Deadline không được trước ngày bắt đầu dự án");
+                return;
+            }
+            if (projectEnd != null && newDeadline.after(projectEnd)) {
+                lblErrorName.setText("Deadline không được sau ngày kết thúc dự án");
+                return;
+            }
+        }
+
+        TasklistService service = TasklistService.getInstance();
         boolean success = service.updateTaskDeadline(editingTask.getTaskId(), dpEnd.getValue().toString());
         if (!success) {
             lblErrorName.setText("System error: Unable to update deadline.");
@@ -310,6 +371,31 @@ public class CreateTaskController {
             controller.setProjectId(backProjectId);
         }
         controller.setTaskData(editingTask);
+    }
+
+    private Date toDate(LocalDate localDate) {
+        if (localDate == null) return null;
+        return truncateToDate(java.sql.Date.valueOf(localDate));
+    }
+
+    private Date truncateToDate(Date date) {
+        if (date == null) return null;
+        return new java.sql.Date(date.getTime());
+    }
+
+    private Date parseToDate(String raw) {
+        if (raw == null || raw.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            String text = raw.trim();
+            if (text.length() > 10) {
+                text = text.substring(0, 10);
+            }
+            return truncateToDate(java.sql.Date.valueOf(text));
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
     }
 
     private void backToProjectDetail() {

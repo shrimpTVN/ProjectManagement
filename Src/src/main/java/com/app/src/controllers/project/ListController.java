@@ -52,6 +52,17 @@ public class ListController implements IProjectDetailSubView, Initializable {
         setupTableColumns();
         setupLinkActions();
 
+        // Cho phép double-click bất kỳ vị trí nào trên dòng để mở chi tiết task
+        taskTable.setRowFactory(tv -> {
+            TableRow<Task> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    handleOpenTaskDetail(row.getItem());
+                }
+            });
+            return row;
+        });
+
 
     }
 

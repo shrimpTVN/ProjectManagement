@@ -12,6 +12,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableRow;
@@ -29,6 +30,7 @@ public class TasklistController {
     // KHAI BÁO CÁC THÀNH PHẦN GIAO DIỆN (@FXML)
     // ==========================================
     @FXML private Label lblTitle;
+    @FXML private Hyperlink hlHome;
 
     @FXML private Button btnAll;
     @FXML private Button btnTodo;
@@ -104,6 +106,14 @@ public class TasklistController {
         });
         loadDataFromDatabase(currentUserId);
         setupFilterButtons();
+    }
+
+    @FXML
+    private void handleBreadcrumbClick(javafx.event.ActionEvent event) {
+        Object source = event.getSource();
+        if (source == hlHome) {
+            ViewNavigator.getInstance().loadSubScene("/scenes/Home.fxml");
+        }
     }
     private void openTaskDetailScene(PersonalTaskDTO clickedTask) {
 //        ViewNavigator.getInstance().loadSubScene("/scenes/detailinfotask.fxml");
