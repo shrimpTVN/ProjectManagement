@@ -61,6 +61,12 @@ public class NotificationController {
 
     }
 
+    public void refreshNotifications() {
+        if (currentUser != null) {
+            loadNotificationsList(currentUser.getUserId());
+        }
+    }
+
     public void addNotificationItem(int index, Notification noti) {
         try {
             // Đảm bảo đường dẫn FXML chính xác (nên bắt đầu bằng /com/app/...)
@@ -69,6 +75,7 @@ public class NotificationController {
 
             // Lấy controller của item và truyền dữ liệu
             NotificationItemController itemController = loader.getController();
+            itemController.setParentController(this);
             itemController.setData(noti);
 
             // Đưa item vào container

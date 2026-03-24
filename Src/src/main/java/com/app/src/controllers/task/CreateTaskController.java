@@ -217,6 +217,12 @@ public class CreateTaskController {
         if (dpStart.getValue() != null) newTask.setTaskStartTime(dpStart.getValue().toString());
         if (dpEnd.getValue() != null) newTask.setTaskEndTime(dpEnd.getValue().toString());
 
+        // Validate thứ tự ngày
+        if (dpStart.getValue() != null && dpEnd.getValue() != null && dpEnd.getValue().isBefore(dpStart.getValue())) {
+            lblErrorName.setText("End date must be after start date");
+            return;
+        }
+
         if (currentProject != null) {
             newTask.setProjectId(currentProject.getProjectId());
         }

@@ -2,6 +2,7 @@ package com.app.src.models;
 
 public class Notification {
 
+    private int notiId;
     private  String notiTitle;
     private String notiDescription;
     private boolean notiIsRead;
@@ -18,6 +19,14 @@ public class Notification {
         this.notiTime = notiTime;
         this.userId = userId;
 
+    }
+
+    public int getNotiId() {
+        return notiId;
+    }
+
+    public void setNotiId(int notiId) {
+        this.notiId = notiId;
     }
 
     public int getUserId() {

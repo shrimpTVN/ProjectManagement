@@ -25,6 +25,10 @@ public class UserService {
         return userDAO.findByUserName(userName);
     }
 
+    public User getUserByAccountUsername(String accountUsername) {
+        return userDAO.findByAccountUsername(accountUsername);
+    }
+
     // Goi ham dang ky tu UserDAO
     public boolean register(String username, String name, String phone, String dob, String selectedGender, String password) {
         return userDAO.registerUser(username, name, phone, dob, selectedGender, password);

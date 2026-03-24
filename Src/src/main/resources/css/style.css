@@ -926,6 +926,33 @@
     -fx-padding: 22;
 }
 
+/* Remove ScrollPane chrome on the information screen */
+.info-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.info-scroll-pane > .viewport,
+.info-scroll-pane > .corner {
+    -fx-background-color: transparent;
+}
+
+.info-scroll-pane .scroll-bar:vertical,
+.info-scroll-pane .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-border-color: transparent;
+}
+
+.info-scroll-pane .scroll-bar .thumb,
+.info-scroll-pane .scroll-bar .track,
+.info-scroll-pane .scroll-bar .increment-button,
+.info-scroll-pane .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
 .info-main-card {
     -fx-background-color: #FFFFFF;
     -fx-background-radius: 16px;

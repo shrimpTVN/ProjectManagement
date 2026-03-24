@@ -232,7 +232,10 @@ public class MemberController implements IProjectDetailSubView {
         }
 
         // 3. Đẩy dữ liệu lên form
-        txtUserName.setText(selectedJoining.getUser().getUserName());
+        String accountUsername = (selectedJoining.getUser().getAccount() != null)
+                ? selectedJoining.getUser().getAccount().getUserName()
+                : selectedJoining.getUser().getUserName();
+        txtUserName.setText(accountUsername);
         txtUserName.setEditable(false); // Khóa ô UserName để tránh chỉnh sửa
 
         cbRole.setValue(selectedJoining.getRole().getRoleName()); // Đặt đúng role hiện tại
@@ -270,13 +273,13 @@ public class MemberController implements IProjectDetailSubView {
             return;
         }
 
-        // 3. Tìm User trong Database dựa trên UserName
+        // 3. Tìm User trong Database dựa trên username của Account
         UserService userService = new UserService();
-        User foundUser = userService.getUserByName(inputUserName);
+        User foundUser = userService.getUserByAccountUsername(inputUserName);
 
         if (foundUser == null) {
-            showAlert(Alert.AlertType.ERROR, "Error", "User '" + inputUserName + "' does not exist.");
-            System.out.println("[DEBUG - Add Member] Failed: User '" + inputUserName + "' does not exist in DB.");
+            showAlert(Alert.AlertType.ERROR, "Error", "Account username '" + inputUserName + "' does not exist.");
+            System.out.println("[DEBUG - Add Member] Failed: Account username '" + inputUserName + "' does not exist in DB.");
             return;
         }
 

@@ -5,16 +5,27 @@ import com.app.src.daos.UserDAO;
 import com.app.src.models.Project;
 import com.app.src.models.User;
 import com.app.src.services.ProjectService;
-// import com.app.src.daos.UserDAO;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 // Initializable để tự động gọi hàm initialize() sau khi load FXML
@@ -30,7 +41,7 @@ public class CreateProjectController implements Initializable {
     private TextArea txtDescription;
 
     @FXML
-    private ComboBox<User> cbManager;
+    private ComboBox<String> cbManager;
 
     @FXML
     private Button btnCreate;
@@ -47,24 +58,21 @@ public class CreateProjectController implements Initializable {
     private ProjectService projectService;
     private Project editingProject; // Biến để lưu thông tin dự án khi chỉnh sửa
 
+    // Map username (Account) -> User để tra ngược khi lưu
+    private final Map<String, User> managerMap = new HashMap<>();
+    private final ObservableList<String> managerUsernames = FXCollections.observableArrayList();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         projectService = new ProjectService();
 
-        // Định dạng ComboBox chỉ hiển thị tên User
-        cbManager.setConverter(new StringConverter<User>() {
-            @Override
-            public String toString(User user) {
-                return user == null ? "" : user.getUserName();
-            }
+        // Cho phép gõ username và lọc theo Account username
+        cbManager.setEditable(true);
 
-            @Override
-            public User fromString(String string) {
-                return null;
-            }
-        });
+        // Bắt lỗi DatePicker khi người dùng gõ sai định dạng yyyy-MM-dd
+        setupDatePickerValidation(dpStartDate);
+        setupDatePickerValidation(dpEndDate);
 
-        // Load danh sách user từ Database lên ComboBox
         loadManagers();
 
         btnCreate.setOnAction(event -> handleCreate());
@@ -74,9 +82,73 @@ public class CreateProjectController implements Initializable {
     }
 
     private void loadManagers() {
-        // Gọi UserDAO lấy danh sách và đẩy vào ComboBox
-        List<User> managers = UserDAO.getInstance().findAll();
-        cbManager.getItems().addAll(managers);
+        managerMap.clear();
+        managerUsernames.clear();
+
+        List<User> basicUsers = UserDAO.getInstance().findAll();
+
+        for (User user : basicUsers) {
+            // Lấy bản đầy đủ để chắc chắn có Account
+            User fullUser = UserDAO.getInstance().findById(user.getUserId());
+            if (fullUser == null || fullUser.getAccount() == null) {
+                continue;
+            }
+
+            String accountUsername = fullUser.getAccount().getUserName();
+            managerMap.put(accountUsername, fullUser);
+            managerUsernames.add(accountUsername);
+        }
+
+        FilteredList<String> filteredList = new FilteredList<>(managerUsernames, p -> true);
+        cbManager.setItems(filteredList);
+
+        cbManager.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
+            final TextField editor = cbManager.getEditor();
+            final String selected = cbManager.getSelectionModel().getSelectedItem();
+
+            if (selected == null || !selected.equals(editor.getText())) {
+                filteredList.setPredicate(item -> {
+                    if (newValue == null || newValue.isEmpty()) return true;
+                    return item.toLowerCase().contains(newValue.toLowerCase());
+                });
+                cbManager.show();
+            }
+        });
+    }
+
+    // Thiết lập converter và validate text nhập vào DatePicker
+    private void setupDatePickerValidation(DatePicker datePicker) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        datePicker.setConverter(new StringConverter<LocalDate>() {
+            @Override
+            public String toString(LocalDate date) {
+                return date != null ? dateFormatter.format(date) : "";
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.trim().isEmpty()) {
+                    try {
+                        return LocalDate.parse(string, dateFormatter);
+                    } catch (DateTimeParseException e) {
+                        return null; // gõ sai thì coi như rỗng
+                    }
+                }
+                return null;
+            }
+        });
+
+        datePicker.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                try {
+                    LocalDate.parse(datePicker.getEditor().getText(), dateFormatter);
+                } catch (DateTimeParseException e) {
+                    datePicker.getEditor().setText("");
+                    datePicker.setValue(null);
+                }
+            }
+        });
     }
 
     private void handleCreate() {
@@ -106,6 +178,11 @@ public class CreateProjectController implements Initializable {
             isValid = false;
         }
 
+        if (startDate != null && endDate != null && endDate.isBefore(startDate)) {
+            lblErrorEndDate.setText("Ngày kết thúc phải sau ngày bắt đầu");
+            isValid = false;
+        }
+
         if (!isValid) {
             System.out.println("Bị chặn lại vì thiếu dữ liệu trên form!");
             return; // Dừng lại nếu form thiếu
@@ -122,9 +199,10 @@ public class CreateProjectController implements Initializable {
         if (editingProject == null) {
             System.out.println("Đang chạy luồng: TẠO MỚI");
             // TẠO MỚI: Bắt buộc lấy Manager từ ComboBox
-            User selectedManager = cbManager.getValue();
+            String managerUsername = cbManager.getEditor().getText().trim();
+            User selectedManager = managerMap.get(managerUsername);
             if (selectedManager == null) {
-                System.out.println("Lỗi: Chưa chọn Manager cho dự án mới");
+                System.out.println("Lỗi: Chưa chọn Manager hợp lệ (username không tồn tại)");
                 return;
             }
 
@@ -141,7 +219,8 @@ public class CreateProjectController implements Initializable {
             boolean success = projectService.updateProject(projectData);
 
             // 2. Cập nhật Manager
-            User selectedManager = cbManager.getValue();
+            String managerUsername = cbManager.getEditor().getText().trim();
+            User selectedManager = managerMap.get(managerUsername);
             if (selectedManager != null) {
                 projectService.updateProjectManager(editingProject.getProjectId(), selectedManager.getUserId());
             }

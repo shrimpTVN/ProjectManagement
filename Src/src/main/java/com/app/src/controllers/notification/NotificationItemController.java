@@ -1,6 +1,7 @@
 package com.app.src.controllers.notification;
 
 import com.app.src.models.Notification;
+import com.app.src.services.NotificationService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -19,6 +20,7 @@ public class NotificationItemController {
     @FXML private Label statusIcon;
 
     private Notification notification;
+    private NotificationController parentController;
 
     public void setData(Notification noti) {
         this.notification = noti;
@@ -53,6 +55,27 @@ public class NotificationItemController {
             titleLabel.setStyle("-fx-font-weight: normal;");
             statusIcon.setText("✓✓");
             statusIcon.setStyle("-fx-text-fill: #4da6ff; -fx-font-size: 18px; -fx-font-weight: bold;");
+        }
+    }
+
+    public void setParentController(NotificationController parentController) {
+        this.parentController = parentController;
+    }
+
+    @FXML
+    private void handleItemClicked() {
+        if (notification == null || notification.isNotiIsRead()) {
+            return;
+        }
+
+        boolean ok = NotificationService.markAsRead(notification.getNotiId(), notification);
+        if (ok) {
+            notification.setNotiIsRead(true);
+            if (parentController != null) {
+                parentController.refreshNotifications();
+            }
+        } else {
+            System.err.println("Không thể cập nhật trạng thái đã đọc cho thông báo ID=" + notification.getNotiId());
         }
     }
 }
