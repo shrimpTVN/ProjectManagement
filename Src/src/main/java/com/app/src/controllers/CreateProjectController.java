@@ -153,29 +153,29 @@ public class CreateProjectController implements Initializable {
     }
 
     private void handleCreate() {
-        System.out.println("Xử lý tạo hoặc cập nhật dự án...");
+        System.out.println("Handling create/update project...");
         clearErrors();
 
-        // 1. Lấy dữ liệu cơ bản từ Form
+        // 1. Read form data
         String name = txtProjectName.getText();
         LocalDate startDate = dpStartDate.getValue();
         LocalDate endDate = dpEndDate.getValue();
         String description = txtDescription.getText();
 
-        System.out.println("Dữ liệu trên form - Name: " + name + ", Start: " + startDate + ", End: " + endDate);
+        System.out.println("Form data - Name: " + name + ", Start: " + startDate + ", End: " + endDate);
 
-        // 2. Validate dữ liệu chung
+        // 2. Validate
         boolean isValid = true;
         if (name == null || name.trim().isEmpty()) {
-            lblErrorName.setText("Vui lòng nhập tên dự án");
+            lblErrorName.setText("Please enter project name");
             isValid = false;
         }
         if (startDate == null) {
-            lblErrorStartDate.setText("Vui lòng chọn ngày bắt đầu");
+            lblErrorStartDate.setText("Please select start date");
             isValid = false;
         }
         if (endDate == null) {
-            lblErrorEndDate.setText("Vui lòng chọn ngày kết thúc");
+            lblErrorEndDate.setText("Please select end date");
             isValid = false;
         }
 
@@ -184,20 +184,20 @@ public class CreateProjectController implements Initializable {
         Date endDateValue = toDate(endDate);
 
         if (startDateValue != null && endDateValue != null && endDateValue.before(startDateValue)) {
-            lblErrorEndDate.setText("Ngày kết thúc phải sau ngày bắt đầu");
+            lblErrorEndDate.setText("End date must be after start date");
             isValid = false;
         }
         if (startDateValue != null && startDateValue.before(today)) {
-            lblErrorStartDate.setText("Ngày bắt đầu không được trước hôm nay");
+            lblErrorStartDate.setText("Start date cannot be before today");
             isValid = false;
         }
         if (endDateValue != null && endDateValue.before(today)) {
-            lblErrorEndDate.setText("Ngày kết thúc không được trước hôm nay");
+            lblErrorEndDate.setText("End date cannot be before today");
             isValid = false;
         }
 
         if (!isValid) {
-            System.out.println("Bị chặn lại vì thiếu dữ liệu trên form!");
+            System.out.println("Blocked due to missing/invalid form data");
             return; // Dừng lại nếu form thiếu
         }
 
@@ -210,12 +210,12 @@ public class CreateProjectController implements Initializable {
 
         // 4. Phân luồng
         if (editingProject == null) {
-            System.out.println("Đang chạy luồng: TẠO MỚI");
-            // TẠO MỚI: Bắt buộc lấy Manager từ ComboBox
+            System.out.println("Flow: CREATE NEW");
+            // CREATE: manager is required
             String managerUsername = cbManager.getEditor().getText().trim();
             User selectedManager = managerMap.get(managerUsername);
             if (selectedManager == null) {
-                System.out.println("Lỗi: Chưa chọn Manager hợp lệ (username không tồn tại)");
+                System.out.println("Error: manager not selected or username not found");
                 return;
             }
 
@@ -223,10 +223,10 @@ public class CreateProjectController implements Initializable {
             int adminId = AppContext.getInstance().getUserData().getUserId();
 
             if (projectService.createProjectWithManager(projectData, adminId, managerId)) {
-                finalizeAction("Tạo thành công!");
+                finalizeAction("Created successfully!");
             }
         } else {
-            System.out.println("Đang chạy luồng: EDIT - ID dự án: " + editingProject.getProjectId());
+            System.out.println("Flow: EDIT - project ID: " + editingProject.getProjectId());
             // 1. Cập nhật thông tin cơ bản
             projectData.setProjectId(editingProject.getProjectId());
             boolean success = projectService.updateProject(projectData);
@@ -238,12 +238,12 @@ public class CreateProjectController implements Initializable {
                 projectService.updateProjectManager(editingProject.getProjectId(), selectedManager.getUserId());
             }
 
-            System.out.println("Kết quả update từ database: " + success);
+            System.out.println("Update result from database: " + success);
 
             if (success) {
-                finalizeAction("Cập nhật thành công!");
+                finalizeAction("Updated successfully!");
             } else {
-                System.out.println("Lỗi: Hàm updateProject trả về false.");
+                System.out.println("Error: updateProject returned false.");
             }
         }
     }
