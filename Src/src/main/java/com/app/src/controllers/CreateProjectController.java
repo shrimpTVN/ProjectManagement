@@ -23,6 +23,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -178,8 +179,20 @@ public class CreateProjectController implements Initializable {
             isValid = false;
         }
 
-        if (startDate != null && endDate != null && endDate.isBefore(startDate)) {
+        Date today = truncateToDate(new Date());
+        Date startDateValue = toDate(startDate);
+        Date endDateValue = toDate(endDate);
+
+        if (startDateValue != null && endDateValue != null && endDateValue.before(startDateValue)) {
             lblErrorEndDate.setText("Ngày kết thúc phải sau ngày bắt đầu");
+            isValid = false;
+        }
+        if (startDateValue != null && startDateValue.before(today)) {
+            lblErrorStartDate.setText("Ngày bắt đầu không được trước hôm nay");
+            isValid = false;
+        }
+        if (endDateValue != null && endDateValue.before(today)) {
+            lblErrorEndDate.setText("Ngày kết thúc không được trước hôm nay");
             isValid = false;
         }
 
@@ -253,6 +266,16 @@ public class CreateProjectController implements Initializable {
         lblErrorName.setText("");
         lblErrorStartDate.setText("");
         lblErrorEndDate.setText("");
+    }
+
+    private Date toDate(LocalDate localDate) {
+        if (localDate == null) return null;
+        return truncateToDate(java.sql.Date.valueOf(localDate));
+    }
+
+    private Date truncateToDate(Date date) {
+        if (date == null) return null;
+        return new java.sql.Date(date.getTime());
     }
 
     public void setProjectInfo(Project project) {
