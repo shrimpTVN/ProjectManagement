@@ -218,44 +218,44 @@ public class CreateTaskController {
         if (dpStart.getValue() != null) newTask.setTaskStartTime(dpStart.getValue().toString());
         if (dpEnd.getValue() != null) newTask.setTaskEndTime(dpEnd.getValue().toString());
 
-        Date today = truncateToDate(new Date());
-        Date startDate = toDate(dpStart.getValue());
-        Date endDate = toDate(dpEnd.getValue());
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = dpStart.getValue();
+        LocalDate endDate = dpEnd.getValue();
 
         // Validate thứ tự ngày
-        if (startDate != null && endDate != null && endDate.before(startDate)) {
+        if (startDate != null && endDate != null && endDate.isBefore(startDate)) {
             lblErrorName.setText("End date must be after start date");
             return;
         }
-        if (startDate != null && startDate.before(today)) {
+        if (startDate != null && startDate.isBefore(today)) {   // Nếu startDate có giá trị và nó trước ngày hôm nay
             lblErrorName.setText("Start date cannot be before today");
             return;
         }
-        if (endDate != null && endDate.before(today)) {
+        if (endDate != null && endDate.isBefore(today)) {
             lblErrorName.setText("Deadline cannot be before today");
             return;
         }
 
         if (currentProject != null) {
             newTask.setProjectId(currentProject.getProjectId());
-            Date projectStart = truncateToDate(currentProject.getProjectStartDate());
-            Date projectEnd = truncateToDate(currentProject.getProjectEndDate());
+            LocalDate projectStart = currentProject.getProjectStartDate() != null ? new java.sql.Date(currentProject.getProjectStartDate().getTime()).toLocalDate() : null;
+            LocalDate projectEnd = currentProject.getProjectEndDate() != null ? new java.sql.Date(currentProject.getProjectEndDate().getTime()).toLocalDate() : null;
             if (projectStart != null) {
-                if (startDate != null && startDate.before(projectStart)) {
+                if (startDate != null && startDate.isBefore(projectStart)) {    // Nếu startDate có giá trị và nó trước ngày bắt đầu dự án
                     lblErrorName.setText("Task start date cannot be before the project start date");
                     return;
                 }
-                if (endDate != null && endDate.before(projectStart)) {
+                if (endDate != null && endDate.isBefore(projectStart)) {
                     lblErrorName.setText("Task deadline cannot be before the project start date");
                     return;
                 }
             }
             if (projectEnd != null) {
-                if (startDate != null && startDate.after(projectEnd)) {
+                if (startDate != null && startDate.isAfter(projectEnd)) {
                     lblErrorName.setText("Task start date cannot be after the project end date");
                     return;
                 }
-                if (endDate != null && endDate.after(projectEnd)) {
+                if (endDate != null && endDate.isAfter(projectEnd)) {
                     lblErrorName.setText("Task deadline cannot be after the project end date");
                     return;
                 }
@@ -380,7 +380,13 @@ public class CreateTaskController {
 
     private Date truncateToDate(Date date) {
         if (date == null) return null;
-        return new java.sql.Date(date.getTime());
+        java.time.LocalDate ld;
+        if (date instanceof java.sql.Date sqlDate) {
+            ld = sqlDate.toLocalDate();
+        } else {
+            ld = date.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+        }
+        return java.sql.Date.valueOf(ld);
     }
 
     private Date parseToDate(String raw) {
