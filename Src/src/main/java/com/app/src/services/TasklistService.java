@@ -35,35 +35,40 @@ public class TasklistService {
     public List<PersonalTaskDTO> getTaskByUser(int userID){
         return taskDAO.findAllByUserId(userID);
     }
+
+    public List<PersonalTaskDTO> getTasksByProjectId(int projectId) {
+        // Gọi instance của TaskDAO và thực thi hàm vừa tạo
+        return TaskDAO.getInstance().findAllByProjectId(projectId);
+    }
     // ==========================================
     // 2. THÊM MỚI (CREATE)
     // ==========================================
-    public boolean addTask(PersonalTaskDTO newTask) {
-        // --- BƯỚC 1: VALIDATION ---
-        if (newTask == null) {
-            throw new IllegalArgumentException("Dữ liệu công việc không tồn tại!");
-        }
-
-        if (newTask.getTaskName() == null || newTask.getTaskName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Tên công việc không được để trống!");
-        }
-
-        if (newTask.getTaskName().length() > 255) {
-            throw new IllegalArgumentException("Tên công việc quá dài (tối đa 255 ký tự)!");
-        }
-
-        // --- BƯỚC 2: BUSINESS LOGIC ---
-        // Chuẩn hóa tên (Xóa khoảng trắng thừa ở đầu/cuối)
-        newTask.setTaskName(newTask.getTaskName().trim());
-
-        // Gợi ý: Set giá trị mặc định cho Status khi tạo mới (nếu model có hỗ trợ)
-        // if (newTask.getTaskStatus() == null || newTask.getTaskStatus().trim().isEmpty()) {
-        //     newTask.setTaskStatus("To do");
-        // }
-
-        // --- BƯỚC 3: GỌI DAO ---
-        return taskDAO.create(newTask);
-    }
+//    public boolean addTask(PersonalTaskDTO newTask) {
+//        // --- BƯỚC 1: VALIDATION ---
+//        if (newTask == null) {
+//            throw new IllegalArgumentException("Dữ liệu công việc không tồn tại!");
+//        }
+//
+//        if (newTask.getTaskName() == null || newTask.getTaskName().trim().isEmpty()) {
+//            throw new IllegalArgumentException("Tên công việc không được để trống!");
+//        }
+//
+//        if (newTask.getTaskName().length() > 255) {
+//            throw new IllegalArgumentException("Tên công việc quá dài (tối đa 255 ký tự)!");
+//        }
+//
+//        // --- BƯỚC 2: BUSINESS LOGIC ---
+//        // Chuẩn hóa tên (Xóa khoảng trắng thừa ở đầu/cuối)
+//        newTask.setTaskName(newTask.getTaskName().trim());
+//
+//        // Gợi ý: Set giá trị mặc định cho Status khi tạo mới (nếu model có hỗ trợ)
+//        // if (newTask.getTaskStatus() == null || newTask.getTaskStatus().trim().isEmpty()) {
+//        //     newTask.setTaskStatus("To do");
+//        // }
+//
+//        // --- BƯỚC 3: GỌI DAO ---
+//        return taskDAO.create(newTask);
+//    }
 
     // ==========================================
     // 3. CẬP NHẬT (UPDATE)

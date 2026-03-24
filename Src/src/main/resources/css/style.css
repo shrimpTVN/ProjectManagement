@@ -1614,3 +1614,75 @@
     -fx-background-color: #0069d9;
 }
 
+/*Board and Boardcard css*/
+/* --- GIAO DIỆN BẢNG KANBAN (BOARD) --- */
+.board-container {
+    -fx-background-color: #ffffff;
+}
+
+.board-column {
+    -fx-background-color: #f4f5f7; /* Màu xám nhạt cho nền cột */
+    -fx-background-radius: 8px;
+    -fx-padding: 10px;
+}
+
+.column-header-container {
+    -fx-padding: 5px 5px 10px 5px;
+}
+
+.column-header {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #172b4d;
+}
+
+.column-count {
+    -fx-font-size: 13px;
+    -fx-text-fill: #5e6c84;
+    -fx-background-color: #dfe1e6;
+    -fx-background-radius: 10px;
+    -fx-padding: 2px 8px;
+}
+
+/* Ẩn viền và màu nền của ScrollPane */
+.task-list-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+.task-list-scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.task-list-container {
+    -fx-padding: 5px; /* Giữ khoảng cách để bóng đổ của thẻ Task không bị cắt */
+}
+
+/* --- GIAO DIỆN THẺ TASK (TASK CARD) --- */
+.task-card {
+    -fx-background-color: white;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    /* Tạo đổ bóng nhẹ nhàng 3D */
+    -fx-effect: dropshadow(three-pass-box, rgba(9, 30, 66, 0.15), 3, 0, 0, 1);
+}
+
+.task-card:hover {
+    -fx-background-color: #fafbfc; /* Sang màu sáng hơn khi hover */
+    -fx-effect: dropshadow(three-pass-box, rgba(9, 30, 66, 0.25), 5, 0, 0, 2); /* Đổ bóng đậm hơn */
+}
+
+.task-name {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #172b4d;
+}
+
+.task-assignee {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6b778c;
+    -fx-font-style: italic;
+}
