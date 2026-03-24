@@ -37,73 +37,24 @@ public class TasklistService {
     public List<PersonalTaskDTO> getTaskByUser(int userID){
         return taskDAO.findAllByUserId(userID);
     }
-    // ==========================================
-    // 2. THÊM MỚI (CREATE)
-    // ==========================================
-    public boolean addTask(PersonalTaskDTO newTask) {
-        // --- BƯỚC 1: VALIDATION ---
-        if (newTask == null) {
-            throw new IllegalArgumentException("Dữ liệu công việc không tồn tại!");
-        }
-
-        if (newTask.getTaskName() == null || newTask.getTaskName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Tên công việc không được để trống!");
-        }
-
-        if (newTask.getTaskName().length() > 255) {
-            throw new IllegalArgumentException("Tên công việc quá dài (tối đa 255 ký tự)!");
-        }
-
-        // --- BƯỚC 2: BUSINESS LOGIC ---
-        // Chuẩn hóa tên (Xóa khoảng trắng thừa ở đầu/cuối)
-        newTask.setTaskName(newTask.getTaskName().trim());
-
-        // Gợi ý: Set giá trị mặc định cho Status khi tạo mới (nếu model có hỗ trợ)
-        // if (newTask.getTaskStatus() == null || newTask.getTaskStatus().trim().isEmpty()) {
-        //     newTask.setTaskStatus("To do");
-        // }
-
-        // --- BƯỚC 3: GỌI DAO ---
-        return taskDAO.create(newTask);
-    }
-
-    // ==========================================
-    // 3. CẬP NHẬT (UPDATE)
-    // ==========================================
-    public boolean toggleTaskStatus(PersonalTaskDTO task) {
-        if (task == null || task.getTaskId() <= 0) {
-            throw new IllegalArgumentException("Công việc không hợp lệ hoặc chưa được lưu!");
-        }
-
-        // Logic đảo trạng thái (Mở ra khi bạn có trường status nhé)
-        /* String currentStatus = task.getTaskStatus();
-        String newStatus = "Done".equalsIgnoreCase(currentStatus) ? "To do" : "Done";
-        task.setTaskStatus(newStatus);
-        */
-
-        return taskDAO.update(task.getTaskId(), task);
-    }
 
     // Cập nhật trạng thái task và truyền cả trạng thái cũ/mới để kiểm tra rule nghiệp vụ chắc chắn hơn.
     public boolean updateTaskStatus(int taskId, String oldStatus, String newStatus, String content, int userId) {
         if (taskId <= 0) {
-            throw new IllegalArgumentException("ID công việc không hợp lệ!");
+            throw new IllegalArgumentException("Invalid task ID!");
         }
         if (newStatus == null || newStatus.trim().isEmpty()) {
-            throw new IllegalArgumentException("Trạng thái không hợp lệ!");
+            throw new IllegalArgumentException("Invalid status!");
         }
         if (userId <= 0) {
-            throw new IllegalArgumentException("Người dùng không hợp lệ!");
+            throw new IllegalArgumentException("Invalid user!");
         }
         return taskDAO.appendStatusUpdating(taskId, oldStatus, newStatus, content, userId);
     }
 
-    // ==========================================
-    // 4. XÓA CÔNG VIỆC (DELETE)
-    // ==========================================
     public boolean deleteTask(int taskId) {
         if (taskId <= 0) {
-            throw new IllegalArgumentException("ID công việc không hợp lệ!");
+            throw new IllegalArgumentException("Invalid task ID!");
         }
         return taskDAO.delete(taskId);
     }
@@ -130,15 +81,15 @@ public class TasklistService {
 
     public boolean addTask(Task newTask) {
         if (newTask == null) {
-            throw new IllegalArgumentException("Dữ liệu công việc không tồn tại!");
+            throw new IllegalArgumentException("Task data does not exist!");
         }
 
         if (newTask.getTaskName() == null || newTask.getTaskName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Tên công việc không được để trống!");
+            throw new IllegalArgumentException("Task name is required!");
         }
 
         if (newTask.getTaskName().length() > 255) {
-            throw new IllegalArgumentException("Tên công việc quá dài (tối đa 255 ký tự)!");
+            throw new IllegalArgumentException("Task name is too long (max 255 characters)!");
         }
 
         newTask.setTaskName(newTask.getTaskName().trim());
@@ -161,15 +112,15 @@ public class TasklistService {
         Date end = parseDate(task.getTaskEndTime());
 
         if (start != null && start.before(today)) {
-            throw new IllegalArgumentException("Ngày bắt đầu công việc không được trước hôm nay!");
+            throw new IllegalArgumentException("Task start date cannot be before today!");
         }
 
         if (end != null && end.before(today)) {
-            throw new IllegalArgumentException("Deadline không được trước hôm nay!");
+            throw new IllegalArgumentException("Deadline cannot be before today!");
         }
 
         if (start != null && end != null && end.before(start)) {
-            throw new IllegalArgumentException("Deadline phải sau hoặc bằng ngày bắt đầu công việc!");
+            throw new IllegalArgumentException("Deadline must be on or after the task start date!");
         }
 
         Project project = resolveProject(task.getProjectId());
@@ -179,19 +130,19 @@ public class TasklistService {
 
             if (projectStart != null) {
                 if (start != null && start.before(projectStart)) {
-                    throw new IllegalArgumentException("Ngày bắt đầu task không được trước ngày bắt đầu dự án!");
+                    throw new IllegalArgumentException("Task start date cannot be before the project start date!");
                 }
                 if (end != null && end.before(projectStart)) {
-                    throw new IllegalArgumentException("Deadline task không được trước ngày bắt đầu dự án!");
+                    throw new IllegalArgumentException("Task deadline cannot be before the project start date!");
                 }
             }
 
             if (projectEnd != null) {
                 if (start != null && start.after(projectEnd)) {
-                    throw new IllegalArgumentException("Ngày bắt đầu task không được sau ngày kết thúc dự án!");
+                    throw new IllegalArgumentException("Task start date cannot be after the project end date!");
                 }
                 if (end != null && end.after(projectEnd)) {
-                    throw new IllegalArgumentException("Deadline task không được sau ngày kết thúc dự án!");
+                    throw new IllegalArgumentException("Task deadline cannot be after the project end date!");
                 }
             }
         }
@@ -201,17 +152,17 @@ public class TasklistService {
         Date today = truncateToDate(new Date());
         Date newDeadline = parseDate(deadline);
         if (newDeadline == null) {
-            throw new IllegalArgumentException("Deadline không hợp lệ!");
+            throw new IllegalArgumentException("Invalid deadline!");
         }
         if (newDeadline.before(today)) {
-            throw new IllegalArgumentException("Deadline không được trước hôm nay!");
+            throw new IllegalArgumentException("Deadline cannot be before today!");
         }
 
         TaskDAO.TaskDateMeta meta = taskDAO.findTaskDateMeta(taskId);
         if (meta != null) {
             Date startDate = truncateToDate(meta.getStartDate());
             if (startDate != null && newDeadline.before(startDate)) {
-                throw new IllegalArgumentException("Deadline không được trước ngày bắt đầu task!");
+                throw new IllegalArgumentException("Deadline cannot be before the task start date!");
             }
 
             Project project = resolveProject(meta.getProjectId());
@@ -219,10 +170,10 @@ public class TasklistService {
                 Date projectStart = truncateToDate(project.getProjectStartDate());
                 Date projectEnd = truncateToDate(project.getProjectEndDate());
                 if (projectStart != null && newDeadline.before(projectStart)) {
-                    throw new IllegalArgumentException("Deadline không được trước ngày bắt đầu dự án!");
+                    throw new IllegalArgumentException("Deadline cannot be before the project start date!");
                 }
                 if (projectEnd != null && newDeadline.after(projectEnd)) {
-                    throw new IllegalArgumentException("Deadline không được sau ngày kết thúc dự án!");
+                    throw new IllegalArgumentException("Deadline cannot be after the project end date!");
                 }
             }
         }

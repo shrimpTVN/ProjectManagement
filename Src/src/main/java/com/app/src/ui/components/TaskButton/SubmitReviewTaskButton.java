@@ -7,7 +7,7 @@ import com.app.src.ui.components.AbstractTaskButton;
 public class SubmitReviewTaskButton extends AbstractTaskButton {
 
     public SubmitReviewTaskButton() {
-        super("Submit");
+        super("Send for review");
     }
 
     @Override
@@ -18,12 +18,12 @@ public class SubmitReviewTaskButton extends AbstractTaskButton {
 
     @Override
     protected String getAlertTitle() {
-        return "Gửi yêu cầu kiểm duyệt";
+        return "Submit review request";
     }
 
     @Override
     protected String getAlertMessage() {
-        return "Bạn xác nhận đã hoàn thành xong công việc và muốn gửi cho Admin duyệt (In Preview)?";
+        return "Confirm you finished the task and want to send it for Admin review (In Preview)?";
     }
 
     @Override
@@ -31,7 +31,7 @@ public class SubmitReviewTaskButton extends AbstractTaskButton {
         int userId = task.getUser() != null ? task.getUser().getUserId() : 0;
         // Trạng thái cũ: In Progress -> Trạng thái mới: In Preview
         return TaskDAO.getInstance().appendStatusUpdating(
-                task.getTaskId(), "In Progressing", "In Preview", "User đã làm xong, gửi yêu cầu duyệt", userId
+                task.getTaskId(), "In Progressing", "In Preview", "User finished and requested review", userId
         );
     }
 }

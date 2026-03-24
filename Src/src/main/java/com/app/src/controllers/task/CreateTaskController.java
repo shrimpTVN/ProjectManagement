@@ -228,11 +228,11 @@ public class CreateTaskController {
             return;
         }
         if (startDate != null && startDate.before(today)) {
-            lblErrorName.setText("Start date không được trước hôm nay");
+            lblErrorName.setText("Start date cannot be before today");
             return;
         }
         if (endDate != null && endDate.before(today)) {
-            lblErrorName.setText("Deadline không được trước hôm nay");
+            lblErrorName.setText("Deadline cannot be before today");
             return;
         }
 
@@ -242,21 +242,21 @@ public class CreateTaskController {
             Date projectEnd = truncateToDate(currentProject.getProjectEndDate());
             if (projectStart != null) {
                 if (startDate != null && startDate.before(projectStart)) {
-                    lblErrorName.setText("Ngày bắt đầu task không được trước ngày bắt đầu dự án");
+                    lblErrorName.setText("Task start date cannot be before the project start date");
                     return;
                 }
                 if (endDate != null && endDate.before(projectStart)) {
-                    lblErrorName.setText("Deadline không được trước ngày bắt đầu dự án");
+                    lblErrorName.setText("Task deadline cannot be before the project start date");
                     return;
                 }
             }
             if (projectEnd != null) {
                 if (startDate != null && startDate.after(projectEnd)) {
-                    lblErrorName.setText("Ngày bắt đầu task không được sau ngày kết thúc dự án");
+                    lblErrorName.setText("Task start date cannot be after the project end date");
                     return;
                 }
                 if (endDate != null && endDate.after(projectEnd)) {
-                    lblErrorName.setText("Deadline không được sau ngày kết thúc dự án");
+                    lblErrorName.setText("Task deadline cannot be after the project end date");
                     return;
                 }
             }
@@ -311,13 +311,13 @@ public class CreateTaskController {
         Date today = truncateToDate(new Date());
         Date newDeadline = toDate(dpEnd.getValue());
         if (newDeadline != null && newDeadline.before(today)) {
-            lblErrorName.setText("Deadline không được trước hôm nay");
+            lblErrorName.setText("Deadline cannot be before today");
             return;
         }
 
         Date taskStartDate = parseToDate(editingTask.getTaskStartTime());
         if (taskStartDate != null && newDeadline != null && newDeadline.before(taskStartDate)) {
-            lblErrorName.setText("Deadline không được trước ngày bắt đầu task");
+            lblErrorName.setText("Deadline cannot be before the task start date");
             return;
         }
 
@@ -325,11 +325,11 @@ public class CreateTaskController {
             Date projectStart = truncateToDate(currentProject.getProjectStartDate());
             Date projectEnd = truncateToDate(currentProject.getProjectEndDate());
             if (projectStart != null && newDeadline.before(projectStart)) {
-                lblErrorName.setText("Deadline không được trước ngày bắt đầu dự án");
+                lblErrorName.setText("Deadline cannot be before the project start date");
                 return;
             }
             if (projectEnd != null && newDeadline.after(projectEnd)) {
-                lblErrorName.setText("Deadline không được sau ngày kết thúc dự án");
+                lblErrorName.setText("Deadline cannot be after the project end date");
                 return;
             }
         }

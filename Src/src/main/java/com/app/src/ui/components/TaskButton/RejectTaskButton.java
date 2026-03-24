@@ -19,12 +19,12 @@ public class RejectTaskButton extends AbstractTaskButton {
 
     @Override
     protected String getAlertTitle() {
-        return "Cảnh báo từ chối công việc";
+        return "Decline task warning";
     }
 
     @Override
     protected String getAlertMessage() {
-        return "Bạn có chắc chắn KHÔNG NHẬN công việc này và muốn hủy/trả lại không?";
+        return "Are you sure you want to decline this task and give it back?";
     }
 
     @Override
@@ -32,7 +32,7 @@ public class RejectTaskButton extends AbstractTaskButton {
         int userId = task.getUser() != null ? task.getUser().getUserId() : 0;
         // Trạng thái cũ: To Do -> Trạng thái mới: Canceled (Hãy đảm bảo bảng STATUS của bạn có trạng thái này)
         return TaskDAO.getInstance().appendStatusUpdating(
-                task.getTaskId(), "To Do", "Canceled", "User từ chối nhận task", userId
+                task.getTaskId(), "To Do", "Canceled", "User declined the task", userId
         );
     }
 }

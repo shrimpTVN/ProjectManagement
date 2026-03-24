@@ -10,7 +10,7 @@ public abstract class AbstractTaskButton extends Button {
     protected Task task;
     protected Runnable onSuccessCallback;
 
-    // Constructor nhận vào tên nút (ví dụ: "Nhận việc", "Hoàn thành")
+    // Constructor receives button label (e.g., "Accept", "Complete")
     public AbstractTaskButton(String text) {
         super(text);
         // Gắn sự kiện click mặc định cho mọi nút kế thừa lớp này
@@ -28,23 +28,23 @@ public abstract class AbstractTaskButton extends Button {
     private void executeAction() {
         if (task == null) return;
 
-        // 1. Hiển thị Alert xác nhận lấy từ class con
+        // 1. Show confirmation Alert provided by subclass
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(getAlertTitle());
-        alert.setHeaderText("Tác vụ: " + task.getTaskName());
+        alert.setHeaderText("Task: " + task.getTaskName());
         alert.setContentText(getAlertMessage());
 
         // 2. Chờ người dùng nhấn OK
         if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
 
-            // 3. Thực thi logic gọi DB (Do class con quyết định)
+            // 3. Execute DB logic (subclass decides)
             boolean isSuccess = updateDatabase();
 
-            // 4. Báo cáo kết quả
+            // 4. Notify result
             if (isSuccess) {
                 if (onSuccessCallback != null) onSuccessCallback.run(); // Load lại giao diện
             } else {
-                Alert error = new Alert(Alert.AlertType.ERROR, "Lỗi cập nhật CSDL. Vui lòng thử lại!");
+                Alert error = new Alert(Alert.AlertType.ERROR, "Database update failed. Please try again!");
                 error.show();
             }
         }
