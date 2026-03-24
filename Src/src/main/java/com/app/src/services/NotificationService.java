@@ -17,7 +17,7 @@ public class NotificationService {
          return instance;
     }
     public NotificationService() {
-        this.notificationDAO = new NotificationDAO();
+        notificationDAO = new NotificationDAO();
     }
     public static List<Notification> getNotificationsByUserId(int userId) {
         // Bạn có thể thêm các logic kiểm tra (validation) ở đây nếu cần
@@ -25,18 +25,27 @@ public class NotificationService {
             System.out.println("[DEBUG - NotificationService] Lỗi: userId không hợp lệ!");
             return null;
         }
+        ensureDao();
         System.out.println("Goi NotificationService thanh cong");
         return notificationDAO.findByUserId(userId);
     }
 
     //Hàm đánh dấu đã đọc
     public static boolean markAsRead(int notiId, Notification noti) {
+        ensureDao();
         noti.setNotiIsRead(true);
         return notificationDAO.update(notiId, noti);
     }
 
     public static boolean createNotification(Notification notification)
     {
+            ensureDao();
             return notificationDAO.create(notification);
+    }
+
+    private static void ensureDao() {   // Hàm này đảm bảo rằng notificationDAO đã được khởi tạo trước khi sử dụng
+        if (notificationDAO == null) {
+            notificationDAO = new NotificationDAO();
+        }
     }
 }

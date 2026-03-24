@@ -62,7 +62,7 @@
                 <VBox spacing="6.0">
                     <children>
                         <Label styleClass="create-project-label" text="Assign Manager" />
-                        <ComboBox fx:id="cbManager" promptText="Select Manager..." styleClass="create-project-input" />
+                        <ComboBox fx:id="cbManager" editable="true" promptText="Select Manager..." styleClass="create-project-input" />
                     </children>
                 </VBox>
 
