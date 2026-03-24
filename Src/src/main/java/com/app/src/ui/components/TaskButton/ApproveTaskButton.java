@@ -1,36 +1,35 @@
 package com.app.src.ui.components.TaskButton;
 import com.app.src.daos.TaskDAO;
-import com.app.src.models.Task;
 import com.app.src.ui.components.AbstractTaskButton;
 
-public class AcceptTaskButton extends AbstractTaskButton {
 
-    public AcceptTaskButton() {
-        super("Accept task"); // button label
+public class ApproveTaskButton extends AbstractTaskButton {
+
+    public ApproveTaskButton() {
+        super("Approve");
     }
 
     @Override
     protected void setupCustomStyle() {
-        // Màu xanh lá cây mướt mắt cho hành động tích cực
+        // Màu xanh lá để chỉ sự đồng ý
         this.getStyleClass().addAll("task-action-btn", "btn-submit");
     }
 
     @Override
     protected String getAlertTitle() {
-        return "Confirm task acceptance";
+        return "Xác nhận duyệt công việc";
     }
 
     @Override
     protected String getAlertMessage() {
-        return "Ready to start this task and move it to In Progress?";
+        return "Bạn xác nhận công việc này đã đạt yêu cầu và chuyển sang trạng thái Done?";
     }
 
     @Override
     protected boolean updateDatabase() {
         int userId = task.getUser() != null ? task.getUser().getUserId() : 0;
-        // Trạng thái cũ: To Do -> Trạng thái mới: In Progress
         return TaskDAO.getInstance().appendStatusUpdating(
-                task.getTaskId(), "To Do", "In Progressing", "User accepted the task and started work", userId
+                task.getTaskId(), "In Preview", "Done", "Quản lý đã duyệt task", userId
         );
     }
 }
