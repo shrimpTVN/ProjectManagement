@@ -28,13 +28,13 @@
                   <Insets left="57.0" />
                </VBox.margin>
                <children>
-                  <Hyperlink fx:id="hlHome" style="-fx-padding: 0; -fx-border-width: 0; -fx-background-insets: 0; -fx-text-fill: black; -fx-visited-text-fill: black;" text="Home">
+                  <Hyperlink fx:id="hlHome" onAction="#handleBreadcrumbClick" style="-fx-padding: 0; -fx-border-width: 0; -fx-background-insets: 0;" styleClass="font-14" text="Home" textFill="#666666">
 <!--                     hlHome : link to home page-->
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Hyperlink>
-                  <Label fx:id="lblSep" text="/">
+                  <Label fx:id="lblSep" styleClass="font-14" text="/" textFill="#666666">
 <!--                     lblSep : "/" component-->
                      <HBox.margin>
                         <Insets right="10.0" />
@@ -43,13 +43,13 @@
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblCurrentPage" style="-fx-text-fill: black;" text="All my tasks">
+                  <Label fx:id="lblCurrentPage" styleClass="font-14" text="All my tasks" textFill="#666666">
 <!--                     lblCurrentPage : name of the current page -->
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblSep2" layoutX="53.0" layoutY="20.0" text="/">
+                  <Label fx:id="lblSep2" layoutX="53.0" layoutY="20.0" styleClass="font-14" text="/" textFill="#666666">
                      <font>
                         <Font size="15.0" />
                      </font>
