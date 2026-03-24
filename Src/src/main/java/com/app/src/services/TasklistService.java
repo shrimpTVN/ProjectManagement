@@ -37,52 +37,6 @@ public class TasklistService {
     public List<PersonalTaskDTO> getTaskByUser(int userID){
         return taskDAO.findAllByUserId(userID);
     }
-    // ==========================================
-    // 2. THÊM MỚI (CREATE)
-    // ==========================================
-    public boolean addTask(PersonalTaskDTO newTask) {
-        // --- STEP 1: VALIDATION ---
-        if (newTask == null) {
-            throw new IllegalArgumentException("Task data does not exist!");
-        }
-
-        if (newTask.getTaskName() == null || newTask.getTaskName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Task name is required!");
-        }
-
-        if (newTask.getTaskName().length() > 255) {
-            throw new IllegalArgumentException("Task name is too long (max 255 characters)!");
-        }
-
-        // --- STEP 2: BUSINESS LOGIC ---
-        // Normalize name (trim extra spaces)
-        newTask.setTaskName(newTask.getTaskName().trim());
-
-        // Gợi ý: Set giá trị mặc định cho Status khi tạo mới (nếu model có hỗ trợ)
-        // if (newTask.getTaskStatus() == null || newTask.getTaskStatus().trim().isEmpty()) {
-        //     newTask.setTaskStatus("To do");
-        // }
-
-        // --- STEP 3: CALL DAO ---
-        return taskDAO.create(newTask);
-    }
-
-    // ==========================================
-    // 3. CẬP NHẬT (UPDATE)
-    // ==========================================
-    public boolean toggleTaskStatus(PersonalTaskDTO task) {
-        if (task == null || task.getTaskId() <= 0) {
-            throw new IllegalArgumentException("Task is invalid or not saved yet!");
-        }
-
-        // Logic đảo trạng thái (Mở ra khi bạn có trường status nhé)
-        /* String currentStatus = task.getTaskStatus();
-        String newStatus = "Done".equalsIgnoreCase(currentStatus) ? "To do" : "Done";
-        task.setTaskStatus(newStatus);
-        */
-
-        return taskDAO.update(task.getTaskId(), task);
-    }
 
     // Cập nhật trạng thái task và truyền cả trạng thái cũ/mới để kiểm tra rule nghiệp vụ chắc chắn hơn.
     public boolean updateTaskStatus(int taskId, String oldStatus, String newStatus, String content, int userId) {
@@ -98,9 +52,6 @@ public class TasklistService {
         return taskDAO.appendStatusUpdating(taskId, oldStatus, newStatus, content, userId);
     }
 
-    // ==========================================
-    // 4. XÓA CÔNG VIỆC (DELETE)
-    // ==========================================
     public boolean deleteTask(int taskId) {
         if (taskId <= 0) {
             throw new IllegalArgumentException("Invalid task ID!");

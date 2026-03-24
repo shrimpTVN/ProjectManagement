@@ -4,7 +4,11 @@ import com.app.src.core.AppContext;
 import com.app.src.daos.UserDAO;
 import com.app.src.models.Project;
 import com.app.src.models.User;
+import com.app.src.services.ProjectJoiningService;
 import com.app.src.services.ProjectService;
+import com.app.src.controllers.project.ProjectDetailController;
+import com.app.src.controllers.project.ProjectDetailNavigator;
+import com.app.src.controllers.project.IProjectDetailSubView;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -231,13 +235,6 @@ public class CreateProjectController implements Initializable {
             projectData.setProjectId(editingProject.getProjectId());
             boolean success = projectService.updateProject(projectData);
 
-            // 2. Cập nhật Manager
-            String managerUsername = cbManager.getEditor().getText().trim();
-            User selectedManager = managerMap.get(managerUsername);
-            if (selectedManager != null) {
-                projectService.updateProjectManager(editingProject.getProjectId(), selectedManager.getUserId());
-            }
-
             System.out.println("Update result from database: " + success);
 
             if (success) {
@@ -257,8 +254,22 @@ public class CreateProjectController implements Initializable {
         ViewNavigator.getInstance().loadSubScene("/scenes/ProjectList.fxml");
     }
 
-    private void handleCancel() {
-        System.out.println("Hủy tạo dự án. Quay về màn hình Home.");
+    private void handleCancel() {   // Nếu đang edit thì quay về detail, nếu đang tạo mới thì về home
+        if (editingProject != null) {
+            Project fullProject = AppContext.getProjectById(editingProject.getProjectId());
+            String adminName = new ProjectJoiningService().getAdmin(editingProject.getProjectId());
+
+            ProjectDetailController controller = ViewNavigator.getInstance().loadSubScene("/scenes/ProjectDetail.fxml");
+            if (controller != null) {
+                controller.renderData(fullProject, adminName);
+                IProjectDetailSubView infoController = ProjectDetailNavigator.getInstance()
+                        .loadSubView("/components/ProjectDetail/Infor.fxml");
+                if (infoController != null) {
+                    infoController.renderData(fullProject, adminName);
+                }
+            }
+            return;
+        }
         ViewNavigator.getInstance().loadSubScene("/scenes/Home.fxml");
     }
 
@@ -294,6 +305,11 @@ public class CreateProjectController implements Initializable {
 
         // Đổi tên nút bấm để người dùng biết họ đang Lưu chứ không phải Tạo mới
         btnCreate.setText("Save Changes");
+
+        // Không cho đổi manager khi edit
+        cbManager.setDisable(true);
+        cbManager.setEditable(false);
+        cbManager.setPromptText("Manager unchanged on edit");
 
         txtDescription.setText(project.getProjectDescription());
     }
