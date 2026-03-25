@@ -167,8 +167,12 @@ public class ChatClientService {
 
     public String generateNotification(String title, String content, int userId) {
         Notification notification = new Notification(title, content, false, String.valueOf( new Date()), userId);
-        NotificationService.getInstance();
-        NotificationService.createNotification(notification);
-        return "not:"+gson.toJson(notification);
+        if (userId != AppContext.getUserData().getUserId()) {
+            NotificationService.getInstance();
+            NotificationService.createNotification(notification);
+            return "not:"+gson.toJson(notification);
+        }
+
+        return "con" + gson.toJson(notification);
     }
 }

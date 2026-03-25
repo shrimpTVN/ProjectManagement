@@ -1,5 +1,7 @@
 package com.app.src.models;
 
+import java.util.Date;
+
 public class Notification {
 
     private int notiId;
@@ -17,6 +19,15 @@ public class Notification {
         this.notiDescription = notiDescription;
         this.notiIsRead = notiIsRead;
         this.notiTime = notiTime;
+        this.userId = userId;
+
+    }
+    public Notification(String notiTitle, String notiDescription, int userId) {
+
+        this.notiTitle = notiTitle;
+        this.notiDescription = notiDescription;
+        this.notiIsRead = false;
+        this.notiTime = String.valueOf(new Date());
         this.userId = userId;
 
     }

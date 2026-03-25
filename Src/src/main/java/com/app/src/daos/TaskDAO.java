@@ -32,7 +32,7 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
                 "FROM TASK t " +
                 "LEFT JOIN PROJECT p ON t.Pro_id = p.Pro_id " +
                 "LEFT JOIN STATUS s ON t.Sta_id = s.Sta_id " +
-                "WHERE t.Task_id = ?";
+                "WHERE t.Task_id = ? and t.task_isRejected = false";
 
         PersonalTaskDTO task = null;
         Connection connection = null;

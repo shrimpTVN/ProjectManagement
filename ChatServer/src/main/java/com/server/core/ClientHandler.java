@@ -34,27 +34,35 @@ public class ClientHandler implements Runnable {
                 String header = message[0];// not -> notification; req -> request to join chat box; com -> comment
                 String body = message[1];
 
+                Notification notification = new Notification();
+                Comment comment = new Comment();
 
-                if (header.equals("not")) {
-                    Notification notification = gson.fromJson(body, Notification.class);
-                    server.broadcastNotification(notification);
-
+                if (header.equals("not") || header.equals("con")){
+                    notification = gson.fromJson(body, Notification.class);
                 } else {
-                    // Parse linh hoạt: hỗ trợ cả JSON object và JSON string chứa object.
-                    Comment msg = parseIncomingComment(body);
-                    if (msg == null || msg.getTaskId() <= 0) {
+                    comment = parseIncomingComment(body);
+                    if (comment == null || comment.getTaskId() <= 0) {
                         System.out.println("Bo qua payload khong hop le tu " + socket.getRemoteSocketAddress());
                         continue;
                     }
-
-                    if (header.equals("req")) {
-                        // 2. Đảm bảo Client này đã được đăng ký vào phòng của task đó
-                        server.joinChatBox(msg.getTaskId(), this);
-                    } else {
-                        // 3. Yêu cầu Server phát sóng tin nhắn vào phòng
-                        server.broadcastToChatBox(msg, this);
-                    }
                 }
+                switch (header) {
+                    case "not":
+                        ChatServer.sendNotificationToUser(notification.getUserId(), notification );
+                        break;
+                    case "con":
+                        ChatServer.registerClient(notification.getUserId(), this);
+                        break;
+                    case "com":
+                        server.broadcastToChatBox(comment, this);
+                        break;
+
+                    case "req":
+                        server.joinChatBox(comment.getTaskId(), this);
+                        break;
+
+                }
+
             }
         } catch (IOException e) {
             System.out.println("Client ngắt kết nối: " + socket.getRemoteSocketAddress());

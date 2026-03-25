@@ -14,12 +14,12 @@ import java.util.concurrent.*;
 public class ChatServer {
     private final int port;
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
-    private final Gson gson = new Gson();
+    private static final Gson gson = new Gson();
 
     // Cấu trúc dữ liệu cốt lõi: Map<taskId, Danh sách Client đang online trong task đó>
     private final ConcurrentHashMap<Integer, Set<ClientHandler>> chatBoxs = new ConcurrentHashMap<>();
     // NEW: Global set for all connected clients to receive notifications
-    private final Set<ClientHandler> connectedClients = ConcurrentHashMap.newKeySet();
+    private final static  ConcurrentHashMap<Integer, ClientHandler> connectedClients =  new ConcurrentHashMap<>();
 
     public ChatServer(int port) {
         this.port = port;
@@ -33,8 +33,7 @@ public class ChatServer {
                 System.out.println("Có client mới kết nối: " + clientSocket.getRemoteSocketAddress());
 
                 ClientHandler handler = new ClientHandler(clientSocket, this);
-                // REGISTER GLOBALLY: Add the new client to the global notification set
-                connectedClients.add(handler);
+
 
                 System.out.println("New client connected and registered for notifications. Total online: " + connectedClients.size());
                 threadPool.execute(handler); // Giao cho Thread Pool xử lý
@@ -44,16 +43,18 @@ public class ChatServer {
         }
     }
 
-    // NEW: Broadcast method for global notifications
-    public void broadcastNotification(Notification notificationPayload) {
-        String jsonPayload = gson.toJson(notificationPayload);
+    public static void registerClient(int userId, ClientHandler handler) {
+        connectedClients.put(userId, handler);
+        System.out.println("User " + userId + " registered. Total online: " + connectedClients.size());
+    }
 
-        for (ClientHandler client : connectedClients) {
-            // Note: In a production environment, you might want to submit these
-            // send operations to a separate thread pool to avoid blocking.
-            client.sendMessage("not:"+jsonPayload);
+    public static void sendNotificationToUser(int userId, Notification notification) {
+        ClientHandler client = connectedClients.get(userId);
+        if (client != null ) {
+            // Convert the Notification object to JSON or your custom protocol string
+            String payload = "not:" + gson.toJson(notification);
+            client.sendMessage(payload);
         }
-        System.out.println("System notification broadcasted to " + connectedClients.size() + " clients.");
     }
 
     // Hàm Broadcast: Chỉ gửi tin nhắn cho những ai thuộc có chat trong task
@@ -84,7 +85,7 @@ public class ChatServer {
         chatBoxs.values().forEach(box -> box.remove(handler));
 
         // UNREGISTER GLOBALLY: Remove from global notifications
-        connectedClients.remove(handler);
+        connectedClients.entrySet().removeIf(entry -> entry.getValue() == handler);
         System.out.println("Client disconnected. Remaining online: " + connectedClients.size());
     }
 
