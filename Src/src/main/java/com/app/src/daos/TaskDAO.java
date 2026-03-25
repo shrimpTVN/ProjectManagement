@@ -416,6 +416,9 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
         if (normalizedStatus.equals("done")) {
             return 4;
         }
+        if (normalizedStatus.equals("cancel")) {
+            return 5;
+        }
         return -1;
     }
 

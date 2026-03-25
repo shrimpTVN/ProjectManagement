@@ -32,7 +32,7 @@ public class RejectTaskButton extends AbstractTaskButton {
         int userId = task.getUser() != null ? task.getUser().getUserId() : 0;
         // Trạng thái cũ: To Do -> Trạng thái mới: Canceled (Hãy đảm bảo bảng STATUS của bạn có trạng thái này)
         return TaskDAO.getInstance().appendStatusUpdating(
-                task.getTaskId(), "To Do", "Canceled", "User declined the task", userId
+                task.getTaskId(), "To Do", "Cancel", "User declined the task", userId
         );
     }
 }
