@@ -11,9 +11,17 @@ import static com.app.src.exceptions.ErrorCode.UNKNOWN_ERROR;
 
 public class ProjectJoiningService {
     private static ProjectJoiningDAO projectJoiningDao;
+    private static ProjectJoiningService instance;
 
-    public ProjectJoiningService() {
+    public  ProjectJoiningService() {
         projectJoiningDao = ProjectJoiningDAO.getInstance();
+    }
+    public static ProjectJoiningService getInstance() {
+        if (instance == null) {
+            instance = new ProjectJoiningService();
+
+        }
+        return instance;
     }
 
     public static String getAdmin(int projectId) {
