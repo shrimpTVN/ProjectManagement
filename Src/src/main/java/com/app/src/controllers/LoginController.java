@@ -5,6 +5,7 @@ import com.app.src.core.service.chat.ChatClientService;
 import com.app.src.core.session.UserSession;
 import com.app.src.exceptions.AppException;
 import com.app.src.models.Notification;
+import com.app.src.models.User;
 import com.app.src.services.LoginService;
 import com.app.src.services.UserService;
 import javafx.event.ActionEvent;
@@ -70,14 +71,22 @@ public class LoginController implements Initializable {
 
                 if (userId != -1) {
                     UserService userService = new UserService();
-                    UserSession.getInstance().setUser(userService.getUserById(userId));
-                    SceneManager.getInstance().switchScene("/scenes/dashboard.fxml");
+                    User currentUser = userService.getUserById(userId);
+                    UserSession.getInstance().setUser(currentUser);
+
+                    SceneManager sceneManager = SceneManager.getInstance();
+                    if (sceneManager.getPrimaryStage() != null) {
+                        // Reflect the signed-in user in the window title for clarity
+                        sceneManager.getPrimaryStage().setTitle("Project Management - " + currentUser.getUserName());
+                    }
+                    sceneManager.switchScene("/scenes/dashboard.fxml");
 
                     // connection den chat server
                     connectChatServerSafely();
 
                     String msg = ChatClientService.getInstance().generateNotification("Đăng ký kết nối","", userId);
                     ChatClientService.getInstance().sendMessage(msg);
+
                 } else {
                     labelLoginMess.setText("Invalid username or password!");
                 }

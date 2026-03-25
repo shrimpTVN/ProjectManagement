@@ -5,7 +5,6 @@ import com.server.model.Task;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class TaskService {
@@ -55,14 +54,20 @@ public class TaskService {
 		List<Task> tasks = taskDAO.findTasksNearingDeadline(days, referenceDate);
 		taskUpdatingService.applyLatestStatus(tasks);
 		return tasks.stream()
-				.filter(task -> !"DONE".equals(normalizeStatus(task.getTaskStatus())))
+				.filter(task -> !TaskUpdatingService.DONE_STATUS.equals(taskUpdatingService.normalizeStatus(task.getTaskStatus())))
 				.collect(Collectors.toList());
 	}
 
-	private String normalizeStatus(String status) {
-		if (status == null) {
-			return "";
+	public List<Task> getTasksForDeadlineReminder(int days, LocalDate referenceDate) {
+		if (days <= 0) {
+			return List.of();
 		}
-		return status.trim().toUpperCase(Locale.ROOT);
+		List<Task> tasks = taskDAO.findTasksForDeadlineReminder(days, referenceDate, TaskUpdatingService.DONE_STATUS);
+		taskUpdatingService.applyLatestStatus(tasks);
+		return tasks;
+	}
+
+	public boolean markTasksAsNotified(List<Integer> taskIds) {
+		return taskDAO.markTasksAsNotified(taskIds);
 	}
 }

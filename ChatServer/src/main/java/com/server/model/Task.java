@@ -9,6 +9,8 @@ public class Task {
 	private String taskStatus;
 	private int projectId;
 	private int userId;
+	private boolean rejected;
+	private boolean notified;
 
 	public Task() {
 	}
@@ -23,6 +25,8 @@ public class Task {
 		this.taskStatus = taskStatus;
 		this.projectId = projectId;
 		this.userId = userId;
+		this.rejected = false;
+		this.notified = false;
 	}
 
 	public int getTaskId() {
@@ -87,5 +91,21 @@ public class Task {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+
+	public boolean isRejected() {
+		return rejected;
+	}
+
+	public void setRejected(boolean rejected) {
+		this.rejected = rejected;
+	}
+
+	public boolean isNotified() {
+		return notified;
+	}
+
+	public void setNotified(boolean notified) {
+		this.notified = notified;
 	}
 }
