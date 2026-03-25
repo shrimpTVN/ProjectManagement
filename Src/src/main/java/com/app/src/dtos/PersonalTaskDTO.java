@@ -5,6 +5,7 @@ import com.app.src.models.Task;
 public class PersonalTaskDTO extends Task {
     private String projectName;
     private String statusName;
+    private String AssigneeName;
 
     public PersonalTaskDTO() {}
 
@@ -13,4 +14,7 @@ public class PersonalTaskDTO extends Task {
 
     public String getStatusName() { return statusName; }
     public void setStatusName(String statusName) { this.statusName = statusName; }
+
+    public String getAssigneeName(){ return AssigneeName; }
+    public void setAssigneeName(String AssigneeName){ this.AssigneeName = AssigneeName; }
 }

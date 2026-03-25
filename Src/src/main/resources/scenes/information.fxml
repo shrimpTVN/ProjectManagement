@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -17,100 +18,104 @@
 
 <StackPane prefHeight="640.0" prefWidth="980.0" styleClass="info-page-root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.InformationController">
    <children>
-      <VBox maxWidth="840.0" prefWidth="840.0" spacing="16.0" styleClass="info-main-card">
-         <children>
-            <AnchorPane prefHeight="230.0" styleClass="info-header-card">
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="info-scroll-pane">
+         <content>
+            <VBox maxWidth="840.0" prefWidth="840.0" spacing="16.0" styleClass="info-main-card">
                <children>
-                  <Rectangle fx:id="Userbackground" arcHeight="18.0" arcWidth="18.0" height="230.0" strokeWidth="0.0" styleClass="info-header-bg" width="840.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <VBox alignment="CENTER" spacing="10.0" AnchorPane.bottomAnchor="18.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="18.0">
+                  <AnchorPane prefHeight="230.0" styleClass="info-header-card">
                      <children>
-                        <ImageView fx:id="profileImageView" fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" styleClass="info-avatar">
-                           <image>
-                              <Image url="@../image/profile2.png" />
-                           </image>
-                        </ImageView>
-                        <Label fx:id="nameLabel" alignment="CENTER" styleClass="info-name" text="Name" />
-                        <Label fx:id="dataEmailLabel" alignment="CENTER" styleClass="info-email" text="email@example.com" />
+                        <Rectangle fx:id="Userbackground" arcHeight="18.0" arcWidth="18.0" height="230.0" strokeWidth="0.0" styleClass="info-header-bg" width="840.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <VBox alignment="CENTER" spacing="10.0" AnchorPane.bottomAnchor="18.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="18.0">
+                           <children>
+                              <ImageView fx:id="profileImageView" fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" styleClass="info-avatar">
+                                 <image>
+                                    <Image url="@../image/profile2.png" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="nameLabel" alignment="CENTER" styleClass="info-name" text="Name" />
+                              <Label fx:id="dataEmailLabel" alignment="CENTER" styleClass="info-email" text="email@example.com" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label fx:id="updateMessageLabel" styleClass="info-update-message" text="" />
+                        <VBox HBox.hgrow="ALWAYS" />
+                        <Button fx:id="editButton" mnemonicParsing="false" onAction="#handleEditClick" styleClass="info-action-btn" text="Edit" />
+                        <Button fx:id="saveButton" managed="false" mnemonicParsing="false" onAction="#handleSaveClick" styleClass="info-action-btn info-action-save" text="Save" visible="false" />
+                        <Button fx:id="cancelButton" managed="false" mnemonicParsing="false" onAction="#handleCancelClick" styleClass="info-action-btn info-action-cancel" text="Cancel" visible="false" />
+                     </children>
+                  </HBox>
+
+                  <VBox fillWidth="true" spacing="14.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <VBox spacing="6.0" styleClass="info-detail-card">
+                           <children>
+                              <Label styleClass="info-detail-title" text="Name" />
+                              <Label fx:id="nameValueLabel" styleClass="info-detail-value" text="N/A" wrapText="true" />
+                              <TextField fx:id="nameField" managed="false" styleClass="info-edit-input" visible="false" />
+                           </children>
+                           <padding>
+                              <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                           </padding>
+                        </VBox>
+
+                        <VBox spacing="6.0" styleClass="info-detail-card">
+                           <children>
+                              <Label styleClass="info-detail-title" text="Date of birth" />
+                              <Label fx:id="dobValueLabel" styleClass="info-detail-value" text="N/A" wrapText="true" />
+                              <DatePicker fx:id="dobPicker" managed="false" styleClass="info-edit-input" visible="false" />
+                              <Label fx:id="dataDateofbirthLabel" managed="false" visible="false" />
+                           </children>
+                           <padding>
+                              <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                           </padding>
+                        </VBox>
+
+                        <VBox spacing="6.0" styleClass="info-detail-card">
+                           <children>
+                              <Label styleClass="info-detail-title" text="Sex" />
+                              <Label fx:id="sexValueLabel" styleClass="info-detail-value" text="N/A" />
+                              <ComboBox fx:id="sexCombo" managed="false" prefWidth="180.0" styleClass="info-edit-input" visible="false" />
+                              <Label fx:id="dataSexLabel" managed="false" visible="false" />
+                           </children>
+                           <padding>
+                              <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                           </padding>
+                        </VBox>
+
+                        <VBox spacing="6.0" styleClass="info-detail-card">
+                           <children>
+                              <Label styleClass="info-detail-title" text="Telephone" />
+                              <Label fx:id="teleValueLabel" styleClass="info-detail-value" text="N/A" wrapText="true" />
+                              <TextField fx:id="teleField" managed="false" styleClass="info-edit-input" visible="false" />
+                              <Label fx:id="dataTeleLabel" managed="false" visible="false" />
+                           </children>
+                           <padding>
+                              <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                           </padding>
+                        </VBox>
+
+                        <VBox spacing="6.0" styleClass="info-detail-card">
+                           <children>
+                              <Label styleClass="info-detail-title" text="Account" />
+                              <Label styleClass="info-detail-value" text="Email is shown below your name." wrapText="true" />
+                           </children>
+                           <padding>
+                              <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                           </padding>
+                        </VBox>
                      </children>
                   </VBox>
                </children>
-            </AnchorPane>
-
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
-               <children>
-                  <Label fx:id="updateMessageLabel" styleClass="info-update-message" text="" />
-                  <VBox HBox.hgrow="ALWAYS" />
-                  <Button fx:id="editButton" mnemonicParsing="false" onAction="#handleEditClick" styleClass="info-action-btn" text="Edit" />
-                  <Button fx:id="saveButton" managed="false" mnemonicParsing="false" onAction="#handleSaveClick" styleClass="info-action-btn info-action-save" text="Save" visible="false" />
-                  <Button fx:id="cancelButton" managed="false" mnemonicParsing="false" onAction="#handleCancelClick" styleClass="info-action-btn info-action-cancel" text="Cancel" visible="false" />
-               </children>
-            </HBox>
-
-            <VBox fillWidth="true" spacing="14.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <VBox spacing="6.0" styleClass="info-detail-card">
-                     <children>
-                        <Label styleClass="info-detail-title" text="Name" />
-                        <Label fx:id="nameValueLabel" styleClass="info-detail-value" text="N/A" wrapText="true" />
-                        <TextField fx:id="nameField" managed="false" styleClass="info-edit-input" visible="false" />
-                     </children>
-                     <padding>
-                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-                     </padding>
-                  </VBox>
-
-                  <VBox spacing="6.0" styleClass="info-detail-card">
-                     <children>
-                        <Label styleClass="info-detail-title" text="Date of birth" />
-                        <Label fx:id="dobValueLabel" styleClass="info-detail-value" text="N/A" wrapText="true" />
-                        <DatePicker fx:id="dobPicker" managed="false" styleClass="info-edit-input" visible="false" />
-                        <Label fx:id="dataDateofbirthLabel" managed="false" visible="false" />
-                     </children>
-                     <padding>
-                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-                     </padding>
-                  </VBox>
-
-                  <VBox spacing="6.0" styleClass="info-detail-card">
-                     <children>
-                        <Label styleClass="info-detail-title" text="Sex" />
-                        <Label fx:id="sexValueLabel" styleClass="info-detail-value" text="N/A" />
-                        <ComboBox fx:id="sexCombo" managed="false" prefWidth="180.0" styleClass="info-edit-input" visible="false" />
-                        <Label fx:id="dataSexLabel" managed="false" visible="false" />
-                     </children>
-                     <padding>
-                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-                     </padding>
-                  </VBox>
-
-                  <VBox spacing="6.0" styleClass="info-detail-card">
-                     <children>
-                        <Label styleClass="info-detail-title" text="Telephone" />
-                        <Label fx:id="teleValueLabel" styleClass="info-detail-value" text="N/A" wrapText="true" />
-                        <TextField fx:id="teleField" managed="false" styleClass="info-edit-input" visible="false" />
-                        <Label fx:id="dataTeleLabel" managed="false" visible="false" />
-                     </children>
-                     <padding>
-                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-                     </padding>
-                  </VBox>
-
-                  <VBox spacing="6.0" styleClass="info-detail-card">
-                     <children>
-                        <Label styleClass="info-detail-title" text="Account" />
-                        <Label styleClass="info-detail-value" text="Email is shown below your name." wrapText="true" />
-                     </children>
-                     <padding>
-                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-                     </padding>
-                  </VBox>
-               </children>
+               <padding>
+                  <Insets bottom="18.0" left="18.0" right="18.0" top="18.0" />
+               </padding>
             </VBox>
-         </children>
-         <padding>
-            <Insets bottom="18.0" left="18.0" right="18.0" top="18.0" />
-         </padding>
-      </VBox>
+         </content>
+      </ScrollPane>
    </children>
 </StackPane>
 

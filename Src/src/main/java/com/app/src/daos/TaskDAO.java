@@ -167,6 +167,61 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
         }
         return tasks;
     }
+    public List<PersonalTaskDTO> findAllByProjectId(int projectId) {
+        List<PersonalTaskDTO> tasks = new ArrayList<>();
+
+        // Câu SQL tương tự, nhưng đổi WHERE thành Pro_id và JOIN thêm bảng USER
+        String sql = "SELECT t.*, p.Pro_name, u.User_name, " +
+                "COALESCE((" +
+                "   SELECT ts.Sta_name " +
+                "   FROM STATUS_UPDATING su " +
+                "   JOIN TASK_STATUS ts ON su.Sta_id = ts.Sta_id " +
+                "   WHERE su.Task_id = t.Task_id " +
+                "   ORDER BY su.StU_id DESC " +
+                "   LIMIT 1" +
+                "), 'To Do') AS Sta_name " +
+                "FROM TASK t " +
+                "LEFT JOIN PROJECT p ON t.Pro_id = p.Pro_id " +
+                "LEFT JOIN USER u ON t.USER_id = u.User_id " + // Lấy thêm tên User cho Board
+                "WHERE t.Pro_id = ?;"; // Lọc theo Project ID
+
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, projectId); // Truyền projectId vào đây
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                PersonalTaskDTO task = new PersonalTaskDTO();
+                task.setTaskId(rs.getInt("Task_id"));
+                task.setTaskName(rs.getString("Task_name"));
+
+                if (rs.getTimestamp("Task_startDate") != null) {
+                    task.setTaskStartTime(String.valueOf(rs.getTimestamp("Task_startDate")));
+                }
+                if (rs.getTimestamp("Task_endDate") != null) {
+                    task.setTaskEndTime(String.valueOf(rs.getTimestamp("Task_endDate")));
+                }
+
+                task.setTaskDescription(rs.getString("Task_description"));
+                task.setProjectName(rs.getString("Pro_name"));
+                task.setStatusName(rs.getString("Sta_name"));
+
+                User user = new User();
+                user.setUserId(rs.getInt("User_id"));
+                // Set thêm UserName để BoardController gọi task.getUser().getUserName()
+                user.setUserName(rs.getString("User_name"));
+                task.setUser(user);
+
+                tasks.add(task);
+            }
+            this.closeResource(ps, connection, rs);
+        } catch (SQLException ex) {
+            throw new RuntimeException("Lỗi khi lấy danh sách Task theo Project: " + ex.getMessage(), ex);
+        }
+        return tasks;
+    }
 
     @Override
     public boolean create(PersonalTaskDTO entity) {
@@ -498,6 +553,48 @@ public class TaskDAO extends AbstractDAO<PersonalTaskDTO> { // Đổi Generic ty
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /** Lấy nhanh ngày bắt đầu và project id của task để validate deadline. */
+    public TaskDateMeta findTaskDateMeta(int taskId) {
+        final String sql = "SELECT Task_startDate, Pro_id FROM TASK WHERE Task_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, taskId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    TaskDateMeta meta = new TaskDateMeta();
+                    meta.setStartDate(rs.getDate("Task_startDate"));
+                    int projectId = rs.getInt("Pro_id");
+                    meta.setProjectId(rs.wasNull() ? null : projectId);
+                    return meta;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static class TaskDateMeta {
+        private java.sql.Date startDate;
+        private Integer projectId;
+
+        public java.sql.Date getStartDate() {
+            return startDate;
+        }
+
+        public void setStartDate(java.sql.Date startDate) {
+            this.startDate = startDate;
+        }
+
+        public Integer getProjectId() {
+            return projectId;
+        }
+
+        public void setProjectId(Integer projectId) {
+            this.projectId = projectId;
         }
     }
 

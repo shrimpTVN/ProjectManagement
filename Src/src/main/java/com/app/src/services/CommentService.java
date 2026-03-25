@@ -22,9 +22,6 @@ public class CommentService {
             return false;
         }
 
-        // 1. Tìm ID tin nhắn gần nhất của NGƯỜI KIA
-        Integer otherLastId = commentDAO.getLatestOtherUserCommentId(taskId, userId);
-
         Comment newComment = new Comment();
         newComment.setTaskId(taskId);
         newComment.setUserId(userId);

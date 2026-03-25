@@ -11,21 +11,21 @@ public class TimeAgoHelper {
         long past = date.getTime();
         long diffInMs = now - past;
 
-        // Nếu thời gian ở tương lai hoặc chênh lệch quá nhỏ
+        // Guard: future timestamps or too small difference
         if (diffInMs < 0 || TimeUnit.MILLISECONDS.toSeconds(diffInMs) < 60) {
-            return "Vừa xong";
+            return "Just now";
         }
 
         long minutes = TimeUnit.MILLISECONDS.toMinutes(diffInMs);
-        if (minutes < 60) return minutes + " phút trước";
+        if (minutes < 60) return minutes + " minutes ago";
 
         long hours = TimeUnit.MILLISECONDS.toHours(diffInMs);
-        if (hours < 24) return hours + " giờ trước";
+        if (hours < 24) return hours + " hours ago";
 
         long days = TimeUnit.MILLISECONDS.toDays(diffInMs);
-        if (days < 30) return days + " ngày trước";
+        if (days < 30) return days + " days ago";
 
         long months = days / 30;
-        return months + " tháng trước";
+        return months + " months ago";
     }
 }

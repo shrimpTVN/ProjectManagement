@@ -61,11 +61,11 @@ public class InforController implements IProjectDetailSubView, Initializable {
     }
 
     private void handleDelete() {
-        System.out.println("ID chuẩn bị xóa là: " + currentProject.getProjectId());
+        System.out.println("Deleting project id: " + currentProject.getProjectId());
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Xác nhận xóa");
-        alert.setHeaderText("Bạn có chắc chắn muốn xóa dự án này?");
-        alert.setContentText("Dữ liệu sau khi xóa sẽ KHÔNG thể khôi phục.");
+        alert.setTitle("Confirm deletion");
+        alert.setHeaderText("Are you sure you want to delete this project?");
+        alert.setContentText("Data cannot be recovered after deletion.");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -78,7 +78,7 @@ public class InforController implements IProjectDetailSubView, Initializable {
                 }
                 ViewNavigator.getInstance().loadSubScene("/scenes/ProjectList.fxml");
             } else {
-                System.out.println("Lỗi: Xóa dự án thất bại.");
+                System.out.println("Error: Project deletion failed.");
             }
         }
     }

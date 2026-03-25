@@ -926,6 +926,33 @@
     -fx-padding: 22;
 }
 
+/* Remove ScrollPane chrome on the information screen */
+.info-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.info-scroll-pane > .viewport,
+.info-scroll-pane > .corner {
+    -fx-background-color: transparent;
+}
+
+.info-scroll-pane .scroll-bar:vertical,
+.info-scroll-pane .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-border-color: transparent;
+}
+
+.info-scroll-pane .scroll-bar .thumb,
+.info-scroll-pane .scroll-bar .track,
+.info-scroll-pane .scroll-bar .increment-button,
+.info-scroll-pane .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
 .info-main-card {
     -fx-background-color: #FFFFFF;
     -fx-background-radius: 16px;
@@ -1546,3 +1573,116 @@
     -fx-background-radius: 999px;
 }
 
+/* --- STYLE CHUNG CHO CÁC NÚT ACTION CỦA TASK --- */
+
+#hboxActionButtons .task-action-btn {
+    -fx-min-width: USE_PREF_SIZE; /* QUAN TRỌNG: Ép các nút luôn rộng vừa khít với nội dung chữ */
+    -fx-padding: 8px 16px;        /* Bơm khoảng đệm (trên/dưới 8px, trái/phải 16px) để nút không bị gầy */
+}
+
+.task-action-btn {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 8px 18px;
+    -fx-background-radius: 6px; /* Bo góc mềm mại */
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 2); /* Đổ bóng nhẹ */
+}
+
+/* 1. Nút Chấp nhận & Duyệt (Màu Xanh lá - Success) */
+.btn-accept {
+    -fx-background-color: #28a745;
+}
+.btn-accept:hover {
+    -fx-background-color: #218838; /* Màu đậm hơn khi đưa chuột vào */
+}
+
+/* 2. Nút Từ chối / Yêu cầu làm lại (Màu Đỏ - Danger) */
+.btn-reject {
+    -fx-background-color: #dc3545;
+}
+.btn-reject:hover {
+    -fx-background-color: #c82333;
+}
+
+/* 3. Nút Nộp duyệt (Màu Xanh dương - Primary) */
+.btn-submit {
+    -fx-background-color: #007bff;
+}
+.btn-submit:hover {
+    -fx-background-color: #0069d9;
+}
+
+/*Board and Boardcard css*/
+/* --- GIAO DIỆN BẢNG KANBAN (BOARD) --- */
+.board-container {
+    -fx-background-color: #ffffff;
+}
+
+.board-column {
+    -fx-background-color: #f4f5f7; /* Màu xám nhạt cho nền cột */
+    -fx-background-radius: 8px;
+    -fx-padding: 10px;
+}
+
+.column-header-container {
+    -fx-padding: 5px 5px 10px 5px;
+}
+
+.column-header {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #172b4d;
+}
+
+.column-count {
+    -fx-font-size: 13px;
+    -fx-text-fill: #5e6c84;
+    -fx-background-color: #dfe1e6;
+    -fx-background-radius: 10px;
+    -fx-padding: 2px 8px;
+}
+
+/* Ẩn viền và màu nền của ScrollPane */
+.task-list-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+.task-list-scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.task-list-container {
+    -fx-padding: 5px; /* Giữ khoảng cách để bóng đổ của thẻ Task không bị cắt */
+}
+
+/* --- GIAO DIỆN THẺ TASK (TASK CARD) --- */
+.task-card {
+    -fx-background-color: white;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    /* Tạo đổ bóng nhẹ nhàng 3D */
+    -fx-effect: dropshadow(three-pass-box, rgba(9, 30, 66, 0.15), 3, 0, 0, 1);
+}
+
+.task-card:hover {
+    -fx-background-color: #fafbfc; /* Sang màu sáng hơn khi hover */
+    -fx-effect: dropshadow(three-pass-box, rgba(9, 30, 66, 0.25), 5, 0, 0, 2); /* Đổ bóng đậm hơn */
+}
+
+.task-name {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #172b4d;
+}
+
+.task-assignee {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6b778c;
+    -fx-font-style: italic;
+}

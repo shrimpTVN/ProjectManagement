@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -41,6 +42,13 @@ public class ProjectDetailController {
     @FXML
     private Button tabInfor;
 
+    @FXML
+    private Hyperlink breadcrumbHome;
+    @FXML
+    private Hyperlink breadcrumbProjects;
+    @FXML
+    private Label breadcrumbProjectName;
+
     private static final String TAB_ACTIVE_CLASS = "project-detail-tab-active";
 
     private Project project;
@@ -54,6 +62,9 @@ public class ProjectDetailController {
         this.adminName = adminName;
 
         lblProjectName.setText(project.getProjectName());
+        if (breadcrumbProjectName != null) {
+            breadcrumbProjectName.setText(project.getProjectName());
+        }
         ProjectDetailNavigator.getInstance().setMainContentArea(tabContentArea);
 
         userRoleName = project.getUserRoleName();
@@ -104,5 +115,17 @@ public class ProjectDetailController {
 
     public void handleBackClick(MouseEvent mouseEvent) {
         ViewNavigator.getInstance().loadSubScene("/scenes/ProjectList.fxml");
+    }
+
+    @FXML
+    private void handleBreadcrumbClick(javafx.event.ActionEvent event) {
+        Object source = event.getSource();
+        if (source == breadcrumbHome) {
+            ViewNavigator.getInstance().loadSubScene("/scenes/Home.fxml");
+            return;
+        }
+        if (source == breadcrumbProjects) {
+            ViewNavigator.getInstance().loadSubScene("/scenes/ProjectList.fxml");
+        }
     }
 }
