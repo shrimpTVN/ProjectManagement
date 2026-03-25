@@ -59,6 +59,8 @@ public class CreateProjectController implements Initializable {
     private Label lblErrorStartDate;
     @FXML
     private Label lblErrorEndDate;
+    @FXML
+    private Label lblErrorManager;
 
     private ProjectService projectService;
     private Project editingProject; // Biến để lưu thông tin dự án khi chỉnh sửa
@@ -183,19 +185,17 @@ public class CreateProjectController implements Initializable {
             isValid = false;
         }
 
-        Date today = truncateToDate(new Date());
-        Date startDateValue = toDate(startDate);
-        Date endDateValue = toDate(endDate);
+        LocalDate today = LocalDate.now();
 
-        if (startDateValue != null && endDateValue != null && endDateValue.before(startDateValue)) {
+        if (startDate != null && endDate != null && endDate.isBefore(startDate)) {
             lblErrorEndDate.setText("End date must be after start date");
             isValid = false;
         }
-        if (startDateValue != null && startDateValue.before(today)) {
+        if (startDate != null && startDate.isBefore(today)) {   // Cho phép start date bằng hôm nay nhưng không cho phép start date trước hôm nay
             lblErrorStartDate.setText("Start date cannot be before today");
             isValid = false;
         }
-        if (endDateValue != null && endDateValue.before(today)) {
+        if (endDate != null && endDate.isBefore(today)) {
             lblErrorEndDate.setText("End date cannot be before today");
             isValid = false;
         }
@@ -219,7 +219,7 @@ public class CreateProjectController implements Initializable {
             String managerUsername = cbManager.getEditor().getText().trim();
             User selectedManager = managerMap.get(managerUsername);
             if (selectedManager == null) {
-                System.out.println("Error: manager not selected or username not found");
+                lblErrorManager.setText("Please select a valid manager");
                 return;
             }
 
@@ -231,7 +231,6 @@ public class CreateProjectController implements Initializable {
             }
         } else {
             System.out.println("Flow: EDIT - project ID: " + editingProject.getProjectId());
-            // 1. Cập nhật thông tin cơ bản
             projectData.setProjectId(editingProject.getProjectId());
             boolean success = projectService.updateProject(projectData);
 
@@ -277,14 +276,15 @@ public class CreateProjectController implements Initializable {
         lblErrorName.setText("");
         lblErrorStartDate.setText("");
         lblErrorEndDate.setText("");
+        if (lblErrorManager != null) lblErrorManager.setText("");
     }
 
-    private Date toDate(LocalDate localDate) {
+    private Date toDate(LocalDate localDate) {      // Chuyển từ LocalDate (không có thời gian) sang Date (có thời gian) mà vẫn giữ nguyên ngày tháng năm, tránh lỗi lệch múi giờ
         if (localDate == null) return null;
         return truncateToDate(java.sql.Date.valueOf(localDate));
     }
 
-    private Date truncateToDate(Date date) {
+    private Date truncateToDate(Date date) {        // Loại bỏ phần thời gian, chỉ giữ lại ngày tháng năm để so sánh chính xác hơn
         if (date == null) return null;
         return new java.sql.Date(date.getTime());
     }
@@ -310,6 +310,9 @@ public class CreateProjectController implements Initializable {
         cbManager.setDisable(true);
         cbManager.setEditable(false);
         cbManager.setPromptText("Manager unchanged on edit");
+        if (lblErrorManager != null) {  // lblErrorManager có thể null nếu đang chạy ở chế độ tạo mới, nên phải kiểm tra trước khi gọi
+            lblErrorManager.setText("");
+        }
 
         txtDescription.setText(project.getProjectDescription());
     }

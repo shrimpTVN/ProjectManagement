@@ -245,7 +245,13 @@ public class TasklistService {
 
     private Date truncateToDate(Date date) {
         if (date == null) return null;
-        return new java.sql.Date(date.getTime());
+        java.time.LocalDate ld;
+        if (date instanceof java.sql.Date sqlDate) {
+            ld = sqlDate.toLocalDate();
+        } else {
+            ld = date.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+        }
+        return java.sql.Date.valueOf(ld);
     }
 
     private Project resolveProject(Integer projectId) {
