@@ -1,5 +1,6 @@
 package com.app.src.controllers.task;
 
+import com.app.src.authentication.RoleValidator;
 import com.app.src.controllers.ViewNavigator;
 import com.app.src.controllers.project.ProjectDetailController;
 import com.app.src.core.AppContext;
@@ -122,8 +123,9 @@ public class CreateTaskController {
                 // Gọi UserDAO lấy thông tin User đầy đủ (bao gồm cả Account)
                 User fullUser = UserDAO.getInstance().findById(basicUser.getUserId());
 
+                String userRole = ProjectJoiningService.getRoleInProject(fullUser.getUserId(), currentProject.getProjectId());
                 // Bắt buộc phải có Account thì mới cho vào danh sách
-                if (fullUser != null && fullUser.getAccount() != null) {
+                if (fullUser != null && fullUser.getAccount() != null && !RoleValidator.isManagerOrAdmin(userRole)) {
                     String accountUsername = fullUser.getAccount().getUserName();
 
                     projectMembersMap.put(accountUsername, fullUser);   // Lưu fullUser vào map với key là username của Account
