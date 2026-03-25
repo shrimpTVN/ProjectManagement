@@ -38,6 +38,57 @@ public class TasklistService {
         return taskDAO.findAllByUserId(userID);
     }
 
+    public List<PersonalTaskDTO> getTasksByProjectId(int projectId) {
+        // Gọi instance của TaskDAO và thực thi hàm vừa tạo
+        return TaskDAO.getInstance().findAllByProjectId(projectId);
+    }
+    // ==========================================
+    // 2. THÊM MỚI (CREATE)
+    // ==========================================
+//    public boolean addTask(PersonalTaskDTO newTask) {
+//        // --- BƯỚC 1: VALIDATION ---
+//        if (newTask == null) {
+//            throw new IllegalArgumentException("Dữ liệu công việc không tồn tại!");
+//        }
+//
+//        if (newTask.getTaskName() == null || newTask.getTaskName().trim().isEmpty()) {
+//            throw new IllegalArgumentException("Tên công việc không được để trống!");
+//        }
+//
+//        if (newTask.getTaskName().length() > 255) {
+//            throw new IllegalArgumentException("Tên công việc quá dài (tối đa 255 ký tự)!");
+//        }
+//
+//        // --- BƯỚC 2: BUSINESS LOGIC ---
+//        // Chuẩn hóa tên (Xóa khoảng trắng thừa ở đầu/cuối)
+//        newTask.setTaskName(newTask.getTaskName().trim());
+//
+//        // Gợi ý: Set giá trị mặc định cho Status khi tạo mới (nếu model có hỗ trợ)
+//        // if (newTask.getTaskStatus() == null || newTask.getTaskStatus().trim().isEmpty()) {
+//        //     newTask.setTaskStatus("To do");
+//        // }
+//
+//        // --- BƯỚC 3: GỌI DAO ---
+//        return taskDAO.create(newTask);
+//    }
+
+    // ==========================================
+    // 3. CẬP NHẬT (UPDATE)
+    // ==========================================
+    public boolean toggleTaskStatus(PersonalTaskDTO task) {
+        if (task == null || task.getTaskId() <= 0) {
+            throw new IllegalArgumentException("Công việc không hợp lệ hoặc chưa được lưu!");
+        }
+
+        // Logic đảo trạng thái (Mở ra khi bạn có trường status nhé)
+        /* String currentStatus = task.getTaskStatus();
+        String newStatus = "Done".equalsIgnoreCase(currentStatus) ? "To do" : "Done";
+        task.setTaskStatus(newStatus);
+        */
+
+        return taskDAO.update(task.getTaskId(), task);
+    }
+
     // Cập nhật trạng thái task và truyền cả trạng thái cũ/mới để kiểm tra rule nghiệp vụ chắc chắn hơn.
     public boolean updateTaskStatus(int taskId, String oldStatus, String newStatus, String content, int userId) {
         if (taskId <= 0) {

@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="10.0" styleClass="task-card" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.TaskCardController">
+<VBox spacing="8.0" styleClass="task-card" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.src.controllers.project.TaskCardController">
     <children>
-        <Label fx:id="taskNameLabel" styleClass="task-name" text="Task Name" />
-        <HBox alignment="CENTER_RIGHT" spacing="5.0">
-            <children>
-                <ImageView fx:id="userIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
-                <Label fx:id="assignedToLabel" styleClass="task-assignee" text="Assigned To" />
-            </children>
-        </HBox>
+        <Label fx:id="taskNameLabel" styleClass="task-name" text="Task Name" wrapText="true" />
+
+        <Label fx:id="assignedToLabel" styleClass="task-assignee" text="Assigned To" />
     </children>
+    <padding>
+        <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+    </padding>
 </VBox>
