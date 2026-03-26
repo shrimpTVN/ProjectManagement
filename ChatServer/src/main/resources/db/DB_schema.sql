@@ -67,8 +67,8 @@ CREATE TABLE TASK
     Task_endDate     DATETIME,
     Pro_id           INT,
     User_id          INT, -- Assigned User
-    isRejected       BOOLEAN default  false,
-    isNotified       BOOLEAN default  false;
+    Task_isRejected       BOOLEAN default  false,
+    Task_isNotified       BOOLEAN default  false;
     FOREIGN KEY (Pro_id) REFERENCES PROJECT (Pro_id) ON DELETE CASCADE,
     FOREIGN KEY (User_id) REFERENCES USER (User_id)
 );

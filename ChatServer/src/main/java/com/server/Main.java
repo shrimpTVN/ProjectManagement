@@ -11,6 +11,7 @@ public class Main {
         DailyDeadlineScheduler scheduler = new DailyDeadlineScheduler(taskService, notificationService);
         scheduler.start();
 
+
         Runtime.getRuntime().addShutdownHook(new Thread(scheduler::stop));
 
         ChatServer server = new ChatServer(8080);

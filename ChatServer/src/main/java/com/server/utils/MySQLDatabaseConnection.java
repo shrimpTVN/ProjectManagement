@@ -4,7 +4,6 @@ import com.server.core.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-
 public class MySQLDatabaseConnection implements DatabaseConnection {
     private static Connection databaseLink;
 
@@ -24,10 +23,12 @@ public class MySQLDatabaseConnection implements DatabaseConnection {
 
         }catch(Exception e)
         {
-            e.printStackTrace();
-            e.getCause();
+            throw new RuntimeException("Cannot connect to MySQL", e);
         }
 
+        if (this.databaseLink == null) {
+            throw new IllegalStateException("MySQL connection is null");
+        }
         return this.databaseLink;
     }
 }
