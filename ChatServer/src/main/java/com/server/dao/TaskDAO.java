@@ -17,7 +17,8 @@ import java.util.StringJoiner;
 public class TaskDAO extends AbstractDAO<Task> {
     @Override
     public Task findById(int id) {
-        final String sql = "SELECT t.Task_id, t.Task_name, t.Task_description, t.Task_startDate, t.Task_endDate, t.Pro_id, t.User_id, t.isRejected, t.isNotified "
+        final String sql = "SELECT t.Task_id, t.Task_name, t.Task_description, t.Task_startDate, t.Task_endDate, t.Pro_id, t.User_id, "
+                + "t.Task_isRejected AS isRejected, t.Task_isNotified AS isNotified "
                 + "FROM TASK t WHERE t.Task_id = ?";
 
         try (Connection connection = getConnection();
@@ -38,7 +39,8 @@ public class TaskDAO extends AbstractDAO<Task> {
 
     @Override
     public List<Task> findAll() {
-        final String sql = "SELECT t.Task_id, t.Task_name, t.Task_description, t.Task_startDate, t.Task_endDate, t.Pro_id, t.User_id, t.isRejected, t.isNotified "
+        final String sql = "SELECT t.Task_id, t.Task_name, t.Task_description, t.Task_startDate, t.Task_endDate, t.Pro_id, t.User_id, "
+                + "t.Task_isRejected AS isRejected, t.Task_isNotified AS isNotified "
                 + "FROM TASK t";
         List<Task> tasks = new ArrayList<>();
 
@@ -62,7 +64,7 @@ public class TaskDAO extends AbstractDAO<Task> {
             return false;
         }
 
-        final String sql = "INSERT INTO TASK(Task_name, Task_description, Task_startDate, Task_endDate, Pro_id, User_id, isRejected, isNotified) "
+        final String sql = "INSERT INTO TASK(Task_name, Task_description, Task_startDate, Task_endDate, Pro_id, User_id, Task_isRejected, Task_isNotified) "
                 + "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = getConnection();
@@ -92,7 +94,7 @@ public class TaskDAO extends AbstractDAO<Task> {
         }
 
         final String sql = "UPDATE TASK SET Task_name = ?, Task_description = ?, Task_startDate = ?, Task_endDate = ?, "
-                + "Pro_id = ?, User_id = ?, isRejected = ?, isNotified = ? WHERE Task_id = ?";
+                + "Pro_id = ?, User_id = ?, Task_isRejected = ?, Task_isNotified = ? WHERE Task_id = ?";
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -144,25 +146,23 @@ public class TaskDAO extends AbstractDAO<Task> {
         }
 
         final String sql = "SELECT t.Task_id, t.Task_name, t.Task_description, t.Task_startDate, t.Task_endDate, "
-                + "t.Pro_id, t.User_id, t.isRejected, t.isNotified, ls.Sta_name "
+                + "t.Pro_id, t.User_id, t.Task_isRejected AS isRejected, t.Task_isNotified AS isNotified, ls.Sta_name "
                 + "FROM TASK t "
-                + "LEFT JOIN (";
-        final String latestStatusCte = "SELECT su.Task_id, ts.Sta_name, su.StU_date "
-                + "FROM STATUS_UPDATING su "
-                + "JOIN TASK_STATUS ts ON su.Sta_id = ts.Sta_id) ls_raw";
-        final String sqlTail = " ls ON ls.Task_id = t.Task_id "
-                + "WHERE t.isRejected = false AND DATE(t.Task_endDate) BETWEEN ? AND DATE_ADD(?, INTERVAL ? DAY)";
-
-        StringBuilder builder = new StringBuilder();
-        builder.append(sql)
-                .append(latestStatusCte)
-                .append(" WHERE ls_raw.StU_date = (SELECT MAX(su2.StU_date) FROM STATUS_UPDATING su2 WHERE su2.Task_id = ls_raw.Task_id))")
-                .append(sqlTail);
+                + "LEFT JOIN (" 
+                + "    SELECT su.Task_id, ts.Sta_name "
+                + "    FROM STATUS_UPDATING su "
+                + "    JOIN (SELECT Task_id, MAX(StU_date) AS max_date FROM STATUS_UPDATING GROUP BY Task_id) latest "
+                + "         ON latest.Task_id = su.Task_id AND latest.max_date = su.StU_date "
+                + "    JOIN TASK_STATUS ts ON su.Sta_id = ts.Sta_id "
+                + ") ls ON ls.Task_id = t.Task_id "
+                + "WHERE COALESCE(t.Task_isRejected, 0) = 0 "
+                + "AND t.Task_endDate IS NOT NULL "
+                + "AND DATE(t.Task_endDate) BETWEEN ? AND DATE_ADD(?, INTERVAL ? DAY)";
 
         List<Task> tasks = new ArrayList<>();
 
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(builder.toString())) {
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             Date fromDate = Date.valueOf(referenceDate);
             statement.setDate(1, fromDate);
             statement.setDate(2, fromDate);
@@ -178,6 +178,7 @@ public class TaskDAO extends AbstractDAO<Task> {
             System.err.println("[TaskDAO] findTasksNearingDeadline failed: " + e.getMessage());
         }
 
+        System.out.println("[TaskDAO] findTasksNearingDeadline refDate=" + referenceDate + ", days=" + days + ", size=" + tasks.size());
         return tasks;
     }
 
@@ -190,28 +191,27 @@ public class TaskDAO extends AbstractDAO<Task> {
         }
 
         final String sql = "SELECT t.Task_id, t.Task_name, t.Task_description, t.Task_startDate, t.Task_endDate, "
-                + "t.Pro_id, t.User_id, t.isRejected, t.isNotified, ls.Sta_name "
+                + "t.Pro_id, t.User_id, t.Task_isRejected AS isRejected, t.Task_isNotified AS isNotified, ls.Sta_name "
                 + "FROM TASK t "
-                + "LEFT JOIN (";
-        final String latestStatusCte = "SELECT su.Task_id, ts.Sta_name, su.StU_date "
-                + "FROM STATUS_UPDATING su "
-                + "JOIN TASK_STATUS ts ON su.Sta_id = ts.Sta_id) ls_raw";
-        final String sqlTail = " ls ON ls.Task_id = t.Task_id "
-                + "WHERE t.isRejected = false AND t.isNotified = false "
+                + "LEFT JOIN ("
+                + "    SELECT su.Task_id, ts.Sta_name "
+                + "    FROM STATUS_UPDATING su "
+                + "    JOIN (SELECT Task_id, MAX(StU_date) AS max_date FROM STATUS_UPDATING GROUP BY Task_id) latest "
+                + "         ON latest.Task_id = su.Task_id AND latest.max_date = su.StU_date "
+                + "    JOIN TASK_STATUS ts ON su.Sta_id = ts.Sta_id "
+                + ") ls ON ls.Task_id = t.Task_id "
+                + "WHERE COALESCE(t.Task_isRejected, 0) = 0 "
+                + "AND COALESCE(t.Task_isNotified, 0) = 0 "
+                + "AND t.Task_endDate IS NOT NULL "
                 + "AND DATE(t.Task_endDate) BETWEEN ? AND DATE_ADD(?, INTERVAL ? DAY) "
                 + "AND (ls.Sta_name IS NULL OR UPPER(ls.Sta_name) <> ? )";
-
-        StringBuilder builder = new StringBuilder();
-        builder.append(sql)
-                .append(latestStatusCte)
-                .append(" WHERE ls_raw.StU_date = (SELECT MAX(su2.StU_date) FROM STATUS_UPDATING su2 WHERE su2.Task_id = ls_raw.Task_id))")
-                .append(sqlTail);
 
         List<Task> tasks = new ArrayList<>();
 
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(builder.toString())) {
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             Date fromDate = Date.valueOf(referenceDate);
+
             statement.setDate(1, fromDate);
             statement.setDate(2, fromDate);
             statement.setInt(3, days);
@@ -226,7 +226,7 @@ public class TaskDAO extends AbstractDAO<Task> {
         } catch (SQLException e) {
             System.err.println("[TaskDAO] findTasksForDeadlineReminder failed: " + e.getMessage());
         }
-
+        System.out.println("[TaskDAO] findTasksForDeadlineReminder refDate=" + referenceDate + ", days=" + days + ", size=" + tasks.size());
         return tasks;
     }
 
@@ -238,7 +238,7 @@ public class TaskDAO extends AbstractDAO<Task> {
         for (int i = 0; i < taskIds.size(); i++) {
             joiner.add("?");
         }
-        final String sql = "UPDATE TASK SET isNotified = true WHERE Task_id IN " + joiner;
+        final String sql = "UPDATE TASK SET Task_isNotified = true WHERE Task_id IN " + joiner;
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -282,3 +282,4 @@ public class TaskDAO extends AbstractDAO<Task> {
         }
     }
 }
+

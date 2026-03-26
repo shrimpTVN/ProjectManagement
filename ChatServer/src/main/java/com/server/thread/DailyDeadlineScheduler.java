@@ -41,10 +41,11 @@ public class DailyDeadlineScheduler {
         LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
         LocalDateTime nextMidnight = now.toLocalDate().plusDays(1).atStartOfDay();
 
-        long initialDelay = Duration.between(now, nextMidnight).toMillis();
-        long period = TimeUnit.DAYS.toMillis(1);
+        long initialDelay = Duration.between(now, nextMidnight).toMinutes();
+        long period = TimeUnit.DAYS.toMinutes(1);
 
-        scheduler.scheduleAtFixedRate(this::runDailyCheck, initialDelay, period, TimeUnit.MILLISECONDS);
+        // run first at next midnight, then every 24h
+        scheduler.scheduleAtFixedRate(this::runDailyCheck, 5, period, TimeUnit.MINUTES);
         started = true;
 
         System.out.println("Midnight scheduler started. First run in " + (initialDelay / 1000 / 60) + " minutes.");
@@ -55,12 +56,15 @@ public class DailyDeadlineScheduler {
     }
 
     private void runDailyCheck() {
+
         if (!jobRunning.compareAndSet(false, true)) {
             return;
         }
 
         try {
             LocalDate today = LocalDate.now(ZoneId.systemDefault());
+            System.out.println("Today: " + today);
+            System.out.println("Starting DailyDeadlineScheduler.");
             processExpiringTasks(today);
         } catch (Exception e) {
             System.err.println("Error during deadline scheduler run: " + e.getMessage());
@@ -71,16 +75,18 @@ public class DailyDeadlineScheduler {
 
     private void processExpiringTasks(LocalDate checkDate) {
         List<Task> expiringTasks = taskService.getTasksForDeadlineReminder(REMINDER_WINDOW_DAYS, checkDate);
+
         if (expiringTasks.isEmpty()) {
             return;
         }
 
         List<Integer> notifiedTaskIds = new ArrayList<>();
+
         for (Task task : expiringTasks) {
             Notification notification = new Notification();
             notification.setUserId(task.getUserId());
-            notification.setNotiTitle("Task deadline reminder");
-            notification.setNotiDescription("Reminder: Task '" + task.getTaskName() + "' is approaching its deadline!");
+            notification.setNotiTitle("Task của bạn sắp đến hạn rồi!");
+            notification.setNotiDescription("Reminder: Task '" + task.getTaskName() + "' đang sắp hết hạn!");
             notification.setNotiIsRead(false);
             notification.setNotiTime(LocalDateTime.now().toString());
 
@@ -91,12 +97,12 @@ public class DailyDeadlineScheduler {
             }
 
             ChatServer.sendNotificationToUser(task.getUserId(), notification);
-            notifiedTaskIds.add(task.getTaskId());
+//            notifiedTaskIds.add(task.getTaskId());
         }
 
-        if (!notifiedTaskIds.isEmpty()) {
-            taskService.markTasksAsNotified(notifiedTaskIds);
-        }
+//        if (!notifiedTaskIds.isEmpty()) {
+//            taskService.markTasksAsNotified(notifiedTaskIds);
+//        }
+
     }
 }
-

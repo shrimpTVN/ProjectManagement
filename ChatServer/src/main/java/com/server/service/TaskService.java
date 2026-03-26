@@ -3,6 +3,7 @@ package com.server.service;
 import com.server.dao.TaskDAO;
 import com.server.model.Task;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,21 +54,23 @@ public class TaskService {
 		}
 		List<Task> tasks = taskDAO.findTasksNearingDeadline(days, referenceDate);
 		taskUpdatingService.applyLatestStatus(tasks);
-		return tasks.stream()
-				.filter(task -> !TaskUpdatingService.DONE_STATUS.equals(taskUpdatingService.normalizeStatus(task.getTaskStatus())))
-				.collect(Collectors.toList());
+		return tasks;
 	}
 
 	public List<Task> getTasksForDeadlineReminder(int days, LocalDate referenceDate) {
 		if (days <= 0) {
 			return List.of();
 		}
-		List<Task> tasks = taskDAO.findTasksForDeadlineReminder(days, referenceDate, TaskUpdatingService.DONE_STATUS);
+		List<Task> tasks = taskDAO.findTasksForDeadlineReminder(days, referenceDate, TaskUpdatingService.DONE_STATUS);System.out.println("Task list from getTasksForDeadlineReminder: " + tasks.size());
 		taskUpdatingService.applyLatestStatus(tasks);
 		return tasks;
 	}
 
 	public boolean markTasksAsNotified(List<Integer> taskIds) {
 		return taskDAO.markTasksAsNotified(taskIds);
+	}
+
+	public List<Task> findAll() {
+		return taskDAO.findAll();
 	}
 }

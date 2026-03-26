@@ -173,6 +173,6 @@ public class ChatClientService {
             return "not:"+gson.toJson(notification);
         }
 
-        return "con" + gson.toJson(notification);
+        return "con: " + gson.toJson(notification);
     }
 }
