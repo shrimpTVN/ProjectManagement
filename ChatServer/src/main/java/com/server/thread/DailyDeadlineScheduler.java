@@ -41,14 +41,15 @@ public class DailyDeadlineScheduler {
         LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
         LocalDateTime nextMidnight = now.toLocalDate().plusDays(1).atStartOfDay();
 
-        long initialDelay = Duration.between(now, nextMidnight).toMinutes();
+//        long initialDelay = Duration.between(now, nextMidnight).toMinutes();
+        long initialDelay = 1;
         long period = TimeUnit.DAYS.toMinutes(1);
 
         // run first at next midnight, then every 24h
-        scheduler.scheduleAtFixedRate(this::runDailyCheck, 5, period, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(this::runDailyCheck, initialDelay, period, TimeUnit.MINUTES);
         started = true;
 
-        System.out.println("Midnight scheduler started. First run in " + (initialDelay / 1000 / 60) + " minutes.");
+        System.out.println("Midnight scheduler started. First run in " + initialDelay+ " minutes.");
     }
 
     public void stop() {
@@ -86,7 +87,7 @@ public class DailyDeadlineScheduler {
             Notification notification = new Notification();
             notification.setUserId(task.getUserId());
             notification.setNotiTitle("Task của bạn sắp đến hạn rồi!");
-            notification.setNotiDescription("Reminder: Task '" + task.getTaskName() + "' đang sắp hết hạn!");
+            notification.setNotiDescription("Reminder: Task '" + task.getTaskName() +"' đang sắp hết hạn!");
             notification.setNotiIsRead(false);
             notification.setNotiTime(LocalDateTime.now().toString());
 
@@ -97,12 +98,12 @@ public class DailyDeadlineScheduler {
             }
 
             ChatServer.sendNotificationToUser(task.getUserId(), notification);
-//            notifiedTaskIds.add(task.getTaskId());
+            notifiedTaskIds.add(task.getTaskId());
         }
 
-//        if (!notifiedTaskIds.isEmpty()) {
-//            taskService.markTasksAsNotified(notifiedTaskIds);
-//        }
+        if (!notifiedTaskIds.isEmpty()) {
+            taskService.markTasksAsNotified(notifiedTaskIds);
+        }
 
     }
 }

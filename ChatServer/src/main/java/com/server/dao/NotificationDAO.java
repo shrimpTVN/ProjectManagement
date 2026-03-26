@@ -2,6 +2,9 @@ package com.server.dao;
 
 import com.server.model.Notification;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,13 +31,32 @@ public class NotificationDAO extends AbstractDAO<Notification> {
 	}
 
 	@Override
-	public boolean create(Notification notification) {
-		if (notification == null) {
-			return false;
+	public boolean create(Notification entity) {
+		// Cập nhật SQL khớp với các trường mới
+		String sql = "INSERT INTO NOTIFICATION (Not_title, Not_description, Not_isRead, Not_date, User_id) VALUES (?, ?, ?, CURRENT_TIMESTAMP, ?)";
+		Connection connection = null;
+		PreparedStatement ps = null;
+
+		try {
+			connection = getConnection();
+			ps = connection.prepareStatement(sql);
+
+			ps.setString(1, entity.getNotiTitle()); // Cần đảm bảo Model có getNotiTitle()
+			ps.setString(2, entity.getNotiDescription());
+			ps.setBoolean(3, false);
+			ps.setInt(4, entity.getUserId());
+
+			int rowsAffected = ps.executeUpdate();
+			return rowsAffected > 0;
+		} catch (SQLException ex) {
+			throw new RuntimeException("Lỗi khi tạo mới Notification: " + ex.getMessage(), ex);
+		} finally {
+			try {
+				this.closeResource(ps, connection, null);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		int id = idSequence.getAndIncrement();
-		storage.put(id, cloneNotification(notification));
-		return true;
 	}
 
 	@Override
